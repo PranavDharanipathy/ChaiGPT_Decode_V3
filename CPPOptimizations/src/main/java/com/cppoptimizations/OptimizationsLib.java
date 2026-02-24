@@ -1,6 +1,8 @@
 package com.cppoptimizations;
 
-public class NativeLib {
+public class OptimizationsLib {
+
+
 
     // Used to load the 'cppoptimizations' library on application startup.
     static {

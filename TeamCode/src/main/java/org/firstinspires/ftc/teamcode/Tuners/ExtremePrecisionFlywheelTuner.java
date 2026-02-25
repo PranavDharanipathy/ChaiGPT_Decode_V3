@@ -46,7 +46,7 @@ public class ExtremePrecisionFlywheelTuner extends LinearOpMode {
     public static double VELOCITY_MARGIN_OF_ERROR = ConfigurationConstants.FLYWHEEL_VELOCITY_MARGIN_OF_ERROR;
     public static double STABILITY_MARGIN_OF_ERROR = ConfigurationConstants.FLYWHEEL_STABILITY_MARGIN_OF_ERROR;
 
-    public static double FLYWHEEL_VOLTAGE_FILTER_ALPHA = ConfigurationConstants.FLYWHEEL_PIDVS_COEFFICIENTS.voltageFilterAlpha;
+    public static double VOLTAGE_FILTER_ALPHA = ConfigurationConstants.FLYWHEEL_PIDVS_COEFFICIENTS.voltageFilterAlpha;
 
     public static double TOTAL_MASS_IN_GRAMS = ConfigurationConstants.FLYWHEEL_ASSEMBLY_TOTAL_WEIGHT;
     public static double SHAFT_DIAMETER = ConfigurationConstants.FLYWHEEL_SHAFT_DIAMETER;
@@ -77,6 +77,7 @@ public class ExtremePrecisionFlywheelTuner extends LinearOpMode {
         DcMotorEx rightFlywheel = hardwareMap.get(DcMotorEx.class, MapSetterConstants.rightFlywheelMotorDeviceName);
 
         flywheel = new Flywheel(leftFlywheel, rightFlywheel);
+        flywheel.initVoltageSensor(hardwareMap);
         flywheel.setInternalParameters(TOTAL_MASS_IN_GRAMS, SHAFT_DIAMETER, MOTOR_CORE_VOLTAGE, MOTOR_RPM);
 
         coefficients = ConfigurationConstants.FLYWHEEL_PIDVS_COEFFICIENTS;
@@ -101,6 +102,7 @@ public class ExtremePrecisionFlywheelTuner extends LinearOpMode {
                     KPIDF_UNITS_PER_VOLT,
                     I_SWITCH,
                     KI_SMASH,
+                    VOLTAGE_FILTER_ALPHA,
                     P_MIN, P_MAX,
                     I_MIN, I_MAX,
                     D_MIN, D_MAX

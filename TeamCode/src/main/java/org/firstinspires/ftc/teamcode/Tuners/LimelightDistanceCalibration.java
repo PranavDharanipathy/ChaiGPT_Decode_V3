@@ -9,8 +9,8 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.Constants;
-import org.firstinspires.ftc.teamcode.ShooterSystems.ShooterInformation;
+import org.firstinspires.ftc.teamcode.Constants.CameraConstants;
+import org.firstinspires.ftc.teamcode.Constants.MapSetterConstants;
 
 @Config
 @TeleOp (group = "tuning")
@@ -32,9 +32,9 @@ public class LimelightDistanceCalibration extends OpMode {
 
         telemetry = new MultipleTelemetry(super.telemetry, FtcDashboard.getInstance().getTelemetry());
 
-        limelight = hardwareMap.get(Limelight3A.class, Constants.MapSetterConstants.limelight3AUSBDeviceName);
+        limelight = hardwareMap.get(Limelight3A.class, MapSetterConstants.limelight3AUSBDeviceName);
 
-        limelight.setPollRateHz(ShooterInformation.CameraConstants.CAMERA_POLL_RATE);
+        limelight.setPollRateHz(CameraConstants.CAMERA_POLL_RATE);
         limelight.pipelineSwitch(PIPELINE);
     }
 

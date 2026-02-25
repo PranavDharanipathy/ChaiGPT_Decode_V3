@@ -184,7 +184,7 @@ public final class Flywheel {
         p = kp * error;
         p = MathUtil.clamp(p, minP, maxP);
 
-        if (!Double.isNaN(error * dt) && error * dt != 0 && targetVelocity != 0) errorSum += error * dt;
+        if (!Double.isNaN(error * dt) && targetVelocity != 0) errorSum += error * dt;
         else errorSum = 0; //integral is reset if it's NaN or if targetVelocity is equal to 0
 
         // i smashing

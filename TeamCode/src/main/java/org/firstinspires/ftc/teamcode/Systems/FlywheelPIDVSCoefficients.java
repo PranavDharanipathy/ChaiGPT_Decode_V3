@@ -1,20 +1,9 @@
 package org.firstinspires.ftc.teamcode.Systems;
 
-import static org.firstinspires.ftc.teamcode.Constants.ShooterConstants.TURRET_KPS;
-import static org.firstinspires.ftc.teamcode.Constants.ShooterConstants.TURRET_KDS;
-import static org.firstinspires.ftc.teamcode.Constants.ShooterConstants.TURRET_KFS;
-import static org.firstinspires.ftc.teamcode.Constants.ShooterConstants.TURRET_PD_POSITIONS;
-import static org.firstinspires.ftc.teamcode.Constants.ShooterConstants.TURRET_FEEDFORWARD_POSITIONS;
-
-import androidx.annotation.Nullable;
-
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 
 import org.firstinspires.ftc.teamcode.Constants.Models;
-import org.firstinspires.ftc.teamcode.Constants.ShooterConstants;
-import org.firstinspires.ftc.teamcode.util.InterpolationData;
 import org.firstinspires.ftc.teamcode.util.LowPassFilter;
-import org.firstinspires.ftc.teamcode.util.MathUtil;
 
 /// Easier usage of the coefficients for the flywheel
 public class FlywheelPIDVSCoefficients {
@@ -53,6 +42,7 @@ public class FlywheelPIDVSCoefficients {
             double kPIDFUnitsPerVolt,
             double iSwitch,
             double kISmash,
+            double voltageFilterAlpha,
             double minP,
             double maxP,
             double minI,
@@ -76,6 +66,8 @@ public class FlywheelPIDVSCoefficients {
         this.iSwitch = iSwitch;
 
         this.kISmash = kISmash;
+
+        this.voltageFilterAlpha = voltageFilterAlpha;
 
         this.minP = minP;
         this.maxP = maxP;
@@ -97,6 +89,7 @@ public class FlywheelPIDVSCoefficients {
             double kPIDFUnitsPerVolt,
             double iSwitch,
             double kISmash,
+            double voltageFilterAlpha,
             double minP,
             double maxP,
             double minI,
@@ -120,6 +113,8 @@ public class FlywheelPIDVSCoefficients {
         this.iSwitch = iSwitch;
 
         this.kISmash = kISmash;
+
+        this.voltageFilterAlpha = voltageFilterAlpha;
 
         this.minP = minP;
         this.maxP = maxP;

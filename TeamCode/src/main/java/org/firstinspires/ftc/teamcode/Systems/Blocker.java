@@ -1,10 +1,11 @@
-package org.firstinspires.ftc.teamcode.TeleOp;
+package org.firstinspires.ftc.teamcode.Systems;
 
 import com.chaigptrobotics.shenanigans.Peak;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.teamcode.Constants.GeneralConstants;
-import org.firstinspires.ftc.teamcode.EnhancedFunctions_SELECTED.BetterGamepad;
+import org.firstinspires.ftc.teamcode.Constants.ConfigurationConstants;
+import org.firstinspires.ftc.teamcode.Constants.BlockerConstants;
+import org.firstinspires.ftc.teamcode.util.BetterGamepad;
 import org.firstinspires.ftc.teamcode.util.Subsystem;
 
 @Peak
@@ -20,7 +21,7 @@ public class Blocker extends Subsystem {
 
         isSubsystem = false;
 
-        blocker.setDirection(GeneralConstants.BLOCKER_SERVO_DIRECTION);
+        blocker.setDirection(ConfigurationConstants.BLOCKER_SERVO_DIRECTION);
         this.blocker = blocker;
     }
     public Blocker() {}
@@ -32,7 +33,7 @@ public class Blocker extends Subsystem {
 
     // COMPONENT
     public enum BlockerState {
-        CLEAR(GeneralConstants.BLOCKER_CLEAR_POSITION), BLOCK(GeneralConstants.BLOCKER_BLOCK_POSITION);
+        CLEAR(BlockerConstants.BLOCKER_CLEAR_POSITION), BLOCK(BlockerConstants.BLOCKER_BLOCK_POSITION);
 
         private double position;
 

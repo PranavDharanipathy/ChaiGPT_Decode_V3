@@ -10,11 +10,10 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.Constants;
+import org.firstinspires.ftc.teamcode.Constants.ConfigurationConstants;
 import org.firstinspires.ftc.teamcode.Constants.MapSetterConstants;
-import org.firstinspires.ftc.teamcode.ShooterSystems.ExtremePrecisionFlywheel;
-import org.firstinspires.ftc.teamcode.ShooterSystems.ShooterInformation;
-import org.firstinspires.ftc.teamcode.util.LowPassFilter;
+import org.firstinspires.ftc.teamcode.Systems.Flywheel;
+import org.firstinspires.ftc.teamcode.Systems.FlywheelPIDVSCoefficients;
 
 @Peak
 @Config
@@ -30,54 +29,58 @@ public class ExtremePrecisionFlywheelTuner extends LinearOpMode {
 
     public static TUNING_STAGES TUNING_STAGE = TUNING_STAGES.PIDVS;
 
-    public static double KP = Constants.FLYWHEEL_PIDVS_COEFFICIENTS[0];
-    public static double KI_FAR = Constants.FLYWHEEL_PIDVS_COEFFICIENTS[1];
-    public static double KI_CLOSE = Constants.FLYWHEEL_PIDVS_COEFFICIENTS[2];
-    public static double KD = Constants.FLYWHEEL_PIDVS_COEFFICIENTS[3];
-    public static double KV = Constants.FLYWHEEL_PIDVS_COEFFICIENTS[4];
-    public static double KS = Constants.FLYWHEEL_PIDVS_COEFFICIENTS[5];
-    public static double kPIDFUnitsPerVolt = Constants.FLYWHEEL_PIDVS_COEFFICIENTS[6];
-    public static double kISmash = Constants.FLYWHEEL_PIDVS_COEFFICIENTS[7];
-    public static double kISwitchError = Constants.FLYWHEEL_PIDVS_COEFFICIENTS[8];
-    public static double I_MIN = Constants.FLYWHEEL_MIN_INTEGRAL_LIMIT, I_MAX = Constants.FLYWHEEL_MAX_INTEGRAL_LIMIT;
-    public static double P_MIN = Constants.FLYWHEEL_MIN_PROPORTIONAL_LIMIT, P_MAX = Constants.FLYWHEEL_MAX_PROPORTIONAL_LIMIT;
+    public static double KP = ConfigurationConstants.FLYWHEEL_PIDVS_COEFFICIENTS.kp;
+    public static double KI_FAR = ConfigurationConstants.FLYWHEEL_PIDVS_COEFFICIENTS.kiFar;
+    public static double KI_CLOSE = ConfigurationConstants.FLYWHEEL_PIDVS_COEFFICIENTS.kiClose;
+    public static double KD = ConfigurationConstants.FLYWHEEL_PIDVS_COEFFICIENTS.kd;
+    public static double KV = ConfigurationConstants.FLYWHEEL_PIDVS_COEFFICIENTS.unscaledKv;
+    public static double KS = ConfigurationConstants.FLYWHEEL_PIDVS_COEFFICIENTS.ks;
+    public static double KPIDF_UNITS_PER_VOLT = ConfigurationConstants.FLYWHEEL_PIDVS_COEFFICIENTS.kPIDFUnitsPerVolt;
+    public static double KI_SMASH = ConfigurationConstants.FLYWHEEL_PIDVS_COEFFICIENTS.kISmash;
+    public static double I_SWITCH = ConfigurationConstants.FLYWHEEL_PIDVS_COEFFICIENTS.iSwitch;
+    public static double D_MIN = ConfigurationConstants.FLYWHEEL_PIDVS_COEFFICIENTS.minD, D_MAX = ConfigurationConstants.FLYWHEEL_PIDVS_COEFFICIENTS.maxD;
+    public static double I_MIN = ConfigurationConstants.FLYWHEEL_PIDVS_COEFFICIENTS.minI, I_MAX = ConfigurationConstants.FLYWHEEL_PIDVS_COEFFICIENTS.maxI;
+    public static double P_MIN = ConfigurationConstants.FLYWHEEL_PIDVS_COEFFICIENTS.minP, P_MAX = ConfigurationConstants.FLYWHEEL_PIDVS_COEFFICIENTS.maxP;
 
     public static double VELOCITY;
-    public static double VELOCITY_MARGIN_OF_ERROR = Constants.FLYWHEEL_VELOCITY_MARGIN_OF_ERROR;
-    public static double STABILITY_MARGIN_OF_ERROR = Constants.FLYWHEEL_STABILITY_MARGIN_OF_ERROR;
+    public static double VELOCITY_MARGIN_OF_ERROR = ConfigurationConstants.FLYWHEEL_VELOCITY_MARGIN_OF_ERROR;
+    public static double STABILITY_MARGIN_OF_ERROR = ConfigurationConstants.FLYWHEEL_STABILITY_MARGIN_OF_ERROR;
 
-    public static double FLYWHEEL_VOLTAGE_FILTER_ALPHA = Constants.FLYWHEEL_VOLTAGE_FILTER_ALPHA;
+    public static double FLYWHEEL_VOLTAGE_FILTER_ALPHA = ConfigurationConstants.FLYWHEEL_PIDVS_COEFFICIENTS.voltageFilterAlpha;
 
-    public static double TOTAL_MASS_IN_GRAMS = ShooterInformation.ShooterConstants.getTotalFlywheelAssemblyWeight();
-    public static double SHAFT_DIAMETER = ShooterInformation.ShooterConstants.SHAFT_DIAMETER;
-    public static double MOTOR_CORE_VOLTAGE = ShooterInformation.ShooterConstants.FLYWHEEL_MOTOR_CORE_VOLTAGE;
-    public static double MOTOR_RPM = ShooterInformation.ShooterConstants.FLYWHEEL_MOTOR_RPM;
+    public static double TOTAL_MASS_IN_GRAMS = ConfigurationConstants.FLYWHEEL_ASSEMBLY_TOTAL_WEIGHT;
+    public static double SHAFT_DIAMETER = ConfigurationConstants.FLYWHEEL_SHAFT_DIAMETER;
+    public static double MOTOR_CORE_VOLTAGE = ConfigurationConstants.FLYWHEEL_MOTOR_CORE_VOLTAGE;
+    public static double MOTOR_RPM = ConfigurationConstants.FLYWHEEL_MOTOR_RPM;
 
-    private ExtremePrecisionFlywheel flywheel;
+    private Flywheel flywheel;
+    private FlywheelPIDVSCoefficients coefficients;
 
     private VoltageSensor batteryVoltageSensor;
 
     private double lastVoltage;
     private double currentVoltage;
-    private double filteredVoltage;
 
     private double lastPIDFUnits = 0;
     private double currentPIDFUnits = 0;
-
-    private DcMotorEx leftFlywheel, rightFlywheel;
 
     @Override
     public void runOpMode() {
 
         Telemetry telemetry = new MultipleTelemetry(this.telemetry, FtcDashboard.getInstance().getTelemetry());
 
+        telemetry.setMsTransmissionInterval(12);
+
         batteryVoltageSensor = hardwareMap.voltageSensor.iterator().next();
 
-        leftFlywheel = hardwareMap.get(DcMotorEx.class, MapSetterConstants.leftFlywheelMotorDeviceName);
-        rightFlywheel = hardwareMap.get(DcMotorEx.class, MapSetterConstants.rightFlywheelMotorDeviceName);
+        DcMotorEx leftFlywheel = hardwareMap.get(DcMotorEx.class, MapSetterConstants.leftFlywheelMotorDeviceName);
+        DcMotorEx rightFlywheel = hardwareMap.get(DcMotorEx.class, MapSetterConstants.rightFlywheelMotorDeviceName);
 
-        flywheel = new ExtremePrecisionFlywheel(leftFlywheel, rightFlywheel);
+        flywheel = new Flywheel(leftFlywheel, rightFlywheel);
         flywheel.setInternalParameters(TOTAL_MASS_IN_GRAMS, SHAFT_DIAMETER, MOTOR_CORE_VOLTAGE, MOTOR_RPM);
+
+        coefficients = ConfigurationConstants.FLYWHEEL_PIDVS_COEFFICIENTS;
+        flywheel.setVelocityPIDVSCoefficients(coefficients);
 
         if (isStopRequested()) return;
         waitForStart();
@@ -89,34 +92,44 @@ public class ExtremePrecisionFlywheelTuner extends LinearOpMode {
 
         while (opModeIsActive()) {
 
+            coefficients.updateCoefficients(
+                    KP,
+                    KI_FAR, KI_CLOSE,
+                    KD,
+                    KV,
+                    KS,
+                    KPIDF_UNITS_PER_VOLT,
+                    I_SWITCH,
+                    KI_SMASH,
+                    P_MIN, P_MAX,
+                    I_MIN, I_MAX,
+                    D_MIN, D_MAX
+            );
+
             lastVoltage = currentVoltage;
             currentVoltage = batteryVoltageSensor.getVoltage();
 
             telemetry.addData("voltage", currentVoltage);
 
-            filteredVoltage = LowPassFilter.getFilteredValue(filteredVoltage, currentVoltage, FLYWHEEL_VOLTAGE_FILTER_ALPHA);
+            if (TUNING_STAGE == TUNING_STAGES.KV_SCALED) {
+                coefficients.setTuning(false);
+            }
+            else {
+                coefficients.setTuning(true);
+            }
 
-            double kv = TUNING_STAGE == TUNING_STAGES.KV_SCALED ? ShooterInformation.Models.getScaledFlywheelKv(KV, filteredVoltage) : KV;
-
-            flywheel.setIConstraints(I_MIN, I_MAX);
-            flywheel.setPConstraints(P_MIN, P_MAX);
-
-            if (TUNING_STAGE == TUNING_STAGES.kPIDFUnitsPerVolt) flywheel.setVelocityPIDVSCoefficients(KP, KI_FAR, KI_CLOSE, KD, 0, 0, kPIDFUnitsPerVolt, kISmash, kISwitchError);
-            else flywheel.setVelocityPIDVSCoefficients(KP, KI_FAR, KI_CLOSE, KD, kv, KS, kPIDFUnitsPerVolt, kISmash, kISwitchError);
+            flywheel.setVelocityPIDVSCoefficients(coefficients);
 
             flywheel.setVelocity(VELOCITY, true);
 
             flywheel.update();
-            sleep(LOOP_TIME);
 
             lastPIDFUnits = currentPIDFUnits;
             currentPIDFUnits = flywheel.getPIDVS()[0] + flywheel.getPIDVS()[1] + flywheel.getPIDVS()[2] + flywheel.getPIDVS()[3];
 
             telemetry.addData("Target Velocity", flywheel.getTargetVelocity());
-            telemetry.addData("Real Velocity", flywheel.getRealVelocity());
-            telemetry.addData("Velocity Estimate", flywheel.getCurrentVelocityEstimate());
-            telemetry.addData("Real ki", flywheel.getRealKi());
-            telemetry.addData("KISwitchTargetVelocity", flywheel.getKISwitchTargetVelocity());
+            telemetry.addData("Current Velocity", flywheel.getCurrentVelocity());
+            telemetry.addData("ki", flywheel.ki);
             telemetry.addData("p", flywheel.getPIDVS()[0]);
             telemetry.addData("i", flywheel.getPIDVS()[1]);
             telemetry.addData("d", flywheel.getPIDVS()[2]);
@@ -134,6 +147,8 @@ public class ExtremePrecisionFlywheelTuner extends LinearOpMode {
             telemetry.addData("Right flywheel motor power", flywheel.getMotorPowers()[1]);
             telemetry.addData("Is motor enabled", flywheel.getMotorEnabled());
             telemetry.update();
+
+            sleep(LOOP_TIME);
         }
     }
 }

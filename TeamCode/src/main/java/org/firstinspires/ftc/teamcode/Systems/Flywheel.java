@@ -66,8 +66,6 @@ public final class Flywheel {
     private double currentVelocity;
 
     private double lastCurrentVelocity = 0;
-    private long currentPosition = 0;
-    private long lastPosition;
 
     /// @param MASS_IN_GRAMS Is the amount of mass in grams that is connected to the motor.
     /// @param SHAFT_DIAMETER Is the diameter of shaft in millimeters connecting to motor.
@@ -100,6 +98,10 @@ public final class Flywheel {
 
     private FlywheelPIDVSCoefficients coefficients;
 
+    public FlywheelPIDVSCoefficients getCoefficients() {
+        return coefficients;
+    }
+
     public void setVelocityPIDVSCoefficients(FlywheelPIDVSCoefficients coefficients) {
 
         this.coefficients = coefficients;
@@ -126,7 +128,9 @@ public final class Flywheel {
     /// Setting variables that do in fact change
     private void chooseCoefficientsInternal() {
 
+        ki = coefficients.ki(targetVelocity, currentVelocity);
 
+        kv = coefficients.kv(batteryVoltageSensor);
     }
 
     private double currentTime = 0;
@@ -149,7 +153,7 @@ public final class Flywheel {
 
     private double dt;
 
-    private double seconds() {
+    private double getSeconds() {
         return System.nanoTime() * 1e-9;
     }
 
@@ -160,18 +164,17 @@ public final class Flywheel {
         //setting start time
         if (firstTick) {
 
-            startTime = seconds();
+            startTime = getSeconds();
             firstTick = false;
         }
 
+        chooseCoefficientsInternal();
+
         prevTime = currentTime;
-        currentTime = seconds() - startTime;
+        currentTime = getSeconds() - startTime;
         dt = currentTime - prevTime;
 
         lastCurrentVelocity = currentVelocity;
-
-        lastPosition = currentPosition;
-        currentPosition = encoder.getCurrentPosition();
         currentVelocity = encoder.getVelocity();
 
         double error = targetVelocity - currentVelocity;
@@ -181,26 +184,16 @@ public final class Flywheel {
         p = kp * error;
         p = MathUtil.clamp(p, minP, maxP);
 
-        //integral - is in fact reset when target velocity changes IF ALLOWED
-        if (kISwitchTargetVelocity == targetVelocity || error < iSw) {
-
-            ki = kiClose;
-            resetIntegral();
-            kISwitchTargetVelocity = targetVelocity;
-        }
-        else {
-            ki = kiFar;
-        }
-
         if (!Double.isNaN(error * dt) && error * dt != 0 && targetVelocity != 0) errorSum += error * dt;
         else errorSum = 0; //integral is reset if it's NaN or if targetVelocity is equal to 0
-        // i is prevented from getting too high or too low
-        i = MathUtil.clamp(ki * errorSum, minI, maxI);
 
         // i smashing
         if (Math.signum(error) != Math.signum(prevError)) {
             errorSum *= kISmash;
         }
+
+        // i is prevented from getting too high or too low
+        i = MathUtil.clamp(ki * errorSum, minI, maxI);
 
         //derivative
         d = dt > 0 ? kd * (error - prevError) / dt : 0;
@@ -265,11 +258,11 @@ public final class Flywheel {
         this.isMotorEnabled = isMotorEnabled.getValue();
     }
 
-    public double getRealVelocity() {
+    public double getCurrentVelocity() {
         return currentVelocity;
     }
 
-    public double getLastVelocity() {
+    public double getLastCurrentVelocity() {
         return lastCurrentVelocity;
     }
 
@@ -302,9 +295,6 @@ public final class Flywheel {
         currentVelocity = 0;
 
         lastCurrentVelocity = 0;
-
-        lastPosition = 0;
-        currentPosition = 0;
 
         setVelocity(0, false); //allowIntegralReset is false to speed up computation because of how '||' works - probably negligible
         resetIntegral(); //integral reset

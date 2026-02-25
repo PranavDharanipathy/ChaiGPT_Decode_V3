@@ -70,7 +70,7 @@ public class GeneralVeloMotor {
         p = kp * error;
 
         //derivative
-        d = kd * (error - prevError) / dt;
+        d = dt > 0 ? kd * (error - prevError) / dt : 0;
 
         //full feedforward
         ff = kff * targetVelocity;

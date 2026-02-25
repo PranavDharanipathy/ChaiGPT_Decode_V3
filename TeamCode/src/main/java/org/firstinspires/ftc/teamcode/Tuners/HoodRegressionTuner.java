@@ -8,13 +8,12 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.teamcode.Constants.Calculations;
+import org.firstinspires.ftc.teamcode.Constants.FieldConstants;
 import org.firstinspires.ftc.teamcode.TeleOp.TeleOpBaseOpMode;
 import org.firstinspires.ftc.teamcode.util.TickrateChecker;
-import org.firstinspires.ftc.teamcode.ShooterSystems.Goal;
-import org.firstinspires.ftc.teamcode.ShooterSystems.ShooterInformation;
 import org.firstinspires.ftc.teamcode.TeleOp.PostAutonomousRobotReset;
 import org.firstinspires.ftc.teamcode.TeleOp.drive.RobotCentricDrive;
-import org.firstinspires.ftc.teamcode.util.Rev9AxisImuWrapped;
 
 @Config
 @TeleOp (group = "tuning")
@@ -42,17 +41,16 @@ public class HoodRegressionTuner extends TeleOpBaseOpMode {
 
     public static GOAL goal = GOAL.BLUE;
 
-    private Rev9AxisImuWrapped rev9AxisImuWrapped;
-
     private final RobotCentricDrive robotCentricDrive = new RobotCentricDrive();
 
-    @Override
-    public void runOpMode() {
+    private Telemetry telemetry;
 
-        Telemetry telemetry = new MultipleTelemetry(this.telemetry, FtcDashboard.getInstance().getTelemetry());
+    @Override
+    public void init() {
+
+        telemetry = new MultipleTelemetry(super.telemetry, FtcDashboard.getInstance().getTelemetry());
 
         initializeDevices();
-        rev9AxisImuWrapped = new Rev9AxisImuWrapped(rev9AxisImu);
 
         applyComponentTraits();
 
@@ -60,84 +58,71 @@ public class HoodRegressionTuner extends TeleOpBaseOpMode {
 
         //setup lynx module
         setUpLynxModule();
+    }
 
-        //telemetry.speak("SIX SEVEN");
+    @Override
+    public void start() {
+        new PostAutonomousRobotReset(this);
+    }
 
-        if (isStopRequested()) return;
-        waitForStart();
+    @Override
+    public void loop() {
 
-        //run robot reset
-        RobotResetter robotReset = new PostAutonomousRobotReset(this);
+        // clear data at start of loop
+        clearCacheOfLynxModule();
 
-        while (opModeIsActive() && !isStopRequested()) {
+        controller2.getInformation();
 
-            // clear data at start of loop
-            clearCacheOfLynxModule();
+        hoodAngler.setPosition(HOOD_POSITION);
+        intake.setPower(INTAKE_POWER);
+        transfer.setVelocity(TRANSFER_VELOCITY);
+        flywheel.setVelocity(FLYWHEEL_VELOCITY, true);
+        flywheel.update();
 
-            controller2.getInformation();
-
-            hoodAngler.setPosition(HOOD_POSITION);
-            intake.setPower(INTAKE_POWER);
-            transfer.setVelocity(TRANSFER_VELOCITY);
-            flywheel.setVelocity(FLYWHEEL_VELOCITY, true);
-            flywheel.update();
-
-            if (controller2.main_buttonHasJustBeenPressed) {
-                relocalization(ShooterInformation.Odometry.RELOCALIZATION_POSES.BACK);
-            }
-
-            follower.update();
-
-            double robotYawRad = rev9AxisImuWrapped.getYaw(AngleUnit.RADIANS);
-            Pose robotPose = follower.getPose();
-            Pose turretPose = ShooterInformation.Calculator.getTurretPoseFromBotPose(robotPose, 0, 0);
-
-            double distanceToGoal = Goal.getDistanceFromGoal(turretPose.getX(), turretPose.getY(), goal.getCoordinate());
-
-            robotCentricDrive.update();
-
-            telemetry.addData("Tick rate", TickrateChecker.getTimePerTick());
-            telemetry.addData("(Predicted) Run speed percentage", "%.2f", TickrateChecker.getRunSpeedPercentage());
-
-            telemetry.addData("p", flywheel.p);
-            telemetry.addData("i", flywheel.i);
-            telemetry.addData("d", flywheel.d);
-            telemetry.addData("v", flywheel.v);
-
-            telemetry.addData("flywheel current velocity", flywheel.getRealVelocity());
-            telemetry.addData("flywheel target velocity", flywheel.getTargetVelocity());
-
-            telemetry.addData("turret current position", turret.getCurrentPosition());
-            telemetry.addData("turret target position", turret.getTargetPosition());
-            telemetry.addData("turret position error", turret.getPositionError());
-
-            telemetry.addData("turret position + robot heading", "%.2f, %.2f, %.2f", turretPose.getX(), turretPose.getY(), Math.toDegrees(robotYawRad));
-            telemetry.addData("distance to goal", distanceToGoal);
-
-            telemetry.addData("goal coordinate", "x:%.2f, y:%.2f", goal.getCoordinate().getX(), goal.getCoordinate().getY());
-
-            telemetry.update();
-
+        if (controller2.main_buttonHasJustBeenPressed) {
+            relocalization(FieldConstants.RELOCALIZATION_POSE);
         }
 
-        //end
-        closeLynxModule();
+        follower.update();
+
+        Pose robotPose = follower.getPose();
+        double robotYawRad = robotPose.getHeading();
+        Pose turretPose = Calculations.getTurretPoseFromBotPose(robotPose, 0, 0);
+
+        double distanceToGoal = Goal.getDistanceFromGoal(turretPose.getX(), turretPose.getY(), goal.getCoordinate());
+
+        robotCentricDrive.update();
+
+        telemetry.addData("Tick rate", TickrateChecker.getTimePerTick());
+
+        telemetry.addData("p", flywheel.p);
+        telemetry.addData("i", flywheel.i);
+        telemetry.addData("d", flywheel.d);
+        telemetry.addData("v", flywheel.v);
+
+        telemetry.addData("flywheel current velocity", flywheel.getCurrentVelocity());
+        telemetry.addData("flywheel target velocity", flywheel.getTargetVelocity());
+
+        telemetry.addData("turret current position", turret.getCurrentPosition());
+        telemetry.addData("turret target position", turret.getTargetPosition());
+        telemetry.addData("turret position error", turret.getPositionError());
+
+        telemetry.addData("turret position + robot heading", "%.2f, %.2f, %.2f", turretPose.getX(), turretPose.getY(), Math.toDegrees(robotYawRad));
+        telemetry.addData("distance to goal", distanceToGoal);
+
+        telemetry.addData("goal coordinate", "x:%.2f, y:%.2f", goal.getCoordinate().getX(), goal.getCoordinate().getY());
+
+        telemetry.update();
 
     }
 
-    private void relocalization(ShooterInformation.Odometry.RELOCALIZATION_POSES pose) {
+    @Override
+    public void stop() {
+        closeLynxModule();
+    }
 
-        double heading = ShooterInformation.Odometry.REZERO_POSES[pose.getPoseIndex()][2];
-
-        Pose reZeroPose = new Pose(
-
-                ShooterInformation.Odometry.REZERO_POSES[pose.getPoseIndex()][0],
-                ShooterInformation.Odometry.REZERO_POSES[pose.getPoseIndex()][1],
-                Math.toRadians(heading)
-        );
-
-        follower.setPose(reZeroPose);
-        rev9AxisImuWrapped.setYaw(heading);
+    private void relocalization(Pose pose) {
+        follower.setPose(pose);
     }
 
 }

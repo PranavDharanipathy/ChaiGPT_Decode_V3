@@ -5,7 +5,7 @@ import java.util.List;
 
 public class ShooterConstants {
 
-    public static double TURRET_TICKS_PER_DEGREE = ;
+    public static double TURRET_TICKS_PER_DEGREE = 91.0222222222;
 
     public static List<Double> TURRET_PD_POSITIONS = new ArrayList<>(List.of(-11000.0,  -10000.0,    -9000.0,   -8000.0,   -7000.0,   -6000.0,    -5000.0,    -4000.0,    -3000.0,   -2000.0,  -1000.0,     0.0,      1000.0,    2000.0,    3000.0,   4000.0,   5000.0,   6000.0,    7000.0,    8000.0,   9000.0,   10000.0,   11000.0,    12000.0,   13000.0));
     public static List<Double> TURRET_KPS =          new ArrayList<>(List.of(0.000285,   0.000279,   0.000285,   0.0002,    0.0002,   0.00014,    0.00011,    0.00009,    0.00008,   0.00007,  0.00005,   0.00005,   0.000092,  0.0000975,  0.0001,   0.00011,  0.00012,  0.00012,  0.00012,    0.00011,  0.00011,  0.0001,    0.00014,    0.0002,    0.00033));

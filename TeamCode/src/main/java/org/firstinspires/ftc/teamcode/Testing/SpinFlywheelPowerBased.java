@@ -9,7 +9,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.Constants;
+import org.firstinspires.ftc.teamcode.Constants.ConfigurationConstants;
+import org.firstinspires.ftc.teamcode.Constants.MapSetterConstants;
 import org.firstinspires.ftc.teamcode.util.Encoder;
 
 @Config
@@ -25,11 +26,11 @@ public class SpinFlywheelPowerBased extends OpMode {
     @Override
     public void init() {
 
-        leftFlywheel = hardwareMap.get(DcMotorEx.class, Constants.MapSetterConstants.leftFlywheelMotorDeviceName);
-        rightFlywheel = hardwareMap.get(DcMotorEx.class, Constants.MapSetterConstants.rightFlywheelMotorDeviceName);
+        leftFlywheel = hardwareMap.get(DcMotorEx.class, MapSetterConstants.leftFlywheelMotorDeviceName);
+        rightFlywheel = hardwareMap.get(DcMotorEx.class, MapSetterConstants.rightFlywheelMotorDeviceName);
 
-        leftFlywheel.setDirection(Constants.FLYWHEEL_MOTOR_DIRECTIONS[0]);
-        rightFlywheel.setDirection(Constants.FLYWHEEL_MOTOR_DIRECTIONS[1]);
+        leftFlywheel.setDirection(ConfigurationConstants.FLYWHEEL_MOTOR_DIRECTIONS[0]);
+        rightFlywheel.setDirection(ConfigurationConstants.FLYWHEEL_MOTOR_DIRECTIONS[1]);
 
         encoder = new Encoder(leftFlywheel);
         encoder.setDirection(Encoder.Direction.FORWARD);
@@ -47,7 +48,7 @@ public class SpinFlywheelPowerBased extends OpMode {
         leftFlywheel.setPower(LEFT_POWER);
         rightFlywheel.setPower(RIGHT_POWER);
 
-        telemetry.addData("encoder velocity", "cooked up raw: %.4f", encoder.getRawVelocityFromInternal());
+        telemetry.addData("encoder velocity", "cooked up raw: %.4f", encoder.getVelocity());
         telemetry.addData("leftFlywheel power", leftFlywheel.getPower());
         telemetry.addData("rightFlywheel power", rightFlywheel.getPower());
         telemetry.update();

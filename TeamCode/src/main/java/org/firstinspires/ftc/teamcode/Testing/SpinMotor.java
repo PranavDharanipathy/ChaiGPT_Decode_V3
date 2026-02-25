@@ -14,7 +14,7 @@ public class SpinMotor extends OpMode {
 
     public static String motorName = "";
 
-    public static DcMotorSimple.Direction servoDirection = DcMotorSimple.Direction.FORWARD;
+    public static DcMotorSimple.Direction motorDirection = DcMotorSimple.Direction.FORWARD;
 
     private DcMotor motor;
 
@@ -22,7 +22,7 @@ public class SpinMotor extends OpMode {
     public void init() {
 
         motor = hardwareMap.get(DcMotor.class, motorName);
-        motor.setDirection(servoDirection);
+        motor.setDirection(motorDirection);
     }
 
     public void loop() {

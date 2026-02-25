@@ -136,12 +136,13 @@ public abstract class TeleOpBaseOpMode extends OpMode {
             follower.setPose(localizationData.getPose());
         }
         else {
-            follower.setPose(FieldConstants);
+            follower.setPose(FieldConstants.RELOCALIZATION_POSE);
         }
 
         follower.update();
 
-        transfer.setDirection(DcMotor.Direction.REVERSE);
+        intake.setDirection(ConfigurationConstants.INTAKE_MOTOR_DIRECTION);
+        transfer.setDirection(ConfigurationConstants.TRANSFER_MOTOR_DIRECTION);
 
         transfer.setVelocityPDFCoefficients(
                 ConfigurationConstants.TRANSFER_PDF_COEFFICIENTS[0],
@@ -153,27 +154,14 @@ public abstract class TeleOpBaseOpMode extends OpMode {
 
         flywheel.initVoltageSensor(hardwareMap);
         flywheel.setInternalParameters(
-                ShooterInformation.ShooterConstants.getTotalFlywheelAssemblyWeight(),
-                ShooterInformation.ShooterConstants.SHAFT_DIAMETER,
-                ShooterInformation.ShooterConstants.FLYWHEEL_MOTOR_CORE_VOLTAGE,
-                ShooterInformation.ShooterConstants.FLYWHEEL_MOTOR_RPM
+                ConfigurationConstants.FLYWHEEL_ASSEMBLY_TOTAL_WEIGHT,
+                ConfigurationConstants.FLYWHEEL_SHAFT_DIAMETER,
+                ConfigurationConstants.FLYWHEEL_MOTOR_CORE_VOLTAGE,
+                ConfigurationConstants.FLYWHEEL_MOTOR_RPM
         );
-        flywheel.setVelocityPIDVSCoefficients(
-                Constants.FLYWHEEL_PIDVS_COEFFICIENTS[0],
-                Constants.FLYWHEEL_PIDVS_COEFFICIENTS[1],
-                Constants.FLYWHEEL_PIDVS_COEFFICIENTS[2],
-                Constants.FLYWHEEL_PIDVS_COEFFICIENTS[3],
-                Constants.FLYWHEEL_PIDVS_COEFFICIENTS[4],
-                Constants.FLYWHEEL_PIDVS_COEFFICIENTS[5],
-                Constants.FLYWHEEL_PIDVS_COEFFICIENTS[6],
-                Constants.FLYWHEEL_PIDVS_COEFFICIENTS[7],
-                Constants.FLYWHEEL_PIDVS_COEFFICIENTS[8]
-        );
-        flywheel.setVoltageFilterAlpha(Constants.FLYWHEEL_VOLTAGE_FILTER_ALPHA);
-        flywheel.setIConstraints(Constants.FLYWHEEL_MIN_INTEGRAL_LIMIT, Constants.FLYWHEEL_MAX_INTEGRAL_LIMIT);
-        flywheel.setPConstraints(Constants.FLYWHEEL_MIN_PROPORTIONAL_LIMIT, Constants.FLYWHEEL_MAX_PROPORTIONAL_LIMIT);
+        flywheel.setVelocityPIDVSCoefficients(ConfigurationConstants.FLYWHEEL_PIDVS_COEFFICIENTS);
 
-        turret.setPIDFSCoefficients(Constants.TURRET_PIDFS_COEFFICIENTS);
+        turret.setPIDFSCoefficients(ConfigurationConstants.TURRET_PIDFS_COEFFICIENTS);
         turret.reverse();
 
         //clear

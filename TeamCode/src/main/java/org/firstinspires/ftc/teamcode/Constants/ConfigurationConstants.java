@@ -3,15 +3,13 @@ package org.firstinspires.ftc.teamcode.Constants;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.apache.commons.math3.util.FastMath;
 import org.firstinspires.ftc.teamcode.Systems.FlywheelPIDVSCoefficients;
 import org.firstinspires.ftc.teamcode.Systems.TurretBasePIDFSCoefficients;
-import org.firstinspires.ftc.teamcode.data.EOAOffset;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class ConfigurationConstants {
+
+    public static DcMotorSimple.Direction INTAKE_MOTOR_DIRECTION = DcMotorSimple.Direction.REVERSE;
+    public static DcMotorSimple.Direction TRANSFER_MOTOR_DIRECTION = DcMotorSimple.Direction.REVERSE;
 
     public static Servo.Direction BLOCKER_SERVO_DIRECTION = Servo.Direction.FORWARD;
 
@@ -41,7 +39,28 @@ public class ConfigurationConstants {
 
     public static double[] TRANSFER_PDF_COEFFICIENTS = {0, 0, 0};
 
-    public static FlywheelPIDVSCoefficients FLYWHEEL_PIDVS_COEFFICIENTS = new FlywheelPIDVSCoefficients();
+    public static double FLYWHEEL_ASSEMBLY_TOTAL_WEIGHT = 1534;
+    public static double FLYWHEEL_SHAFT_DIAMETER = 8;
+    public static double FLYWHEEL_MOTOR_CORE_VOLTAGE = 12;
+    public static double FLYWHEEL_MOTOR_RPM = 6000;
+
+    public static FlywheelPIDVSCoefficients FLYWHEEL_PIDVS_COEFFICIENTS = new FlywheelPIDVSCoefficients(
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0.8,
+            0,
+            0,
+            -0.1, 1,
+            -0.3, 0.3,
+            -0.2, 0.2
+    );
+
+    public static double FLYWHEEL_VELOCITY_MARGIN_OF_ERROR = 8;
+    public static double FLYWHEEL_STABILITY_MARGIN_OF_ERROR = 8;
 
     public static TurretBasePIDFSCoefficients TURRET_PIDFS_COEFFICIENTS = new TurretBasePIDFSCoefficients(
             0.0,

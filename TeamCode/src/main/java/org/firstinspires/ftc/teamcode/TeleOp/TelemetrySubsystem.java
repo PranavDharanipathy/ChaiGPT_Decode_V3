@@ -51,8 +51,7 @@ public class TelemetrySubsystem implements EffectivelySubsystem {
 
         telem.addData(TelemetryMode.RAW_DATA, "hood position", shooter.hoodAngler.getPosition());
 
-        telem.addData(TelemetryMode.RAW_DATA, "flywheel velocity estimate", "%.0f", shooter.flywheel.getCurrentVelocityEstimate());
-        telem.addData(TelemetryMode.INFO, "flywheel real velocity", "%.0f", shooter.flywheel.getRealVelocity());
+        telem.addData(TelemetryMode.INFO, "flywheel current velocity", "%.0f", shooter.flywheel.getCurrentVelocity());
         telem.addData(TelemetryMode.INFO, "flywheel target velocity", shooter.flywheel.getTargetVelocity());
 
         telem.addData(TelemetryMode.INFO, "turret target angle", shooter.tt);

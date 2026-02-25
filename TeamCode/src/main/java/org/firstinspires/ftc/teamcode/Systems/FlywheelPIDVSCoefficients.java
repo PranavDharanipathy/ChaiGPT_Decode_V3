@@ -87,6 +87,50 @@ public class FlywheelPIDVSCoefficients {
         this.maxD = maxD;
     }
 
+    public void updateCoefficients(
+            double kp,
+            double kiFar,
+            double kiClose,
+            double kd,
+            double unscaledKv,
+            double ks,
+            double kPIDFUnitsPerVolt,
+            double iSwitch,
+            double kISmash,
+            double minP,
+            double maxP,
+            double minI,
+            double maxI,
+            double minD,
+            double maxD
+    ) {
+
+        this.kp = kp;
+
+        this.kiFar = kiFar;
+        this.kiClose = kiClose;
+
+        this.kd = kd;
+
+        this.unscaledKv = unscaledKv;
+
+        this.ks = ks;
+        this.kPIDFUnitsPerVolt = kPIDFUnitsPerVolt;
+
+        this.iSwitch = iSwitch;
+
+        this.kISmash = kISmash;
+
+        this.minP = minP;
+        this.maxP = maxP;
+
+        this.minI = minI;
+        this.maxI = maxI;
+
+        this.minD = minD;
+        this.maxD = maxD;
+    }
+
     private double kISwitchTargetVelocity;
 
     public double ki(double targetVelocity, double currentVelocity) {
@@ -103,6 +147,8 @@ public class FlywheelPIDVSCoefficients {
 
     /// Run every loop
     public double kv(VoltageSensor batteryVoltageSensor) {
+
+        if (tuning) return unscaledKv;
 
         filteredVoltage = LowPassFilter.getFilteredValue(filteredVoltage, batteryVoltageSensor.getVoltage(), voltageFilterAlpha);
 

@@ -6,8 +6,8 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.pedropathing.geometry.Pose;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.teamcode.Constants.Calculations;
 import org.firstinspires.ftc.teamcode.TeleOp.TeleOpBaseOpMode;
-import org.firstinspires.ftc.teamcode.ShooterSystems.ShooterInformation;
 import org.firstinspires.ftc.teamcode.pedroPathing.PoseVelocity;
 import org.firstinspires.ftc.teamcode.pedroPathing.PoseVelocityTracker;
 
@@ -18,7 +18,7 @@ public class PoseVelocityTrackerTesting extends TeleOpBaseOpMode {
     private PoseVelocityTracker poseVelocityTracker;
 
     @Override
-    public void runOpMode() {
+    public void init() {
 
         initializeDevices();
         applyComponentTraits();
@@ -26,41 +26,40 @@ public class PoseVelocityTrackerTesting extends TeleOpBaseOpMode {
         telemetry = new MultipleTelemetry(this.telemetry, FtcDashboard.getInstance().getTelemetry());
 
         poseVelocityTracker = new PoseVelocityTracker(follower);
+    }
 
-        waitForStart();
+    @Override
+    public void loop() {
 
-        while (opModeIsActive()) {
+        follower.update();
 
-            follower.update();
+        poseVelocityTracker.update();
 
-            poseVelocityTracker.update();
+        Pose botPose = follower.getPose();
 
-            Pose botPose = follower.getPose();
+        PoseVelocity botVel = poseVelocityTracker.getPoseVelocity();
 
-            PoseVelocity botVel = poseVelocityTracker.getPoseVelocity();
+        telemetry.addData("raw pose", botPose.toString());
 
-            telemetry.addData("raw pose", botPose.toString());
+        telemetry.addData("future pose",
+                Calculations.getFutureRobotPose(
+                        1.3,
+                        botPose,
+                        botVel
+                ).toString()
+        );
 
-            telemetry.addData("future pose",
-                    ShooterInformation.Calculator.getFutureRobotPose(
-                            1.3,
-                            botPose,
-                            botVel
-                    ).toString()
-            );
+        telemetry.addData("bot vel", "x: %.2f, y: %.2f, heading: %.2f", botVel.getXVelocity(), botVel.getYVelocity(), botVel.getAngularVelocity());
 
-            telemetry.addData("bot vel", "x: %.2f, y: %.2f, heading: %.2f", botVel.getXVelocity(), botVel.getYVelocity(), botVel.getAngularVelocity());
+        double[][] histories = poseVelocityTracker.getHistories();
+        double[] xVelHistory = histories[0];
+        double[] yVelHistory = histories[1];
+        double[] angVelHistory = histories[2];
 
-            double[][] histories = poseVelocityTracker.getHistories();
-            double[] xVelHistory = histories[0];
-            double[] yVelHistory = histories[1];
-            double[] angVelHistory = histories[2];
+        telemetry.addData("xVelHistory", "P:%.2f, C:%.2f", xVelHistory[0], xVelHistory[1]);
+        telemetry.addData("yVelHistory", "P:%.2f, C:%.2f", yVelHistory[0], yVelHistory[1]);
+        telemetry.addData("angVelHistory", "P:%.2f, C:%.2f", angVelHistory[0], angVelHistory[1]);
 
-            telemetry.addData("xVelHistory", "P:%.2f, C:%.2f", xVelHistory[0], xVelHistory[1]);
-            telemetry.addData("yVelHistory", "P:%.2f, C:%.2f", yVelHistory[0], yVelHistory[1]);
-            telemetry.addData("angVelHistory", "P:%.2f, C:%.2f", angVelHistory[0], angVelHistory[1]);
-
-            telemetry.update();
-        }
+        telemetry.update();
     }
 }

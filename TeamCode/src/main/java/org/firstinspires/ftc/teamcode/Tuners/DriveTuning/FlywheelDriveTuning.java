@@ -6,7 +6,8 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.Constants;
+import org.firstinspires.ftc.teamcode.Constants.ConfigurationConstants;
+import org.firstinspires.ftc.teamcode.Systems.FlywheelPIDVSCoefficients;
 import org.firstinspires.ftc.teamcode.TeleOp.TeleOpBaseOpMode;
 import org.firstinspires.ftc.teamcode.TeleOp.PostAutonomousRobotReset;
 
@@ -14,17 +15,18 @@ import org.firstinspires.ftc.teamcode.TeleOp.PostAutonomousRobotReset;
 @TeleOp (group = "tuning")
 public class FlywheelDriveTuning extends TeleOpBaseOpMode {
 
-    public static double KP = Constants.FLYWHEEL_PIDVS_COEFFICIENTS[0];
-    public static double KI_FAR = Constants.FLYWHEEL_PIDVS_COEFFICIENTS[1];
-    public static double KI_CLOSE = Constants.FLYWHEEL_PIDVS_COEFFICIENTS[2];
-    public static double KD = Constants.FLYWHEEL_PIDVS_COEFFICIENTS[3];
-    public static double KV = Constants.FLYWHEEL_PIDVS_COEFFICIENTS[4];
-    public static double KS = Constants.FLYWHEEL_PIDVS_COEFFICIENTS[5];
-    public static double kPIDFUnitsPerVolt = Constants.FLYWHEEL_PIDVS_COEFFICIENTS[6];
-    public static double kISmash = Constants.FLYWHEEL_PIDVS_COEFFICIENTS[7];
-    public static double kISwitchError = Constants.FLYWHEEL_PIDVS_COEFFICIENTS[8];
-    public static double I_MIN = Constants.FLYWHEEL_MIN_INTEGRAL_LIMIT, I_MAX = Constants.FLYWHEEL_MAX_INTEGRAL_LIMIT;
-    public static double P_MIN = Constants.FLYWHEEL_MIN_PROPORTIONAL_LIMIT, P_MAX = Constants.FLYWHEEL_MAX_PROPORTIONAL_LIMIT;
+    public static double KP = ConfigurationConstants.FLYWHEEL_PIDVS_COEFFICIENTS.kp;
+    public static double KI_FAR = ConfigurationConstants.FLYWHEEL_PIDVS_COEFFICIENTS.kiFar;
+    public static double KI_CLOSE = ConfigurationConstants.FLYWHEEL_PIDVS_COEFFICIENTS.kiClose;
+    public static double KD = ConfigurationConstants.FLYWHEEL_PIDVS_COEFFICIENTS.kd;
+    public static double KV = ConfigurationConstants.FLYWHEEL_PIDVS_COEFFICIENTS.unscaledKv;
+    public static double KS = ConfigurationConstants.FLYWHEEL_PIDVS_COEFFICIENTS.ks;
+    public static double KPIDF_UNITS_PER_VOLT = ConfigurationConstants.FLYWHEEL_PIDVS_COEFFICIENTS.kPIDFUnitsPerVolt;
+    public static double KI_SMASH = ConfigurationConstants.FLYWHEEL_PIDVS_COEFFICIENTS.kISmash;
+    public static double I_SWITCH = ConfigurationConstants.FLYWHEEL_PIDVS_COEFFICIENTS.iSwitch;
+    public static double D_MIN = ConfigurationConstants.FLYWHEEL_PIDVS_COEFFICIENTS.minD, D_MAX = ConfigurationConstants.FLYWHEEL_PIDVS_COEFFICIENTS.maxD;
+    public static double I_MIN = ConfigurationConstants.FLYWHEEL_PIDVS_COEFFICIENTS.minI, I_MAX = ConfigurationConstants.FLYWHEEL_PIDVS_COEFFICIENTS.maxI;
+    public static double P_MIN = ConfigurationConstants.FLYWHEEL_PIDVS_COEFFICIENTS.minP, P_MAX = ConfigurationConstants.FLYWHEEL_PIDVS_COEFFICIENTS.maxP;
 
     public static double TRANSFER_VELOCITY = 2000;
     public static double INTAKE_POWER = 1;
@@ -33,8 +35,10 @@ public class FlywheelDriveTuning extends TeleOpBaseOpMode {
 
     private Telemetry telemetry;
 
+    private FlywheelPIDVSCoefficients coefficients = ConfigurationConstants.FLYWHEEL_PIDVS_COEFFICIENTS;
+
     @Override
-    public void runOpMode() {
+    public void init() {
 
         telemetry = new MultipleTelemetry(super.telemetry, FtcDashboard.getInstance().getTelemetry());
 
@@ -44,36 +48,53 @@ public class FlywheelDriveTuning extends TeleOpBaseOpMode {
 
         //setup lynx module
         setUpLynxModule();
+    }
 
-        if (isStopRequested()) return;
-        waitForStart();
+    @Override
+    public void start() {
+        new PostAutonomousRobotReset(this);
+    }
 
-        //run robot reset
-        RobotResetter robotReset = new PostAutonomousRobotReset(this);
+    @Override
+    public void loop() {
 
-        while (opModeIsActive()) {
+        clearCacheOfLynxModule();
 
-            clearCacheOfLynxModule();
+        coefficients.updateCoefficients(
+                KP,
+                KI_FAR, KI_CLOSE,
+                KD,
+                KV,
+                KS,
+                KPIDF_UNITS_PER_VOLT,
+                I_SWITCH,
+                KI_SMASH,
+                P_MIN, P_MAX,
+                I_MIN, I_MAX,
+                D_MIN, D_MAX
+        );
 
-            flywheel.setIConstraints(I_MIN, I_MAX);
-            flywheel.setPConstraints(P_MIN, P_MAX);
-            flywheel.setVelocityPIDVSCoefficients(KP, KI_FAR, KI_CLOSE, KD, KV, KS, kPIDFUnitsPerVolt, kISmash, kISwitchError);
+        flywheel.setVelocityPIDVSCoefficients(coefficients);
 
-            hoodAngler.setPosition(HOOD_POSITION);
-            intake.setPower(INTAKE_POWER);
-            transfer.setVelocity(TRANSFER_VELOCITY);
-            flywheel.setVelocity(FLYWHEEL_VELOCITY, true);
-            flywheel.update();
+        hoodAngler.setPosition(HOOD_POSITION);
+        intake.setPower(INTAKE_POWER);
+        transfer.setVelocity(TRANSFER_VELOCITY);
+        flywheel.setVelocity(FLYWHEEL_VELOCITY, true);
+        flywheel.update();
 
-            telemetry.addData("Target Velocity", flywheel.getTargetVelocity());
-            telemetry.addData("Real Velocity", flywheel.getRealVelocity());
-            telemetry.addData("p", "%.5f", flywheel.p);
-            telemetry.addData("i", "%.5f", flywheel.i);
-            telemetry.addData("d", "%.5f", flywheel.d);
-            telemetry.addData("v", "%.5f", flywheel.v);
+        telemetry.addData("Target Velocity", flywheel.getTargetVelocity());
+        telemetry.addData("Real Velocity", flywheel.getCurrentVelocity());
+        telemetry.addData("p", "%.5f", flywheel.p);
+        telemetry.addData("i", "%.5f", flywheel.i);
+        telemetry.addData("d", "%.5f", flywheel.d);
+        telemetry.addData("v", "%.5f", flywheel.v);
 
-            telemetry.addData("flywheel power", "%.5f", flywheel.getPower());
-            telemetry.update();
-        }
+        telemetry.addData("flywheel power", "%.5f", flywheel.getPower());
+        telemetry.update();
+    }
+
+    @Override
+    public void stop() {
+        closeLynxModule();
     }
 }

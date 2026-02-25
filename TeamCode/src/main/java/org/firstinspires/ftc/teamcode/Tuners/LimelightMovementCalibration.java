@@ -10,13 +10,20 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.Constants;
-import org.firstinspires.ftc.teamcode.ShooterSystems.ShooterInformation;
-import org.firstinspires.ftc.teamcode.ShooterSystems.TurretBase;
+import org.firstinspires.ftc.teamcode.Constants.CameraConstants;
+import org.firstinspires.ftc.teamcode.Constants.ConfigurationConstants;
+import org.firstinspires.ftc.teamcode.Constants.MapSetterConstants;
+import org.firstinspires.ftc.teamcode.Constants.ShooterConstants;
+import org.firstinspires.ftc.teamcode.Systems.TurretBase;
 
 @Config
 @TeleOp (group = "tuning")
 public class LimelightMovementCalibration extends OpMode {
+
+    public static double SHAKE_DEGREES = 0;
+    public static double SHAKE_FREQUENCY = 0; //in milliseconds
+
+
 
     private Limelight3A limelight;
 
@@ -26,11 +33,8 @@ public class LimelightMovementCalibration extends OpMode {
 
     private double startPosition;
 
-    public static double SHAKE_DEGREES = 0;
-    public static double SHAKE_FREQUENCY = 0;
-
     private int lastPollHzRate;
-    public static int POLL_HZ_RATE = ShooterInformation.CameraConstants.CAMERA_POLL_RATE;
+    public static int POLL_HZ_RATE = CameraConstants.CAMERA_POLL_RATE;
 
     public enum TUNING_STAGE {
         PIPELINE_STATS, POLL_RATE
@@ -43,10 +47,10 @@ public class LimelightMovementCalibration extends OpMode {
 
         telemetry = new MultipleTelemetry(super.telemetry, FtcDashboard.getInstance().getTelemetry());
 
-        limelight = hardwareMap.get(Limelight3A.class, Constants.MapSetterConstants.limelight3AUSBDeviceName);
+        limelight = hardwareMap.get(Limelight3A.class, MapSetterConstants.limelight3AUSBDeviceName);
 
         turret = new TurretBase(hardwareMap);
-        turret.setPIDFSCoefficients(Constants.TURRET_PIDFS_COEFFICIENTS);
+        turret.setPIDFSCoefficients(ConfigurationConstants.TURRET_PIDFS_COEFFICIENTS);
 
         startPosition = turret.getCurrentPosition();
 
@@ -98,7 +102,7 @@ public class LimelightMovementCalibration extends OpMode {
         if (shakeType.getBoolean()) shake = shakeRight;
         else shake = shakeLeft;
 
-        turret.setPosition((shake * ShooterInformation.ShooterConstants.TURRET_TICKS_PER_DEGREE) + startPosition);
+        turret.setPosition((shake * ShooterConstants.TURRET_TICKS_PER_DEGREE) + startPosition);
 
         turret.update();
 

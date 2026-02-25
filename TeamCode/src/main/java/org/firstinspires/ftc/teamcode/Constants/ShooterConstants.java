@@ -18,7 +18,7 @@ public class ShooterConstants {
 
     public static double TURRET_HOME_POSITION_INCREMENT = 150;
 
-    public static double TURRET_POSITIONAL_OFFSET = ;
+    public static double TURRET_POSITIONAL_OFFSET = 0; //rando number so I can tune flywheel
     public static double TURRET_ANGULAR_OFFSET = 0;
 
 }

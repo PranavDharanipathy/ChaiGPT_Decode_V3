@@ -19,7 +19,7 @@ import org.firstinspires.ftc.teamcode.Systems.FlywheelPIDVSCoefficients;
 @Peak
 @Config
 @TeleOp (group = "tuning")
-public class ExtremePrecisionFlywheelTuner extends LinearOpMode {
+public class FlywheelTuner extends LinearOpMode {
 
     public static int LOOP_TIME = 60;
 

@@ -38,5 +38,7 @@ public class Intake extends Subsystem {
             intake.setPower(0);
             transfer.setVelocity(0);
         }
+
+        transfer.update();
     }
 }

@@ -22,7 +22,7 @@ public class ShooterDriveTuning extends TeleOpBaseOpMode {
 
 
     @Override
-    public void runOpMode() {
+    public void init() {
 
         telemetry = new MultipleTelemetry(this.telemetry, FtcDashboard.getInstance().getTelemetry());
 
@@ -32,48 +32,45 @@ public class ShooterDriveTuning extends TeleOpBaseOpMode {
 
         //setup lynx module
         setUpLynxModule();
+    }
 
-        //telemetry.speak("SIX SEVEN");
+    @Override
+    public void start() {
+        new PostAutonomousRobotReset(this);
+    }
 
-        if (isStopRequested()) return;
-        waitForStart();
+    @Override
+    public void loop() {
 
-        //run robot reset
-        RobotResetter robotReset = new PostAutonomousRobotReset(this);
+        // clear data at start of loop
+        clearCacheOfLynxModule();
 
-        while (opModeIsActive() && !isStopRequested()) {
+        hoodAngler.setPosition(HOOD_POSITION);
+        intake.setPower(INTAKE_POWER);
+        transfer.setVelocity(TRANSFER_VELOCITY);
+        flywheel.setVelocity(FLYWHEEL_VELOCITY, true);
+        flywheel.update();
 
-            // clear data at start of loop
-            clearCacheOfLynxModule();
+        telemetry.addData("Tick rate", TickrateChecker.getTimePerTick());
 
-            hoodAngler.setPosition(HOOD_POSITION);
-            intake.setPower(INTAKE_POWER);
-            transfer.setVelocity(TRANSFER_VELOCITY);
-            flywheel.setVelocity(FLYWHEEL_VELOCITY, true);
-            flywheel.update();
+        telemetry.addData("hood position", hoodAngler.getPosition());
 
-            telemetry.addData("Tick rate", TickrateChecker.getTimePerTick());
-            telemetry.addData("(Predicted) Run speed percentage", "%.2f", TickrateChecker.getRunSpeedPercentage());
+        telemetry.addData("p", flywheel.p);
+        telemetry.addData("i", flywheel.i);
+        telemetry.addData("d", flywheel.d);
+        telemetry.addData("v", flywheel.v);
 
-            telemetry.addData("hood position", hoodAngler.getPosition());
+        telemetry.addData("flywheel current velocity", flywheel.getCurrentVelocity());
+        telemetry.addData("flywheel target velocity", flywheel.getTargetVelocity());
 
-            telemetry.addData("p", flywheel.p);
-            telemetry.addData("i", flywheel.i);
-            telemetry.addData("d", flywheel.d);
-            telemetry.addData("v", flywheel.v);
+        telemetry.addData("turret current position", turret.getCurrentPosition());
+        telemetry.addData("turret target position", turret.getTargetPosition());
 
-            telemetry.addData("flywheel current velocity", flywheel.getCurrentVelocity());
-            telemetry.addData("flywheel target velocity", flywheel.getTargetVelocity());
+        telemetry.update();
+    }
 
-            telemetry.addData("turret current position", turret.getCurrentPosition());
-            telemetry.addData("turret target position", turret.getTargetPosition());
-
-            telemetry.update();
-
-        }
-
-        //end
+    @Override
+    public void stop() {
         closeLynxModule();
-
     }
 }

@@ -26,15 +26,15 @@ public class HoodRegressionTuner extends TeleOpBaseOpMode {
 
     public enum GOAL {
 
-        RED(Goal.GoalCoordinatesForDistance.RED.getCoordinate()), BLUE(Goal.GoalCoordinatesForDistance.BLUE.getCoordinate());
+        RED(FieldConstants.GoalCoordinatesForDistance.RED.getCoordinate()), BLUE(FieldConstants.GoalCoordinatesForDistance.BLUE.getCoordinate());
 
-        private Goal.GoalCoordinate coord;
+        private Pose coord;
 
-        GOAL(Goal.GoalCoordinate goalCoordinate) {
+        GOAL(Pose goalCoordinate) {
             coord = goalCoordinate;
         }
 
-        public Goal.GoalCoordinate getCoordinate() {
+        public Pose getCoordinate() {
             return coord;
         }
     }
@@ -89,7 +89,7 @@ public class HoodRegressionTuner extends TeleOpBaseOpMode {
         double robotYawRad = robotPose.getHeading();
         Pose turretPose = Calculations.getTurretPoseFromBotPose(robotPose, 0, 0);
 
-        double distanceToGoal = Goal.getDistanceFromGoal(turretPose.getX(), turretPose.getY(), goal.getCoordinate());
+        double distanceToGoal = Calculations.getDistanceFromGoal(turretPose.getX(), turretPose.getY(), goal.getCoordinate());
 
         robotCentricDrive.update();
 

@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.Constants;
+import org.firstinspires.ftc.teamcode.Constants.MapSetterConstants;
 
 @Peak
 @Config
@@ -31,7 +31,7 @@ public class LimelightGoalViewingStatistics extends LinearOpMode {
 
         telemetry = new MultipleTelemetry(super.telemetry, FtcDashboard.getInstance().getTelemetry());
 
-        limelight3A = hardwareMap.get(Limelight3A.class, Constants.MapSetterConstants.limelight3AUSBDeviceName);
+        limelight3A = hardwareMap.get(Limelight3A.class, MapSetterConstants.limelight3AUSBDeviceName);
         limelight3A.pipelineSwitch(PIPELINE);
 
         if (isStopRequested()) return;

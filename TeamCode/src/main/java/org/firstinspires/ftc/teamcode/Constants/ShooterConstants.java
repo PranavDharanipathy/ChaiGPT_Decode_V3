@@ -1,24 +1,52 @@
 package org.firstinspires.ftc.teamcode.Constants;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class ShooterConstants {
+
+    /// Y-Point that differentiates the turret pointing at the goal far/close position.
+    public static double FAR_ZONE_CLOSE_ZONE_BARRIER = -35;
+
+    public static double FAR_SIDE_FLYWHEEL_SHOOT_VELOCITY = 408_000;
+    public static double CLOSER_CLOSE_SIDE_FLYWHEEL_SHOOT_VELOCITY = 340_000;
+    public static double FARTHER_CLOSE_SIDE_FLYWHEEL_SHOOT_VELOCITY = 345_000;
+    public static double OPPONENT_SIDE_CLOSE_SIDE_FLYWHEEL_SHOOT_VELOCITY = 375_000;
+
+    /** Distance to goal when shooting at close where flywheel velocity switches from farther close to closer close when
+     bot is within this distance to the goal. */
+    public static double CLOSE_SIDE_SWITCH = 64;
+
+    public static double MIN_TURRET_POSITION_IN_DEGREES = -135, MAX_TURRET_POSITION_IN_DEGREES = 135;
+
+    public static double HOOD_ANGLER_MIN_POSITION = 0.91;
+    public static double HOOD_ANGLER_MAX_POSITION = 0.0;
+    public static double HOOD_POSITION_MANUAL_INCREMENT = 0.035;
+    public static double HOOD_CLOSE_POSITION = 0.25;
+    public static double HOOD_FAR_POSITION = 0.16;
+
+
 
     public static double TURRET_TICKS_PER_DEGREE = 91.0222222222;
 
-    public static List<Double> TURRET_PD_POSITIONS = new ArrayList<>(List.of(-11000.0,  -10000.0,    -9000.0,   -8000.0,   -7000.0,   -6000.0,    -5000.0,    -4000.0,    -3000.0,   -2000.0,  -1000.0,     0.0,      1000.0,    2000.0,    3000.0,   4000.0,   5000.0,   6000.0,    7000.0,    8000.0,   9000.0,   10000.0,   11000.0,    12000.0,   13000.0));
-    public static List<Double> TURRET_KPS =          new ArrayList<>(List.of(0.000285,   0.000279,   0.000285,   0.0002,    0.0002,   0.00014,    0.00011,    0.00009,    0.00008,   0.00007,  0.00005,   0.00005,   0.000092,  0.0000975,  0.0001,   0.00011,  0.00012,  0.00012,  0.00012,    0.00011,  0.00011,  0.0001,    0.00014,    0.0002,    0.00033));
-    public static List<Double> TURRET_KDS =          new ArrayList<>(List.of(  0.003,    0.00318,     0.003,      0.003,    0.003,     0.0028,     0.0024,     0.0022,     0.0022,    0.002,    0.002,     0.002,     0.00385,   0.00375,   0.0032,   0.00353,  0.0035,   0.0032,    0.0032,     0.003,    0.003,   0.0035,    0.0031,     0.0025,     0.002));
-
-    public static List<Double> TURRET_FEEDFORWARD_POSITIONS = new ArrayList<>(List.of(-110000.0, -10000.0,   -9000.0,    -8000.0,    -7000.0,    -6000.0,    -5000.0,     -4000.0,    -3000.0,   -2000.0,    -1000.0,     0.0,       1000.0,    2000.0,    3000.0,     4000.0,     5000.0,   6000.0,     7000.0,     8000.0,   9000.0,    10000.0,   11000.0,    12000.0,   13000.0));
-    public static List<Double> TURRET_KFS =                   new ArrayList<>(List.of( 0.000003, 0.0000021,  0.0000021,  0.000002,  0.00000175, 0.00000185,  0.0000018,  0.00000185, 0.0000025, 0.0000025,   0.000003,  0.000011,   0.000008,  0.000007,  0.0000032,   0.000003,  0.000003, 0.000003,  0.0000031,  0.0000029, 0.000003,  0.00000305, 0.0000035,  0.000004,  0.000006));
-
-    public static double TURRET_KF_RESISTANCE_ENGAGE_ERROR = 2000;
-
     public static double TURRET_HOME_POSITION_INCREMENT = 150;
 
-    public static double TURRET_POSITIONAL_OFFSET = 0;//TODO
+    public static double TURRET_TARGET_POSITION_ACCEPTABLE_ERROR_MARGIN = 50;
+
+    public static double TURRET_POSITIONAL_OFFSET = -0.7893685;
     public static double TURRET_ANGULAR_OFFSET = 0;
+
+    /*
+     * the TURRET_ANGULAR_OFFSET is multiplied by the correct multiplier to make
+     * the turret spin the proper way.
+     */
+    public static int BLUE_TURRET_ANGULAR_OFFSET_DIRECTION = 1;
+    public static int RED_TURRET_ANGULAR_OFFSET_DIRECTION = -1;
+
+    /// The robot velocities must be greater than this for turret hysteresis control to be used.
+    /// <p>
+    /// Index 0 is translational, index 1 in angular (in radians).
+    /// <p>
+    /// Translational is in inches per second and angular is in radians per second.
+    public static double[] TURRET_HYSTERESIS_CONTROL_ENGAGE_VELOCITY = {10, Math.toRadians(15)};
+
+
 
 }

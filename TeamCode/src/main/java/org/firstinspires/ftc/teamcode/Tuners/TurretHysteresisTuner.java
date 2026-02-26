@@ -7,10 +7,9 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.TeleOp.TeleOpBaseOpMode;
-import org.firstinspires.ftc.teamcode.ShooterSystems.Goal;
 import org.firstinspires.ftc.teamcode.Systems.CurrentAlliance;
 import org.firstinspires.ftc.teamcode.TeleOp.PostAutonomousRobotReset;
-import org.firstinspires.ftc.teamcode.TeleOp.Shooter;
+import org.firstinspires.ftc.teamcode.Systems.Shooter;
 import org.firstinspires.ftc.teamcode.TeleOp.drive.RobotCentricDrive;
 import org.firstinspires.ftc.teamcode.util.MathUtil;
 
@@ -18,7 +17,7 @@ import org.firstinspires.ftc.teamcode.util.MathUtil;
 @TeleOp(group = "tuning")
 public class TurretHysteresisTuner extends TeleOpBaseOpMode {
 
-    public static CurrentAlliance.ALLIANCE alliance = CurrentAlliance.ALLIANCE.BLUE_ALLIANCE;
+    public static CurrentAlliance.ALLIANCE ALLIANCE = CurrentAlliance.ALLIANCE.BLUE_ALLIANCE;
 
     public static double A_NORMAL = 7.2;
     public static double T_NORMAL = 1.5;
@@ -30,32 +29,48 @@ public class TurretHysteresisTuner extends TeleOpBaseOpMode {
     private Telemetry telemetry;
 
     @Override
-    public void runOpMode() {
+    public void init() {
 
         initializeDevices();
         applyComponentTraits();
 
+
         telemetry = new MultipleTelemetry(super.telemetry, FtcDashboard.getInstance().getTelemetry());
+        telemetry.setMsTransmissionInterval(50);
 
         robotCentricDrive.provideComponents(left_front, right_front, left_back, right_back, controller1);
-        shooter.provideComponents(flywheel, turret, hoodAngler, follower, unstartedCamera.ll(), rev9AxisImu, controller1, controller2);
+        shooter.provideComponents(flywheel, turret, hoodAngler, follower, unstartedCamera, controller1, controller2);
+        setUpLynxModule();
 
-        waitForStart();
+        shooter.setTHCTuning(true);
+    }
+
+    @Override
+    public void start() {
 
         new PostAutonomousRobotReset(this);
 
-        shooter.start(alliance == CurrentAlliance.ALLIANCE.BLUE_ALLIANCE ? Goal.GoalCoordinates.BLUE : Goal.GoalCoordinates.RED);
+        shooter.start(CurrentAlliance.ALLIANCE.BLUE_ALLIANCE);
+    }
 
-        while (opModeIsActive()) {
+    @Override
+    public void loop() {
 
-            controller1.getInformation();
+        clearCacheOfLynxModule();
 
-            shooter.update();
+        controller1.getInformation();
 
-            telemetry.addData("Turret lookahead time", shooter.getTurretTimeLookahead());
-            telemetry.update();
-        }
+        shooter.provideCustomTHCLookahead(this::getTurretFuturePosePredictionTime); // shooter applies turret acceleration automatically
 
+        shooter.update();
+
+        telemetry.addData("Turret lookahead time", shooter.getTHCLookahead());
+        telemetry.update();
+    }
+
+    @Override
+    public void stop() {
+        closeLynxModule();
     }
 
     private double getTurretFuturePosePredictionTime(double turretAcceleration) {

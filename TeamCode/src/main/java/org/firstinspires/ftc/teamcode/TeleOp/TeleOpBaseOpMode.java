@@ -2,16 +2,17 @@ package org.firstinspires.ftc.teamcode.TeleOp;
 
 import com.pedropathing.follower.Follower;
 import com.qualcomm.hardware.lynx.LynxModule;
-import com.qualcomm.hardware.rev.Rev9AxisImu;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.Constants.CameraConstants;
 import org.firstinspires.ftc.teamcode.Constants.ConfigurationConstants;
 import org.firstinspires.ftc.teamcode.Constants.DriveConstants;
 import org.firstinspires.ftc.teamcode.Constants.FieldConstants;
 import org.firstinspires.ftc.teamcode.Constants.MapSetterConstants;
+import org.firstinspires.ftc.teamcode.Systems.Blocker;
 import org.firstinspires.ftc.teamcode.Systems.Camera;
 import org.firstinspires.ftc.teamcode.Systems.Flywheel;
 import org.firstinspires.ftc.teamcode.Systems.HoodAngler;
@@ -43,11 +44,9 @@ public abstract class TeleOpBaseOpMode extends OpMode {
 
     public DcMotor left_front, right_front, left_back, right_back;
 
-    public Rev9AxisImu rev9AxisImu;
-
     public GeneralVeloMotor transfer;
-
     public DcMotor intake;
+    public Blocker blocker;
 
     public Camera unstartedCamera;
 
@@ -100,6 +99,8 @@ public abstract class TeleOpBaseOpMode extends OpMode {
         intake = hardwareMap.get(DcMotor.class, MapSetterConstants.intakeMotorDeviceName);
 
         transfer = new GeneralVeloMotor(hardwareMap, MapSetterConstants.transferMotorDeviceName);
+
+        blocker = new Blocker(hardwareMap.get(Servo.class, MapSetterConstants.blockerServoDeviceName));
 
         unstartedCamera = new Camera(follower, Camera.from(hardwareMap, MapSetterConstants.limelight3AUSBDeviceName));
 

@@ -6,10 +6,8 @@ import com.pedropathing.geometry.Pose;
 import com.qualcomm.robotcore.util.ReadWriteFile;
 
 import org.firstinspires.ftc.robotcore.internal.system.AppUtil;
-import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.Constants.FieldConstants;
 import org.firstinspires.ftc.teamcode.Constants.IOConstants;
-import org.firstinspires.ftc.teamcode.ShooterSystems.ShooterInformation.Odometry.RELOCALIZATION_POSES;
 
 import java.io.File;
 
@@ -17,8 +15,8 @@ import java.io.File;
 /// Provides robot x, y, REV 9-Axis heading (radians), turret start position
 public class EOALocalization {
 
-    /// @param xOffset is added to x (in TeleOp format nomenclature)
-    /// @param yOffset is added to y (in TeleOp format nomenclature)
+    /// @param xOffset is added to output x value (in TeleOp format nomenclature)
+    /// @param yOffset is added to output y value (in TeleOp format nomenclature)
     public static Pose autoFormatToTeleOpFormat(Pose autoPose, double xOffset, double yOffset) {
         return new Pose(autoPose.getX() - 72 + xOffset, autoPose.getY() - 72 + yOffset, autoPose.getHeading());
     }

@@ -4,6 +4,8 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.Constants.ConfigurationConstants;
+import org.firstinspires.ftc.teamcode.Constants.ShooterConstants;
+import org.firstinspires.ftc.teamcode.util.MathUtil;
 
 public class HoodAngler {
 
@@ -37,6 +39,14 @@ public class HoodAngler {
 
         leftHoodAngler.setPosition(position);
         rightHoodAngler.setPosition(position);
+    }
+
+    public void setSafePosition(double position) {
+
+        double safePosition = MathUtil.clamp(position, ShooterConstants.HOOD_ANGLER_MAX_POSITION, ShooterConstants.HOOD_ANGLER_MIN_POSITION);
+
+        leftHoodAngler.setPosition(safePosition);
+        rightHoodAngler.setPosition(safePosition);
     }
 
     public double getPosition() {

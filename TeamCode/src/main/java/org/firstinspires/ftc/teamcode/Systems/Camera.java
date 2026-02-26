@@ -51,7 +51,7 @@ public class Camera {
 
     public void update() {
 
-        limelight.updateRobotOrientation();
+        limelight.updateRobotOrientation(Math.toDegrees(follower.getHeading()));
 
         LLResult llResult = limelight.getLatestResult();
 
@@ -65,6 +65,9 @@ public class Camera {
 
     public Pose getBotPose() {
         return botPose;
+    }
+    public double getDistanceToTag() {
+        return distanceToTag;
     }
 
 }

@@ -7,4 +7,6 @@ public class GeneralConstants {
 
     public static int TELEMETRY_MS_TRANSMISSION_INTERVAL = 25;
 
+    public static int NORMAL_CONTROLLER_RUMBLE_TIME = 300;
+
 }

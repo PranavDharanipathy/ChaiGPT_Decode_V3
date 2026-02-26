@@ -43,7 +43,7 @@ public class DriveConstants {
 
             .secondaryHeadingPIDFCoefficients(new PIDFCoefficients(1.1,0.0005,0,0.025))
 
-            .centripetalScaling(0.00062)
+            .centripetalScaling(0)
             ;
 
     public static PathConstraints autoPathConstraints = new PathConstraints(0.994, 50, 1.5, 1.5);
@@ -64,8 +64,8 @@ public class DriveConstants {
             .yVelocity(-61.15854729822397);
 
     public static PinpointConstants localizerConstants = new PinpointConstants()
-            .forwardPodY(3.75)
-            .strafePodX(8.25)
+            .forwardPodY(2.83464)
+            .strafePodX(5.86613)
             .distanceUnit(DistanceUnit.INCH)
             .hardwareMapName(MapSetterConstants.pinpointOdometryComputerDeviceName)
             .encoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD)

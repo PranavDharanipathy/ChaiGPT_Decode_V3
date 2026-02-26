@@ -14,12 +14,12 @@ import org.firstinspires.ftc.teamcode.util.Encoder;
 import org.firstinspires.ftc.teamcode.util.LowPassFilter;
 import org.firstinspires.ftc.teamcode.util.MathUtil;
 
-import static org.firstinspires.ftc.teamcode.Constants.ShooterConstants.TURRET_PD_POSITIONS;
-import static org.firstinspires.ftc.teamcode.Constants.ShooterConstants.TURRET_KPS;
-import static org.firstinspires.ftc.teamcode.Constants.ShooterConstants.TURRET_KDS;
+import static org.firstinspires.ftc.teamcode.Constants.ConfigurationConstants.TURRET_PD_POSITIONS;
+import static org.firstinspires.ftc.teamcode.Constants.ConfigurationConstants.TURRET_KPS;
+import static org.firstinspires.ftc.teamcode.Constants.ConfigurationConstants.TURRET_KDS;
 
-import static org.firstinspires.ftc.teamcode.Constants.ShooterConstants.TURRET_FEEDFORWARD_POSITIONS;
-import static org.firstinspires.ftc.teamcode.Constants.ShooterConstants.TURRET_KFS;
+import static org.firstinspires.ftc.teamcode.Constants.ConfigurationConstants.TURRET_FEEDFORWARD_POSITIONS;
+import static org.firstinspires.ftc.teamcode.Constants.ConfigurationConstants.TURRET_KFS;
 
 import java.util.Collections;
 

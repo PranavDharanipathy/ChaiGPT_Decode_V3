@@ -18,6 +18,9 @@ public class PedroDrive extends Subsystem {
     }
 
     private Follower follower;
+    public Follower getFollower() {
+        return follower;
+    }
 
     private BetterGamepad controller1, controller2;
 

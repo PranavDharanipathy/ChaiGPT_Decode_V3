@@ -1,14 +1,14 @@
 package org.firstinspires.ftc.teamcode.Systems;
 
-import static org.firstinspires.ftc.teamcode.Constants.ShooterConstants.TURRET_KPS;
-import static org.firstinspires.ftc.teamcode.Constants.ShooterConstants.TURRET_KDS;
-import static org.firstinspires.ftc.teamcode.Constants.ShooterConstants.TURRET_KFS;
-import static org.firstinspires.ftc.teamcode.Constants.ShooterConstants.TURRET_PD_POSITIONS;
-import static org.firstinspires.ftc.teamcode.Constants.ShooterConstants.TURRET_FEEDFORWARD_POSITIONS;
+import static org.firstinspires.ftc.teamcode.Constants.ConfigurationConstants.TURRET_KPS;
+import static org.firstinspires.ftc.teamcode.Constants.ConfigurationConstants.TURRET_KDS;
+import static org.firstinspires.ftc.teamcode.Constants.ConfigurationConstants.TURRET_KFS;
+import static org.firstinspires.ftc.teamcode.Constants.ConfigurationConstants.TURRET_PD_POSITIONS;
+import static org.firstinspires.ftc.teamcode.Constants.ConfigurationConstants.TURRET_FEEDFORWARD_POSITIONS;
+import static org.firstinspires.ftc.teamcode.Constants.ConfigurationConstants.TURRET_KF_RESISTANCE_ENGAGE_ERROR;
 
 import androidx.annotation.Nullable;
 
-import org.firstinspires.ftc.teamcode.Constants.ShooterConstants;
 import org.firstinspires.ftc.teamcode.util.InterpolationData;
 import org.firstinspires.ftc.teamcode.util.MathUtil;
 
@@ -162,7 +162,7 @@ public class TurretBasePIDFSCoefficients {
 
         boolean reversalNeeded = kfReversalNeeded(targetPosition, lastTargetPosition, startPosition, reversed);
 
-        double reversingValue = reversalNeeded && Math.abs(targetPosition - currentPosition) >= ShooterConstants.TURRET_KF_RESISTANCE_ENGAGE_ERROR ? kFResistance[0] : 1;
+        double reversingValue = reversalNeeded && Math.abs(targetPosition - currentPosition) >= TURRET_KF_RESISTANCE_ENGAGE_ERROR ? kFResistance[0] : 1;
 
         if (reversingValue == kFResistance[0]) {
             kFResistanceTargetPosition = targetPosition;

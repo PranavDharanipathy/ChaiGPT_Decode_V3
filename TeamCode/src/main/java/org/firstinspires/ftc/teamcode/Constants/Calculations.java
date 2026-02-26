@@ -20,6 +20,25 @@ public class Calculations {
         return new Pose(x, y, yaw).getAsCoordinateSystem(PedroCoordinates.INSTANCE);
     }
 
+    /// The angle in degrees that is required for any system to look in to be pointing at the goal.
+    /// <p>
+    /// x is forward-backward and y is left-right.
+    /// @param x In inches
+    /// @param y In inches
+    public static double getAngleToGoal(double x, double y, Pose goalCoordinate) {
+
+        double dx = goalCoordinate.getX() - x;
+        double dy = goalCoordinate.getY() - y;
+
+        return Math.toDegrees(FastMath.atan2(dx, dy));
+    }
+
+    /// Gets the flat (2d) distance from the goal.
+    public static double getDistanceFromGoal(double x, double y, Pose goalCoordinate) {
+        return MathUtil.getDistance2d(x, goalCoordinate.getX(), y, goalCoordinate.getY());
+    }
+
+    /// @return Turret's x, y, and heading absolute to the field
     public static Pose getTurretPoseFromBotPose(Pose botPose, double turretPositionTicks, double turretStartPositionTicks) {
 
         double reZeroedTurretTicks = turretPositionTicks - turretStartPositionTicks;
@@ -46,6 +65,8 @@ public class Calculations {
         );
     }
 
+
+    /// @return robots translational velocity vector
     public static double getRobotTranslationalVelocity(double xVelocity, double yVelocity) {
         return Math.hypot(xVelocity, yVelocity);
     }
@@ -53,7 +74,7 @@ public class Calculations {
     /// For turret hysteresis control - the amount of time in the future where the robot's pose
     /// will be predicted based on its current pose and velocity as well as the turret's acceleration.
     /// @param turretAcceleration is in rad/sec^2
-    public static double getTurretFuturePosePredictionTime(double turretAcceleration) {
+    public static double getFuturePosePredictionTimeTHC(double turretAcceleration) {//THC is turret hysteresis control
 
         final double NORMAL_ACCEL = Math.toRadians(7.2);
         final double NORMAL = 1.5;

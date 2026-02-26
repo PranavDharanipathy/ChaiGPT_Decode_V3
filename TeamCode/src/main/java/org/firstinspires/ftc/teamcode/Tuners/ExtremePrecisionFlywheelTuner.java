@@ -1,3 +1,4 @@
+
 package org.firstinspires.ftc.teamcode.Tuners;
 
 import com.acmerobotics.dashboard.FtcDashboard;
@@ -29,7 +30,8 @@ public class ExtremePrecisionFlywheelTuner extends LinearOpMode {
 
     public static TUNING_STAGES TUNING_STAGE = TUNING_STAGES.PIDVS;
 
-    public static double KP = ConfigurationConstants.FLYWHEEL_PIDVS_COEFFICIENTS.kp;
+    public static double KP_FAR = ConfigurationConstants.FLYWHEEL_PIDVS_COEFFICIENTS.kpFar;
+    public static double KP_CLOSE = ConfigurationConstants.FLYWHEEL_PIDVS_COEFFICIENTS.kpClose;
     public static double KI_FAR = ConfigurationConstants.FLYWHEEL_PIDVS_COEFFICIENTS.kiFar;
     public static double KI_CLOSE = ConfigurationConstants.FLYWHEEL_PIDVS_COEFFICIENTS.kiClose;
     public static double KD = ConfigurationConstants.FLYWHEEL_PIDVS_COEFFICIENTS.kd;
@@ -38,6 +40,8 @@ public class ExtremePrecisionFlywheelTuner extends LinearOpMode {
     public static double KPIDF_UNITS_PER_VOLT = ConfigurationConstants.FLYWHEEL_PIDVS_COEFFICIENTS.kPIDFUnitsPerVolt;
     public static double KI_SMASH = ConfigurationConstants.FLYWHEEL_PIDVS_COEFFICIENTS.kISmash;
     public static double I_SWITCH = ConfigurationConstants.FLYWHEEL_PIDVS_COEFFICIENTS.iSwitch;
+    public static double P_SWITCH = ConfigurationConstants.FLYWHEEL_PIDVS_COEFFICIENTS.pSwitch;
+
     public static double D_MIN = ConfigurationConstants.FLYWHEEL_PIDVS_COEFFICIENTS.minD, D_MAX = ConfigurationConstants.FLYWHEEL_PIDVS_COEFFICIENTS.maxD;
     public static double I_MIN = ConfigurationConstants.FLYWHEEL_PIDVS_COEFFICIENTS.minI, I_MAX = ConfigurationConstants.FLYWHEEL_PIDVS_COEFFICIENTS.maxI;
     public static double P_MIN = ConfigurationConstants.FLYWHEEL_PIDVS_COEFFICIENTS.minP, P_MAX = ConfigurationConstants.FLYWHEEL_PIDVS_COEFFICIENTS.maxP;
@@ -46,7 +50,7 @@ public class ExtremePrecisionFlywheelTuner extends LinearOpMode {
     public static double VELOCITY_MARGIN_OF_ERROR = ConfigurationConstants.FLYWHEEL_VELOCITY_MARGIN_OF_ERROR;
     public static double STABILITY_MARGIN_OF_ERROR = ConfigurationConstants.FLYWHEEL_STABILITY_MARGIN_OF_ERROR;
 
-    public static double FLYWHEEL_VOLTAGE_FILTER_ALPHA = ConfigurationConstants.FLYWHEEL_PIDVS_COEFFICIENTS.voltageFilterAlpha;
+    public static double VOLTAGE_FILTER_ALPHA = ConfigurationConstants.FLYWHEEL_PIDVS_COEFFICIENTS.voltageFilterAlpha;
 
     public static double TOTAL_MASS_IN_GRAMS = ConfigurationConstants.FLYWHEEL_ASSEMBLY_TOTAL_WEIGHT;
     public static double SHAFT_DIAMETER = ConfigurationConstants.FLYWHEEL_SHAFT_DIAMETER;
@@ -77,6 +81,7 @@ public class ExtremePrecisionFlywheelTuner extends LinearOpMode {
         DcMotorEx rightFlywheel = hardwareMap.get(DcMotorEx.class, MapSetterConstants.rightFlywheelMotorDeviceName);
 
         flywheel = new Flywheel(leftFlywheel, rightFlywheel);
+        flywheel.initVoltageSensor(hardwareMap);
         flywheel.setInternalParameters(TOTAL_MASS_IN_GRAMS, SHAFT_DIAMETER, MOTOR_CORE_VOLTAGE, MOTOR_RPM);
 
         coefficients = ConfigurationConstants.FLYWHEEL_PIDVS_COEFFICIENTS;
@@ -93,14 +98,16 @@ public class ExtremePrecisionFlywheelTuner extends LinearOpMode {
         while (opModeIsActive()) {
 
             coefficients.updateCoefficients(
-                    KP,
+                    KP_FAR, KP_CLOSE,
                     KI_FAR, KI_CLOSE,
                     KD,
                     KV,
                     KS,
                     KPIDF_UNITS_PER_VOLT,
                     I_SWITCH,
+                    P_SWITCH,
                     KI_SMASH,
+                    VOLTAGE_FILTER_ALPHA,
                     P_MIN, P_MAX,
                     I_MIN, I_MAX,
                     D_MIN, D_MAX

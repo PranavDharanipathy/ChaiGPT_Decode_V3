@@ -32,46 +32,45 @@ public class EOALocalizationOffsetTuner extends TeleOpBaseOpMode {
     private Telemetry telemetry;
 
     @Override
-    public void runOpMode() throws InterruptedException {
+    public void init() {
 
         telemetry = new MultipleTelemetry(super.telemetry, FtcDashboard.getInstance().getTelemetry());
 
         initializeDevices();
 
         applyComponentTraits();
+    }
 
-        waitForStart();
+    @Override
+    public void loop() {
 
-        while (opModeIsActive()) {
+        Pose autoPose = new Pose(AUTO_POSE[0], AUTO_POSE[1], Math.toRadians(AUTO_POSE[2]));
+        Pose teleOpPose = new Pose(TELEOP_POSE[0], TELEOP_POSE[1], Math.toRadians(TELEOP_POSE[2]));
 
-            Pose autoPose = new Pose(AUTO_POSE[0], AUTO_POSE[1], Math.toRadians(AUTO_POSE[2]));
-            Pose teleOpPose = new Pose(TELEOP_POSE[0], TELEOP_POSE[1], Math.toRadians(TELEOP_POSE[2]));
+        controller1.getInformation();
 
-            controller1.getInformation();
+        if (controller1.main_buttonHasJustBeenPressed) {
 
-            if (controller1.main_buttonHasJustBeenPressed) {
-
-                Pose pose = localizationType == CurrentLocalization.AUTO ? autoPose : teleOpPose;
-                follower.setPose(pose);
-            }
-
-            follower.update();
-
-            telemetry.addLine("main button for setting pose (set up position before clicking)");
-
-            Pose currentPose = follower.getPose();
-
-            if (localizationType == CurrentLocalization.TELEOP) {
-
-                telemetry.addData("pose in current format (teleop)", currentPose);
-            }
-            else { //is auto
-
-                telemetry.addData("pose in current format (auto)", currentPose);
-                telemetry.addData("pose in teleop format", EOALocalization.autoFormatToTeleOpFormat(currentPose, X_OFFSET, Y_OFFSET).toString());
-            }
-
-            telemetry.update();
+            Pose pose = localizationType == CurrentLocalization.AUTO ? autoPose : teleOpPose;
+            follower.setPose(pose);
         }
+
+        follower.update();
+
+        telemetry.addLine("main button for setting pose (set up position before clicking)");
+
+        Pose currentPose = follower.getPose();
+
+        if (localizationType == CurrentLocalization.TELEOP) {
+
+            telemetry.addData("pose in current format (teleop)", currentPose);
+        }
+        else { //is auto
+
+            telemetry.addData("pose in current format (auto)", currentPose);
+            telemetry.addData("pose in teleop format", EOALocalization.autoFormatToTeleOpFormat(currentPose, X_OFFSET, Y_OFFSET).toString());
+        }
+
+        telemetry.update();
     }
 }

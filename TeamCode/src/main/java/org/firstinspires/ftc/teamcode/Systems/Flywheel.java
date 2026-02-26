@@ -46,9 +46,7 @@ public final class Flywheel {
     public double kp;
     public double ki;
     public double kISmash;
-    private double iSwitch;
     public double kd;
-    public double unscaledKv;
     public double kv;
     public double ks;
 
@@ -106,14 +104,10 @@ public final class Flywheel {
 
         this.coefficients = coefficients;
 
-        kp = coefficients.kp;
-
         kd = coefficients.kd;
 
         ks = coefficients.ks;
         kPIDFUnitsPerVolt = coefficients.kPIDFUnitsPerVolt;
-
-        iSwitch = coefficients.iSwitch;
 
         kISmash = coefficients.kISmash;
 
@@ -127,6 +121,8 @@ public final class Flywheel {
 
     /// Setting variables that do in fact change
     private void chooseCoefficientsInternal() {
+
+        kp = coefficients.kp(targetVelocity, currentVelocity);
 
         ki = coefficients.ki(targetVelocity, currentVelocity);
 
@@ -184,7 +180,7 @@ public final class Flywheel {
         p = kp * error;
         p = MathUtil.clamp(p, minP, maxP);
 
-        if (!Double.isNaN(error * dt) && error * dt != 0 && targetVelocity != 0) errorSum += error * dt;
+        if (!Double.isNaN(error * dt) && targetVelocity != 0) errorSum += error * dt;
         else errorSum = 0; //integral is reset if it's NaN or if targetVelocity is equal to 0
 
         // i smashing

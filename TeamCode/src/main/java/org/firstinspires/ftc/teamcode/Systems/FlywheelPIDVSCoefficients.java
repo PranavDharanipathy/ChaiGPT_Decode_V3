@@ -8,7 +8,7 @@ import org.firstinspires.ftc.teamcode.util.LowPassFilter;
 /// Easier usage of the coefficients for the flywheel
 public class FlywheelPIDVSCoefficients {
 
-    public double kp;
+    public double kpFar, kpClose;
     public double kiFar, kiClose;
     public double kd;
     public double unscaledKv;
@@ -17,6 +17,7 @@ public class FlywheelPIDVSCoefficients {
     public double kPIDFUnitsPerVolt;
 
     public double iSwitch;
+    public double pSwitch;
 
     public double kISmash;
 
@@ -33,7 +34,8 @@ public class FlywheelPIDVSCoefficients {
     }
 
     public FlywheelPIDVSCoefficients(
-            double kp,
+            double kpFar,
+            double kpClose,
             double kiFar,
             double kiClose,
             double kd,
@@ -41,6 +43,7 @@ public class FlywheelPIDVSCoefficients {
             double ks,
             double kPIDFUnitsPerVolt,
             double iSwitch,
+            double pSwitch,
             double kISmash,
             double voltageFilterAlpha,
             double minP,
@@ -51,7 +54,8 @@ public class FlywheelPIDVSCoefficients {
             double maxD
     ) {
 
-        this.kp = kp;
+        this.kpFar = kpFar;
+        this.kpClose = kpClose;
 
         this.kiFar = kiFar;
         this.kiClose = kiClose;
@@ -64,6 +68,7 @@ public class FlywheelPIDVSCoefficients {
         this.kPIDFUnitsPerVolt = kPIDFUnitsPerVolt;
 
         this.iSwitch = iSwitch;
+        this.pSwitch = pSwitch;
 
         this.kISmash = kISmash;
 
@@ -80,7 +85,8 @@ public class FlywheelPIDVSCoefficients {
     }
 
     public void updateCoefficients(
-            double kp,
+            double kpFar,
+            double kpClose,
             double kiFar,
             double kiClose,
             double kd,
@@ -88,6 +94,7 @@ public class FlywheelPIDVSCoefficients {
             double ks,
             double kPIDFUnitsPerVolt,
             double iSwitch,
+            double pSwitch,
             double kISmash,
             double voltageFilterAlpha,
             double minP,
@@ -98,7 +105,8 @@ public class FlywheelPIDVSCoefficients {
             double maxD
     ) {
 
-        this.kp = kp;
+        this.kpFar = kpFar;
+        this.kpClose = kpClose;
 
         this.kiFar = kiFar;
         this.kiClose = kiClose;
@@ -111,6 +119,7 @@ public class FlywheelPIDVSCoefficients {
         this.kPIDFUnitsPerVolt = kPIDFUnitsPerVolt;
 
         this.iSwitch = iSwitch;
+        this.pSwitch = pSwitch;
 
         this.kISmash = kISmash;
 
@@ -124,6 +133,12 @@ public class FlywheelPIDVSCoefficients {
 
         this.minD = minD;
         this.maxD = maxD;
+    }
+
+    public double kp(double targetVelocity, double currentVelocity) {
+
+        if ((targetVelocity - currentVelocity) < pSwitch) return kiClose;
+        else return kiFar;
     }
 
     private double kISwitchTargetVelocity;

@@ -106,8 +106,6 @@ public final class Flywheel {
 
         this.coefficients = coefficients;
 
-        kp = coefficients.kp;
-
         kd = coefficients.kd;
 
         ks = coefficients.ks;
@@ -127,6 +125,8 @@ public final class Flywheel {
 
     /// Setting variables that do in fact change
     private void chooseCoefficientsInternal() {
+
+        kp = coefficients.kp(targetVelocity, currentVelocity);
 
         ki = coefficients.ki(targetVelocity, currentVelocity);
 

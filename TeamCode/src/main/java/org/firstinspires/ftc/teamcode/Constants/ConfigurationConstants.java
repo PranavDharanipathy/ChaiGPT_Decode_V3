@@ -46,6 +46,7 @@ public class ConfigurationConstants {
 
     public static FlywheelPIDVSCoefficients FLYWHEEL_PIDVS_COEFFICIENTS = new FlywheelPIDVSCoefficients(
             0.0005,
+            0.0044,
             0.000025,
             0.00031,
             0.00003,
@@ -53,6 +54,7 @@ public class ConfigurationConstants {
             0.000001,
             0.83,
             167,
+            80,
             0.67,
             0.23,
             -0.1, 1,

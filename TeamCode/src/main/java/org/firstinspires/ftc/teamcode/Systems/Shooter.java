@@ -254,6 +254,8 @@ public class Shooter implements EffectivelySubsystem {
             hoodPosition = ShooterConstants.HOOD_CLOSE_POSITION; //Models.getCloseHoodPositionFromRegression(distanceToGoal);
         }
 
+        staticHoodUpdate();
+
         //updating
         hoodAngler.setSafePosition(hoodPosition);
         turret.update();
@@ -278,6 +280,33 @@ public class Shooter implements EffectivelySubsystem {
             flywheelTargetVelocity = ShooterConstants.FARTHER_CLOSE_SIDE_FLYWHEEL_SHOOT_VELOCITY;
         }
         return flywheelTargetVelocity;
+    }
+
+    private void staticHoodUpdate() {
+
+        if (controller2.xHasJustBeenPressed) {
+
+            if (flywheelTargetVelocityZone == ZONE.CLOSE) {
+                ShooterConstants.HOOD_CLOSE_POSITION+=ShooterConstants.HOOD_POSITION_MANUAL_INCREMENT;
+                hoodPosition = ShooterConstants.HOOD_CLOSE_POSITION;
+            }
+            else {
+                ShooterConstants.HOOD_FAR_POSITION+=ShooterConstants.HOOD_POSITION_MANUAL_INCREMENT;
+                hoodPosition = ShooterConstants.HOOD_FAR_POSITION;
+            }
+
+        }
+        else if (controller2.bHasJustBeenPressed) {
+
+            if (flywheelTargetVelocityZone == ZONE.CLOSE) {
+                ShooterConstants.HOOD_CLOSE_POSITION-=ShooterConstants.HOOD_POSITION_MANUAL_INCREMENT;
+                hoodPosition = ShooterConstants.HOOD_CLOSE_POSITION;
+            }
+            else {
+                ShooterConstants.HOOD_FAR_POSITION-=ShooterConstants.HOOD_POSITION_MANUAL_INCREMENT;
+                hoodPosition = ShooterConstants.HOOD_FAR_POSITION;
+            }
+        }
     }
 
     private double route(double rawtt) {

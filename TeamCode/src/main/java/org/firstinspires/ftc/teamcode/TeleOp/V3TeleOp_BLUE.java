@@ -17,6 +17,7 @@ public class V3TeleOp_BLUE extends TeleOpBaseOpMode {
     private final Blocker blocker = new Blocker().asSubsystem();
     private final Shooter shooter = new Shooter();
     private final PedroDrive pedroDrive = new PedroDrive();
+    private final TelemetrySubsystem telemetry = new TelemetrySubsystem();
 
     @Override
     public void init() {
@@ -30,6 +31,7 @@ public class V3TeleOp_BLUE extends TeleOpBaseOpMode {
         intake.provideComponents(super.intake, transfer, controller1);
         blocker.provideComponents(super.blocker, controller1);
         shooter.provideComponents(flywheel, turret, hoodAngler, follower, unstartedCamera, controller1, controller2);
+        telemetry.provideComponents(super.telemetry, true, controller2);
         setUpLynxModule();
     }
 
@@ -53,6 +55,8 @@ public class V3TeleOp_BLUE extends TeleOpBaseOpMode {
         shooter.update();
         blocker.update();
         pedroDrive.update();
+
+        telemetry.runInstance(shooter, pedroDrive);
     }
 
     @Override

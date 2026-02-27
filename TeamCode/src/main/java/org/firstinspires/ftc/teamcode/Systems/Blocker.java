@@ -78,7 +78,7 @@ public class Blocker extends Subsystem {
     @Override
     public void update() {
 
-        if (controller1.right_bumperHasJustBeenPressed) {
+        if (controller1.right_bumper()) {
             setState(BlockerState.CLEAR);
         }
         else {

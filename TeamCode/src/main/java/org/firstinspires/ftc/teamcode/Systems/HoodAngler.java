@@ -12,6 +12,13 @@ public class HoodAngler {
     private Servo leftHoodAngler;
     private Servo rightHoodAngler;
 
+    /// Index 0 is left
+    /// <p>
+    /// Index 1 is right
+    public Servo[] getServos() {
+        return new Servo[] { leftHoodAngler, rightHoodAngler };
+    }
+
     public HoodAngler(HardwareMap hardwareMap, String leftHoodAnglerServoName, String rightHoodAnglerServoName) {
 
         leftHoodAngler = hardwareMap.get(Servo.class, leftHoodAnglerServoName);
@@ -37,19 +44,30 @@ public class HoodAngler {
 
     public void setPosition(double position) {
 
-        leftHoodAngler.setPosition(position);
-        rightHoodAngler.setPosition(position);
+        this.position = position;
+
+        leftHoodAngler.setPosition(this.position + ConfigurationConstants.LEFT_HOOD_ALIGNMENT_OFFSET);
+        rightHoodAngler.setPosition(this.position + ConfigurationConstants.RIGHT_HOOD_ALIGNMENT_OFFSET);
     }
 
     public void setSafePosition(double position) {
 
-        double safePosition = MathUtil.clamp(position, ShooterConstants.HOOD_ANGLER_MAX_POSITION, ShooterConstants.HOOD_ANGLER_MIN_POSITION);
+        this.position = MathUtil.clamp(position, ShooterConstants.HOOD_ANGLER_MAX_POSITION, ShooterConstants.HOOD_ANGLER_MIN_POSITION);
 
-        leftHoodAngler.setPosition(safePosition);
-        rightHoodAngler.setPosition(safePosition);
+        leftHoodAngler.setPosition(this.position + ConfigurationConstants.LEFT_HOOD_ALIGNMENT_OFFSET);
+        rightHoodAngler.setPosition(this.position + ConfigurationConstants.RIGHT_HOOD_ALIGNMENT_OFFSET);
     }
 
+    /// Index 0 is left
+    /// <p>
+    /// Index 1 is right
+    public double[] getServoPositions() {
+        return new double[] { leftHoodAngler.getPosition(), rightHoodAngler.getPosition() };
+    }
+
+    private double position;
+
     public double getPosition() {
-        return leftHoodAngler.getPosition();
+        return position;
     }
 }

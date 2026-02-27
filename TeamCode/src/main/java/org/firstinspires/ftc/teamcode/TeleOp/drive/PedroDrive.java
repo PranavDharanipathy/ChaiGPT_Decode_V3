@@ -39,7 +39,7 @@ public class PedroDrive extends Subsystem {
 
         if (state == DriveState.MANUAL) {
 
-            follower.startTeleOpDrive(true);
+            if (!follower.getTeleopDrive()) follower.startTeleOpDrive(true);
             follower.setTeleOpDrive(
                     -controller1.left_stick_y(),
                     -controller1.left_stick_x(),

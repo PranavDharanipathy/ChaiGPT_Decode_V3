@@ -163,7 +163,7 @@ public abstract class TeleOpBaseOpMode extends OpMode {
         flywheel.setVelocityPIDVSCoefficients(ConfigurationConstants.FLYWHEEL_PIDVS_COEFFICIENTS);
 
         turret.setPIDFSCoefficients(ConfigurationConstants.TURRET_PIDFS_COEFFICIENTS);
-        turret.reverse();
+        //turret.reverse();
 
         //clear
         EOALocalization.blank();

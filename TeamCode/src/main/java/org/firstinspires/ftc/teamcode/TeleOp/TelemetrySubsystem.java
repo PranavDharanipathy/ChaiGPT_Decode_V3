@@ -6,7 +6,6 @@ import org.firstinspires.ftc.teamcode.Systems.Shooter;
 import org.firstinspires.ftc.teamcode.util.BetterGamepad;
 import org.firstinspires.ftc.teamcode.util.TickrateChecker;
 import org.firstinspires.ftc.teamcode.TeleOp.drive.PedroDrive;
-import org.firstinspires.ftc.teamcode.Systems.Intake;
 import org.firstinspires.ftc.teamcode.util.EffectivelySubsystem;
 import org.firstinspires.ftc.teamcode.util.TelemetryUtils.TelemetryMode;
 import org.firstinspires.ftc.teamcode.util.TelemetryUtils.TelemetryO;

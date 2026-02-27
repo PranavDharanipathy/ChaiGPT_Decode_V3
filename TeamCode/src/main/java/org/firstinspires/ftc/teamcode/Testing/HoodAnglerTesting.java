@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.Constants.ConfigurationConstants;
 import org.firstinspires.ftc.teamcode.Constants.MapSetterConstants;
 import org.firstinspires.ftc.teamcode.Systems.HoodAngler;
 
@@ -17,6 +18,9 @@ public class HoodAnglerTesting extends LinearOpMode {
     private HoodAngler hoodAngler;
 
     public static double POSITION;
+
+    public static double LEFT_OFFSET;
+    public static double RIGHT_OFFSET;
 
     @Override
     public void runOpMode() {
@@ -29,9 +33,15 @@ public class HoodAnglerTesting extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()) {
+
+            ConfigurationConstants.LEFT_HOOD_ALIGNMENT_OFFSET = LEFT_OFFSET;
+            ConfigurationConstants.RIGHT_HOOD_ALIGNMENT_OFFSET = RIGHT_OFFSET;
+
             hoodAngler.setPosition(POSITION);
 
             telemetry.addData("position", hoodAngler.getPosition());
+            telemetry.addData("internal left position", hoodAngler.getServos()[0].getPosition());
+            telemetry.addData("internal right position", hoodAngler.getServos()[1].getPosition());
             telemetry.update();
         }
 

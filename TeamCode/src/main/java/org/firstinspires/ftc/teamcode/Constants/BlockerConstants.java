@@ -2,6 +2,6 @@ package org.firstinspires.ftc.teamcode.Constants;
 
 public class BlockerConstants {
 
-    public static double BLOCKER_CLEAR_POSITION = 0;
-    public static double BLOCKER_BLOCK_POSITION = 1;
+    public static double BLOCKER_CLEAR_POSITION = 0.42;
+    public static double BLOCKER_BLOCK_POSITION = 0.645;
 }

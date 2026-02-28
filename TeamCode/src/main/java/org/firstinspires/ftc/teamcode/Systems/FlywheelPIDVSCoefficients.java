@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.Systems;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 
 import org.firstinspires.ftc.teamcode.Constants.Models;
+import org.firstinspires.ftc.teamcode.util.DoubleM;
 import org.firstinspires.ftc.teamcode.util.LowPassFilter;
 
 /// Easier usage of the coefficients for the flywheel
@@ -143,9 +144,11 @@ public class FlywheelPIDVSCoefficients {
 
     private double kISwitchTargetVelocity;
 
-    public double ki(double targetVelocity, double currentVelocity) {
+    public double ki(double targetVelocity, double currentVelocity, DoubleM errorSum) {
 
         if (kISwitchTargetVelocity == targetVelocity || (targetVelocity - currentVelocity) < iSwitch) {
+
+            if (kISwitchTargetVelocity != targetVelocity) errorSum.set(0);
 
             kISwitchTargetVelocity = targetVelocity;
             return kiClose;

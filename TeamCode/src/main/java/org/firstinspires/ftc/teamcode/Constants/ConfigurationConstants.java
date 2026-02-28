@@ -40,25 +40,24 @@ public class ConfigurationConstants {
     /// <p>
     /// Index 1 is the right motor.
     public static DcMotorSimple.Direction[] FLYWHEEL_MOTOR_DIRECTIONS = {
-            DcMotorSimple.Direction.FORWARD,
-            DcMotorSimple.Direction.REVERSE
+            DcMotorSimple.Direction.REVERSE,
+            DcMotorSimple.Direction.FORWARD
     };
 
-    public static double[] TRANSFER_PDF_COEFFICIENTS = {0, 0, 0};
+    public static double[] TRANSFER_PDF_COEFFICIENTS = {0.000075, 0.00000136, 0.000428};
 
     public static double FLYWHEEL_ASSEMBLY_TOTAL_WEIGHT = 1534;
     public static double FLYWHEEL_SHAFT_DIAMETER = 8;
     public static double FLYWHEEL_MOTOR_CORE_VOLTAGE = 12;
     public static double FLYWHEEL_MOTOR_RPM = 6000;
 
-    //TODO update flywheel PID
     public static FlywheelPIDVSCoefficients FLYWHEEL_PIDVS_COEFFICIENTS = new FlywheelPIDVSCoefficients(
             0.0005,
-            0.0044,
-            0.000025,
-            0.00031,
             0.00003,
-            0.000422,
+            0.0000175,
+            0.000285,
+            0.00003,
+            0.0004,
             0.000001,
             0.83,
             167,
@@ -70,18 +69,18 @@ public class ConfigurationConstants {
             -0.2, 0.2
     );
 
-    public static double FLYWHEEL_VELOCITY_MARGIN_OF_ERROR = 8;
-    public static double FLYWHEEL_STABILITY_MARGIN_OF_ERROR = 8;
+    public static double FLYWHEEL_VELOCITY_MARGIN_OF_ERROR = 10;
+    public static double FLYWHEEL_STABILITY_MARGIN_OF_ERROR = 10;
 
     public static TurretBasePIDFSCoefficients TURRET_PIDFS_COEFFICIENTS = new TurretBasePIDFSCoefficients(
             0.0,
-            new double[] {0.0000023, 0.0000023},
-            new double[] {0.00001, 0.00001},
+            new double[] {5.25e-9, 5.15e-9},
+            new double[] {3.37e-7, 3.365e-7},
             0.0,
             null,
             0.05,
-            new double[] {1000, 1000},
-            new double[] {0.33, 0.33},
+            new double[] {650, 650},
+            new double[] {0.12, 0.145},
             new double[] {200, 200},
             new double[] {0.9, 0.9},
             1,

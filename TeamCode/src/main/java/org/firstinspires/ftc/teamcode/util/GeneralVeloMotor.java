@@ -36,7 +36,7 @@ public class GeneralVeloMotor {
     }
 
     private double kp, kd, kff;
-    private double p, d, ff;
+    public double p, d, ff;
     private double prevTime = 0, currTime = 0;
     private double prevError = 0, error = 0;
 

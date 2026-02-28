@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 
 import org.firstinspires.ftc.teamcode.Constants.ConfigurationConstants;
+import org.firstinspires.ftc.teamcode.util.DoubleM;
 import org.firstinspires.ftc.teamcode.util.Encoder;
 import org.firstinspires.ftc.teamcode.util.MathUtil;
 
@@ -81,7 +82,7 @@ public final class Flywheel {
     }
 
     public double p = 0, i = 0, d = 0;
-    private double errorSum = 0;
+    private DoubleM errorSum = new DoubleM(0);
     public double v = 0;
     public double s = 0;
 
@@ -124,7 +125,7 @@ public final class Flywheel {
 
         kp = coefficients.kp(targetVelocity, currentVelocity);
 
-        ki = coefficients.ki(targetVelocity, currentVelocity);
+        ki = coefficients.ki(targetVelocity, currentVelocity, errorSum);
 
         kv = coefficients.kv(batteryVoltageSensor);
     }
@@ -180,16 +181,16 @@ public final class Flywheel {
         p = kp * error;
         p = MathUtil.clamp(p, minP, maxP);
 
-        if (!Double.isNaN(error * dt) && targetVelocity != 0) errorSum += error * dt;
-        else errorSum = 0; //integral is reset if it's NaN or if targetVelocity is equal to 0
+        if (!Double.isNaN(error * dt) && targetVelocity != 0) errorSum.add(error * dt);
+        else errorSum.set(0); //integral is reset if it's NaN or if targetVelocity is equal to 0
 
         // i smashing
         if (Math.signum(error) != Math.signum(prevError)) {
-            errorSum *= kISmash;
+            errorSum.multiply(kISmash);
         }
 
         // i is prevented from getting too high or too low
-        i = MathUtil.clamp(ki * errorSum, minI, maxI);
+        i = MathUtil.clamp(ki * errorSum.get(), minI, maxI);
 
         //derivative
         d = dt > 0 ? kd * (error - prevError) / dt : 0;
@@ -297,7 +298,7 @@ public final class Flywheel {
     }
 
     private void resetIntegral() {
-        errorSum = 0;
+        errorSum.set(0);
         i = 0;
     }
 

@@ -142,7 +142,8 @@ public class Shooter implements EffectivelySubsystem {
         poseVelocityTracker.update();
         TurretHelper.update(turret);
 
-        robotYawRad = follower.getPose().getHeading(); //rev9AxisImuWrapped.getYaw(AngleUnit.RADIANS);
+        currentRobotPose = follower.getPose();
+        robotYawRad = currentRobotPose.getHeading();
         PoseVelocity robotVelocity = poseVelocityTracker.getPoseVelocity();
         double translationalVelocity = Calculations.getRobotTranslationalVelocity(robotVelocity.getXVelocity(), robotVelocity.getYVelocity());
         //turret
@@ -155,8 +156,6 @@ public class Shooter implements EffectivelySubsystem {
         else if (controller2.dpad_rightHasJustBeenPressed) {
             turretStartPosition-=ShooterConstants.TURRET_HOME_POSITION_INCREMENT;
         }
-
-        currentRobotPose = follower.getPose();
 
         //hysteresis control is only used if the robot is moving fast enough
         isTurretLookingAhead = Math.abs(translationalVelocity) > TURRET_HYSTERESIS_CONTROL_ENGAGE_VELOCITY[0] || Math.abs(robotVelocity.getAngularVelocity()) > TURRET_HYSTERESIS_CONTROL_ENGAGE_VELOCITY[1];
@@ -197,7 +196,7 @@ public class Shooter implements EffectivelySubsystem {
         angleToGoal = Calculations.getAngleToGoal(turretPose.getX(), turretPose.getY(), goalCoordinate);
 
         double rawtt = angleToGoal - Math.toDegrees(robotYawRad);
-        tt = route(rawtt);
+        tt = Calculations.routeTurret(rawtt);
 
         turretPosition = tt * ShooterConstants.TURRET_TICKS_PER_DEGREE + turretStartPosition;
         double targetPosition = turretPosition;
@@ -284,7 +283,7 @@ public class Shooter implements EffectivelySubsystem {
 
     private void staticHoodUpdate() {
 
-        if (controller2.xHasJustBeenPressed) {
+        if (controller2.xHasJustBeenPressed) {//lower hood
 
             if (flywheelTargetVelocityZone == ZONE.CLOSE) {
                 ShooterConstants.HOOD_CLOSE_POSITION+=ShooterConstants.HOOD_POSITION_MANUAL_INCREMENT;
@@ -296,7 +295,7 @@ public class Shooter implements EffectivelySubsystem {
             }
 
         }
-        else if (controller2.bHasJustBeenPressed) {
+        else if (controller2.bHasJustBeenPressed) {//increase hood
 
             if (flywheelTargetVelocityZone == ZONE.CLOSE) {
                 ShooterConstants.HOOD_CLOSE_POSITION-=ShooterConstants.HOOD_POSITION_MANUAL_INCREMENT;
@@ -307,23 +306,6 @@ public class Shooter implements EffectivelySubsystem {
                 hoodPosition = ShooterConstants.HOOD_FAR_POSITION;
             }
         }
-    }
-
-    private double route(double rawtt) {
-
-        if (rawtt >= ShooterConstants.MIN_TURRET_POSITION_IN_DEGREES && rawtt <= ShooterConstants.MAX_TURRET_POSITION_IN_DEGREES) return rawtt; //no need to reroute
-
-        double[] reroutes = {rawtt - 360, rawtt + 360};
-        if (reroutes[0] >= ShooterConstants.MIN_TURRET_POSITION_IN_DEGREES && reroutes[0] <= ShooterConstants.MAX_TURRET_POSITION_IN_DEGREES) {
-            return reroutes[0];
-        }
-        else if (reroutes[1] >= ShooterConstants.MIN_TURRET_POSITION_IN_DEGREES && reroutes[1] <= ShooterConstants.MAX_TURRET_POSITION_IN_DEGREES) {
-            return reroutes[1];
-        }
-
-        // go to the closest limit if target position is outside the min and max
-        else if (rawtt < ShooterConstants.MIN_TURRET_POSITION_IN_DEGREES) return ShooterConstants.MIN_TURRET_POSITION_IN_DEGREES;
-        else return ShooterConstants.MAX_TURRET_POSITION_IN_DEGREES;
     }
 
     private void relocalization(Pose reZeroPose) {

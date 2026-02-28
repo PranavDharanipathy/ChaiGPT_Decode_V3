@@ -30,7 +30,7 @@ public class Calculations {
         double dx = goalCoordinate.getX() - x;
         double dy = goalCoordinate.getY() - y;
 
-        return Math.toDegrees(FastMath.atan2(dx, dy));
+        return Math.toDegrees(FastMath.atan2(dy, dx));
     }
 
     /// Gets the flat (2d) distance from the goal.
@@ -44,7 +44,7 @@ public class Calculations {
         double reZeroedTurretTicks = turretPositionTicks - turretStartPositionTicks;
         double turretRotation = Math.toRadians(reZeroedTurretTicks / ShooterConstants.TURRET_TICKS_PER_DEGREE);
 
-        double turretHeading = botPose.getHeading() + turretRotation + Math.toRadians(ShooterConstants.TURRET_ANGULAR_OFFSET);
+        double turretHeading = botPose.getHeading() + turretRotation;
 
         double turretX = botPose.getX() + (ShooterConstants.TURRET_POSITIONAL_OFFSET * FastMath.cos(botPose.getHeading()));
         double turretY = botPose.getY() + (ShooterConstants.TURRET_POSITIONAL_OFFSET * FastMath.sin(botPose.getHeading()));
@@ -85,6 +85,23 @@ public class Calculations {
         double futurePredictionTime = NORMAL * (1 + Math.sqrt(NORMAL_ACCEL / (turretAccel + 1e-3)));
 
         return MathUtil.clamp(futurePredictionTime, NORMAL, MAX);
+    }
+
+    public static double routeTurret(double rawtt) {
+
+        if (rawtt >= ShooterConstants.MIN_TURRET_POSITION_IN_DEGREES && rawtt <= ShooterConstants.MAX_TURRET_POSITION_IN_DEGREES) return rawtt; //no need to reroute
+
+        double[] reroutes = {rawtt - 360, rawtt + 360};
+        if (reroutes[0] >= ShooterConstants.MIN_TURRET_POSITION_IN_DEGREES && reroutes[0] <= ShooterConstants.MAX_TURRET_POSITION_IN_DEGREES) {
+            return reroutes[0];
+        }
+        else if (reroutes[1] >= ShooterConstants.MIN_TURRET_POSITION_IN_DEGREES && reroutes[1] <= ShooterConstants.MAX_TURRET_POSITION_IN_DEGREES) {
+            return reroutes[1];
+        }
+
+        // go to the closest limit if target position is outside the min and max
+        else if (rawtt < ShooterConstants.MIN_TURRET_POSITION_IN_DEGREES) return ShooterConstants.MIN_TURRET_POSITION_IN_DEGREES;
+        else return ShooterConstants.MAX_TURRET_POSITION_IN_DEGREES;
     }
 
 }

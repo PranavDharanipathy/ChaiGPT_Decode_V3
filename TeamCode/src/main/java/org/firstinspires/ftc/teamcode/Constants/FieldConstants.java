@@ -8,7 +8,7 @@ import org.firstinspires.ftc.teamcode.util.MathUtil;
 
 public class FieldConstants {
 
-    public static Pose RELOCALIZATION_POSE = new Pose(0, 0, Math.toRadians(270));
+    public static Pose RELOCALIZATION_POSE = new Pose(0, -59.75, Math.toRadians(-90));
 
     public static Pose BLUE_BASE_POSE = new Pose();
     public static Pose RED_BASE_POSE = new Pose();
@@ -21,9 +21,9 @@ public class FieldConstants {
     @SuppressWarnings("all")
     public enum GoalCoordinates {
 
-        //           CLOSE ALLIANCE                  CLOSE OPPONENT                           FAR
-        RED(new Pose(-72,72), new Pose(-72,72), new Pose(-72,72)),
-        BLUE(new Pose(72,72), new Pose(72,72), new Pose(72,72));
+        //        CLOSE ALLIANCE       CLOSE OPPONENT            FAR
+        RED(new Pose(72,76), new Pose(72,72), new Pose(67,72)),
+        BLUE(new Pose(-72,76), new Pose(-72,72), new Pose(-67,72));
 
         private Pose closeAlliance;
         private Pose closeOpponent;

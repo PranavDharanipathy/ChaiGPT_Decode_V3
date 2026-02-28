@@ -24,7 +24,7 @@ public class GeneralVeloMotorTuner extends OpMode {
 
     public static DcMotorSimple.Direction DIRECTION = DcMotorSimple.Direction.FORWARD;
 
-    public static double VELOCITY = 500;
+    public static double VELOCITY = 0;
 
     public static double KP = 0;
     public static double KD = 0;
@@ -38,6 +38,8 @@ public class GeneralVeloMotorTuner extends OpMode {
         motor = new GeneralVeloMotor(hardwareMap, motorName);
 
         telemetry = new MultipleTelemetry(super.telemetry, FtcDashboard.getInstance().getTelemetry());
+
+        telemetry.setMsTransmissionInterval(50);
     }
 
     @Override
@@ -49,8 +51,13 @@ public class GeneralVeloMotorTuner extends OpMode {
 
         motor.setVelocity(VELOCITY);
 
+        motor.update();
+
         telemetry.addData("velocity", motor.getVelocity());
         telemetry.addData("power", motor.getPower());
+        telemetry.addData("p", motor.p);
+        telemetry.addData("d", motor.d);
+        telemetry.addData("ff", motor.ff);
         telemetry.update();
 
         sleep(LOOP_TIME);

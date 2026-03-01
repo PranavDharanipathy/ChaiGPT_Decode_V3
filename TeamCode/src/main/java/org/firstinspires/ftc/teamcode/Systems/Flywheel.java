@@ -145,6 +145,7 @@ public final class Flywheel {
         targetVelocity = velocity;
     }
 
+    private double position = 0;
     private boolean firstTick = true;
     private double startTime;
 
@@ -167,12 +168,15 @@ public final class Flywheel {
 
         chooseCoefficientsInternal();
 
+        double lastPosition = position;
+        position = encoder.getCurrentPosition();
+
         prevTime = currentTime;
         currentTime = getSeconds() - startTime;
         dt = currentTime - prevTime;
 
         lastCurrentVelocity = currentVelocity;
-        currentVelocity = encoder.getVelocity();
+        currentVelocity = (position - lastPosition) / dt;
 
         double error = targetVelocity - currentVelocity;
 

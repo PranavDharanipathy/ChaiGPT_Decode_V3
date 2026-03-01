@@ -52,7 +52,7 @@ public class LimelightGoalApriltagLocalization extends OpMode {
 
         telemetry = new MultipleTelemetry(super.telemetry, FtcDashboard.getInstance().getTelemetry(), PanelsTelemetry.INSTANCE.getFtcTelemetry());
 
-        follower = DriveConstants.createTeleOpFollower(hardwareMap);
+        follower = DriveConstants.createFollower(hardwareMap);
 
         limelight = hardwareMap.get(Limelight3A.class, MapSetterConstants.limelight3AUSBDeviceName);
 

@@ -81,10 +81,10 @@ public class Tuning extends SelectableOpMode {
     @Override
     public void onSelect() {
         if (follower == null) {
-            follower = DriveConstants.createAutoFollower(hardwareMap);
+            follower = DriveConstants.createFollower(hardwareMap);
             PanelsConfigurables.INSTANCE.refreshClass(this);
         } else {
-            follower = DriveConstants.createAutoFollower(hardwareMap);
+            follower = DriveConstants.createFollower(hardwareMap);
         }
 
         follower.setStartingPose(new Pose());

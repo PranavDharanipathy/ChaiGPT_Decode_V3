@@ -58,9 +58,4 @@ public class V3TeleOp_BLUE extends TeleOpBaseOpMode {
 
         telemetry.runInstance(shooter, pedroDrive);
     }
-
-    @Override
-    public void stop() {
-        closeLynxModule();
-    }
 }

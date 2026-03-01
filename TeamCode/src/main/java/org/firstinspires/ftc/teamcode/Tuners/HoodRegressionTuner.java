@@ -19,9 +19,9 @@ import org.firstinspires.ftc.teamcode.TeleOp.drive.RobotCentricDrive;
 @TeleOp (group = "tuning")
 public class HoodRegressionTuner extends TeleOpBaseOpMode {
 
-    public static double TRANSFER_VELOCITY = 1200;
+    public static double TRANSFER_VELOCITY = 1850;
     public static double INTAKE_POWER = 1;
-    public static double FLYWHEEL_VELOCITY = 370_000;
+    public static double FLYWHEEL_VELOCITY = 0;
     public static double HOOD_POSITION = 0.3;
 
     public enum GOAL {
@@ -49,6 +49,7 @@ public class HoodRegressionTuner extends TeleOpBaseOpMode {
     public void init() {
 
         telemetry = new MultipleTelemetry(super.telemetry, FtcDashboard.getInstance().getTelemetry());
+        telemetry.setMsTransmissionInterval(10);
 
         initializeDevices();
 
@@ -71,15 +72,16 @@ public class HoodRegressionTuner extends TeleOpBaseOpMode {
         // clear data at start of loop
         clearCacheOfLynxModule();
 
-        controller2.getInformation();
+        controller1.getInformation();
 
         hoodAngler.setPosition(HOOD_POSITION);
         intake.setPower(INTAKE_POWER);
         transfer.setVelocity(TRANSFER_VELOCITY);
         flywheel.setVelocity(FLYWHEEL_VELOCITY, true);
+        transfer.update();
         flywheel.update();
 
-        if (controller2.main_buttonHasJustBeenPressed) {
+        if (controller1.main_buttonHasJustBeenPressed) {
             relocalization(FieldConstants.RELOCALIZATION_POSE);
         }
 

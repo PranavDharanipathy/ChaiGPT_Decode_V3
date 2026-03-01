@@ -10,7 +10,6 @@ import com.pedropathing.ftc.drivetrains.MecanumConstants;
 import com.pedropathing.ftc.localization.constants.PinpointConstants;
 import com.pedropathing.paths.PathConstraints;
 import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -21,7 +20,7 @@ public class DriveConstants {
 
     public static FollowerConstants followerConstants = new FollowerConstants()
 
-            .mass(13.19954)
+            .mass(14.4)
 
             .forwardZeroPowerAcceleration(66.62530181163879)
             .lateralZeroPowerAcceleration(-51.82186721441313)
@@ -37,7 +36,7 @@ public class DriveConstants {
             .drivePIDFCoefficients(new FilteredPIDFCoefficients(0.01,0,0.0018,0.85,0.1))
 
             .translationalPIDFSwitch(3)
-            .headingPIDFSwitch(0.17453299)
+            .headingPIDFSwitch(Math.toRadians(8))
             .drivePIDFSwitch(20)
 
             .secondaryTranslationalPIDFCoefficients(new PIDFCoefficients(0.1,0,0.003,0.035))
@@ -47,8 +46,7 @@ public class DriveConstants {
             .centripetalScaling(0)
             ;
 
-    public static PathConstraints autoPathConstraints = new PathConstraints(0.994, 50, 1.5, 1.5);
-    public static PathConstraints teleOpPathConstraints = new PathConstraints(0.994, 50, 1.6, 1.5);
+    public static PathConstraints pathConstraints = new PathConstraints(0.994, 50, 1.5, 1.5);
 
     public static MecanumConstants driveConstants = new MecanumConstants()
             .maxPower(1)
@@ -73,17 +71,9 @@ public class DriveConstants {
             .forwardEncoderDirection(GoBildaPinpointDriver.EncoderDirection.FORWARD)
             .strafeEncoderDirection(GoBildaPinpointDriver.EncoderDirection.REVERSED);
 
-    public static Follower createAutoFollower(HardwareMap hardwareMap) {
+    public static Follower createFollower(HardwareMap hardwareMap) {
         return new FollowerBuilder(followerConstants, hardwareMap)
-                .pathConstraints(autoPathConstraints)
-                .mecanumDrivetrain(driveConstants)
-                .pinpointLocalizer(localizerConstants)
-                .build();
-    }
-
-    public static Follower createTeleOpFollower(HardwareMap hardwareMap) {
-        return new FollowerBuilder(followerConstants, hardwareMap)
-                .pathConstraints(teleOpPathConstraints)
+                .pathConstraints(pathConstraints)
                 .mecanumDrivetrain(driveConstants)
                 .pinpointLocalizer(localizerConstants)
                 .build();

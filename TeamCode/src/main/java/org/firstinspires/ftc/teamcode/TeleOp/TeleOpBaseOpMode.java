@@ -94,7 +94,7 @@ public abstract class TeleOpBaseOpMode extends OpMode {
         left_back = hardwareMap.get(DcMotor.class, MapSetterConstants.leftBackMotorDeviceName);
         right_back = hardwareMap.get(DcMotor.class, MapSetterConstants.rightBackMotorDeviceName);
 
-        follower = DriveConstants.createTeleOpFollower(hardwareMap);
+        follower = DriveConstants.createFollower(hardwareMap);
 
         intake = hardwareMap.get(DcMotor.class, MapSetterConstants.intakeMotorDeviceName);
 

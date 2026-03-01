@@ -31,9 +31,9 @@ public class FlywheelDriveTuning extends TeleOpBaseOpMode {
     public static double I_MIN = ConfigurationConstants.FLYWHEEL_PIDVS_COEFFICIENTS.minI, I_MAX = ConfigurationConstants.FLYWHEEL_PIDVS_COEFFICIENTS.maxI;
     public static double P_MIN = ConfigurationConstants.FLYWHEEL_PIDVS_COEFFICIENTS.minP, P_MAX = ConfigurationConstants.FLYWHEEL_PIDVS_COEFFICIENTS.maxP;
 
-    public static double TRANSFER_VELOCITY = 2000;
+    public static double TRANSFER_VELOCITY = 1850;
     public static double INTAKE_POWER = 1;
-    public static double FLYWHEEL_VELOCITY = 405000;
+    public static double FLYWHEEL_VELOCITY = 0;
     public static double HOOD_POSITION = 0.2;
 
     private Telemetry telemetry;
@@ -55,6 +55,7 @@ public class FlywheelDriveTuning extends TeleOpBaseOpMode {
 
     @Override
     public void start() {
+        flywheel.setVelocityPIDVSCoefficients(coefficients);
         new PostAutonomousRobotReset(this);
     }
 
@@ -85,6 +86,7 @@ public class FlywheelDriveTuning extends TeleOpBaseOpMode {
         intake.setPower(INTAKE_POWER);
         transfer.setVelocity(TRANSFER_VELOCITY);
         flywheel.setVelocity(FLYWHEEL_VELOCITY, true);
+        transfer.update();
         flywheel.update();
 
         telemetry.addData("Target Velocity", flywheel.getTargetVelocity());
@@ -98,8 +100,4 @@ public class FlywheelDriveTuning extends TeleOpBaseOpMode {
         telemetry.update();
     }
 
-    @Override
-    public void stop() {
-        closeLynxModule();
-    }
 }

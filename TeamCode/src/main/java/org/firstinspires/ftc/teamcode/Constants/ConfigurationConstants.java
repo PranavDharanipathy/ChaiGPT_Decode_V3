@@ -52,21 +52,21 @@ public class ConfigurationConstants {
     public static double FLYWHEEL_MOTOR_RPM = 6000;
 
     public static FlywheelPIDVSCoefficients FLYWHEEL_PIDVS_COEFFICIENTS = new FlywheelPIDVSCoefficients(
-            0.0005,
-            0.00003,
-            0.0000175,
-            0.000285,
-            0.00003,
-            0.0004,
+            0.005,
+            0.001,
+            0.0000001,
+            0.00015,
+            0.0001,
+            0.00041,
             0.000001,
             0.83,
-            167,
             80,
-            0.67,
-            0.23,
-            -0.25, 1,
+            100,
+            0.5,
+            0.3,
+            -1, 1,
             -0.3, 0.3,
-            -0.2, 0.2
+            -0.3, 0.3
     );
 
     public static double FLYWHEEL_VELOCITY_MARGIN_OF_ERROR = 10;

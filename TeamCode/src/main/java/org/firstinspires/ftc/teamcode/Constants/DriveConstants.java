@@ -88,4 +88,12 @@ public class DriveConstants {
                 .pinpointLocalizer(localizerConstants)
                 .build();
     }
+
+    public static Follower createFollower(HardwareMap hardwareMap) {
+        return new FollowerBuilder(followerConstants, hardwareMap)
+                .pathConstraints(teleOpPathConstraints)
+                .mecanumDrivetrain(driveConstants)
+                .pinpointLocalizer(localizerConstants)
+                .build();
+    }
 }

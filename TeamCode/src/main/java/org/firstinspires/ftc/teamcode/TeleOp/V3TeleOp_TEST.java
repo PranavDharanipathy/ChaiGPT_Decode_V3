@@ -63,8 +63,4 @@ public class V3TeleOp_TEST extends TeleOpBaseOpMode {
         telemetry.runInstance(shooter, pedroDrive);
     }
 
-    @Override
-    public void stop() {
-        closeLynxModule();
-    }
 }

@@ -49,6 +49,7 @@ public class ShooterDriveTuning extends TeleOpBaseOpMode {
         intake.setPower(INTAKE_POWER);
         transfer.setVelocity(TRANSFER_VELOCITY);
         flywheel.setVelocity(FLYWHEEL_VELOCITY, true);
+        transfer.update();
         flywheel.update();
 
         telemetry.addData("Tick rate", TickrateChecker.getTimePerTick());
@@ -69,8 +70,4 @@ public class ShooterDriveTuning extends TeleOpBaseOpMode {
         telemetry.update();
     }
 
-    @Override
-    public void stop() {
-        closeLynxModule();
-    }
 }

@@ -7,6 +7,9 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 public class GeneralVeloMotor {
 
     private DcMotorEx motor;
+    public DcMotorEx getMotor() {
+        return motor;
+    }
 
     public GeneralVeloMotor(HardwareMap hardwareMap, String deviceName) {
 

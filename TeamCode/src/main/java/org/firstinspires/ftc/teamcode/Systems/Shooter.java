@@ -9,6 +9,7 @@ import org.firstinspires.ftc.teamcode.Constants.Calculations;
 import org.firstinspires.ftc.teamcode.Constants.CameraConstants;
 import org.firstinspires.ftc.teamcode.Constants.FieldConstants;
 import org.firstinspires.ftc.teamcode.Constants.GeneralConstants;
+import org.firstinspires.ftc.teamcode.Constants.Models;
 import org.firstinspires.ftc.teamcode.Constants.ShooterConstants;
 import org.firstinspires.ftc.teamcode.pedroPathing.PoseVelocity;
 import org.firstinspires.ftc.teamcode.pedroPathing.PoseVelocityTracker;
@@ -239,7 +240,6 @@ public class Shooter implements EffectivelySubsystem {
         }
 
         //hood
-
         if (flywheelTargetVelocityZone == ZONE.FAR) hoodPosition = ShooterConstants.HOOD_FAR_POSITION;
         else {
 
@@ -250,10 +250,10 @@ public class Shooter implements EffectivelySubsystem {
 
             distanceToGoal = Calculations.getDistanceFromGoal(turretPose.getX(), turretPose.getY(), goalCoordinatesForDistance.getCoordinate());
 
-            hoodPosition = ShooterConstants.HOOD_CLOSE_POSITION; //Models.getCloseHoodPositionFromRegression(distanceToGoal);
+            hoodPosition = Models.getCloseHoodPositionFromRegression(distanceToGoal); //ShooterConstants.HOOD_CLOSE_POSITION
         }
 
-        staticHoodUpdate();
+        //staticHoodUpdate();
 
         //updating
         hoodAngler.setSafePosition(hoodPosition);
@@ -269,44 +269,38 @@ public class Shooter implements EffectivelySubsystem {
         if (flywheelTargetVelocityZone == ZONE.FAR) {
             flywheelTargetVelocity = ShooterConstants.FAR_SIDE_FLYWHEEL_SHOOT_VELOCITY;
         }
-        else if (goalCoordinates.onOpponentSide(futureRobotPose.getY())) {
-            flywheelTargetVelocity = ShooterConstants.OPPONENT_SIDE_CLOSE_SIDE_FLYWHEEL_SHOOT_VELOCITY;
-        }
-        else if (distanceToGoal < ShooterConstants.CLOSE_SIDE_SWITCH) {
-            flywheelTargetVelocity = ShooterConstants.CLOSER_CLOSE_SIDE_FLYWHEEL_SHOOT_VELOCITY;
-        }
         else {
-            flywheelTargetVelocity = ShooterConstants.FARTHER_CLOSE_SIDE_FLYWHEEL_SHOOT_VELOCITY;
+            flywheelTargetVelocity = ShooterConstants.CLOSE_SIDE_FLYWHEEL_SHOOT_VELOCITY;
         }
         return flywheelTargetVelocity;
     }
 
-    private void staticHoodUpdate() {
-
-        if (controller2.xHasJustBeenPressed) {//lower hood
-
-            if (flywheelTargetVelocityZone == ZONE.CLOSE) {
-                ShooterConstants.HOOD_CLOSE_POSITION+=ShooterConstants.HOOD_POSITION_MANUAL_INCREMENT;
-                hoodPosition = ShooterConstants.HOOD_CLOSE_POSITION;
-            }
-            else {
-                ShooterConstants.HOOD_FAR_POSITION+=ShooterConstants.HOOD_POSITION_MANUAL_INCREMENT;
-                hoodPosition = ShooterConstants.HOOD_FAR_POSITION;
-            }
-
-        }
-        else if (controller2.bHasJustBeenPressed) {//increase hood
-
-            if (flywheelTargetVelocityZone == ZONE.CLOSE) {
-                ShooterConstants.HOOD_CLOSE_POSITION-=ShooterConstants.HOOD_POSITION_MANUAL_INCREMENT;
-                hoodPosition = ShooterConstants.HOOD_CLOSE_POSITION;
-            }
-            else {
-                ShooterConstants.HOOD_FAR_POSITION-=ShooterConstants.HOOD_POSITION_MANUAL_INCREMENT;
-                hoodPosition = ShooterConstants.HOOD_FAR_POSITION;
-            }
-        }
-    }
+//    private void staticHoodUpdate() {
+//
+//        if (controller2.xHasJustBeenPressed) {//lower hood
+//
+//            if (flywheelTargetVelocityZone == ZONE.CLOSE) {
+//                ShooterConstants.HOOD_CLOSE_POSITION+=ShooterConstants.HOOD_POSITION_MANUAL_INCREMENT;
+//                hoodPosition = ShooterConstants.HOOD_CLOSE_POSITION;
+//            }
+//            else {
+//                ShooterConstants.HOOD_FAR_POSITION+=ShooterConstants.HOOD_POSITION_MANUAL_INCREMENT;
+//                hoodPosition = ShooterConstants.HOOD_FAR_POSITION;
+//            }
+//
+//        }
+//        else if (controller2.bHasJustBeenPressed) {//increase hood
+//
+//            if (flywheelTargetVelocityZone == ZONE.CLOSE) {
+//                ShooterConstants.HOOD_CLOSE_POSITION-=ShooterConstants.HOOD_POSITION_MANUAL_INCREMENT;
+//                hoodPosition = ShooterConstants.HOOD_CLOSE_POSITION;
+//            }
+//            else {
+//                ShooterConstants.HOOD_FAR_POSITION-=ShooterConstants.HOOD_POSITION_MANUAL_INCREMENT;
+//                hoodPosition = ShooterConstants.HOOD_FAR_POSITION;
+//            }
+//        }
+//    }
 
     private void relocalization(Pose reZeroPose) {
         follower.setPose(reZeroPose);

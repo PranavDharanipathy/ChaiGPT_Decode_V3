@@ -138,15 +138,15 @@ public class FlywheelPIDVSCoefficients {
 
     public double kp(double targetVelocity, double currentVelocity) {
 
-        if ((targetVelocity - currentVelocity) < pSwitch) return kiClose;
-        else return kiFar;
+        if (Math.abs(targetVelocity - currentVelocity) < pSwitch) return kpClose;
+        else return kpFar;
     }
 
     private double kISwitchTargetVelocity;
 
     public double ki(double targetVelocity, double currentVelocity, DoubleM errorSum) {
 
-        if (kISwitchTargetVelocity == targetVelocity || (targetVelocity - currentVelocity) < iSwitch) {
+        if (kISwitchTargetVelocity == targetVelocity || Math.abs(targetVelocity - currentVelocity) < iSwitch) {
 
             if (kISwitchTargetVelocity != targetVelocity) errorSum.set(0);
 

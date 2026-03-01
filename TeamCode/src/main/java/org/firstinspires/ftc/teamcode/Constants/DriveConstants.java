@@ -30,9 +30,9 @@ public class DriveConstants {
             .useSecondaryHeadingPIDF(true)
             .useSecondaryDrivePIDF(false)
 
-            .translationalPIDFCoefficients(new PIDFCoefficients(0.13, 0, 0.018, 0.175))
+            .translationalPIDFCoefficients(new PIDFCoefficients(0.1, 0, 0.01, 0.005))
 
-            .headingPIDFCoefficients(new PIDFCoefficients(1,0,0.055,0.1))
+            .headingPIDFCoefficients(new PIDFCoefficients(0.84,0,0.086,0.1))
 
             .drivePIDFCoefficients(new FilteredPIDFCoefficients(0.01,0,0.0018,0.85,0.1))
 
@@ -40,9 +40,9 @@ public class DriveConstants {
             .headingPIDFSwitch(0.17453299)
             .drivePIDFSwitch(20)
 
-            .secondaryTranslationalPIDFCoefficients(new PIDFCoefficients(0.1,0,0.003,0.035))
+            .secondaryTranslationalPIDFCoefficients(new PIDFCoefficients(0.0767,0.00009,0.0185,0.005))
 
-            .secondaryHeadingPIDFCoefficients(new PIDFCoefficients(1.1,0.0005,0,0.025))
+            .secondaryHeadingPIDFCoefficients(new PIDFCoefficients(0.5,0.0005,0.08,0.025))
 
             .centripetalScaling(0)
             ;

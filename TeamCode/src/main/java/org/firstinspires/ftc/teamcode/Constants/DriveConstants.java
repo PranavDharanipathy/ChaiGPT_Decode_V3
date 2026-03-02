@@ -32,22 +32,23 @@ public class DriveConstants {
 
             .translationalPIDFCoefficients(new PIDFCoefficients(0.1, 0, 0.01, 0.005))
 
-            .headingPIDFCoefficients(new PIDFCoefficients(0.84,0,0.086,0.1))
+            .headingPIDFCoefficients(new PIDFCoefficients(0.85,0,0.086,0.1))
 
-            .drivePIDFCoefficients(new FilteredPIDFCoefficients(0.01,0,0.0018,0.85,0.1))
+            .drivePIDFCoefficients(new FilteredPIDFCoefficients(0.071,0.0005,0.000615,0.15,0.065))
 
             .translationalPIDFSwitch(3)
-            .headingPIDFSwitch(0.17453299)
+            .headingPIDFSwitch(0.19)
             .drivePIDFSwitch(13)
+
 
             .secondaryTranslationalPIDFCoefficients(new PIDFCoefficients(0.0767,0.00009,0.0185,0.005))
 
-            .secondaryHeadingPIDFCoefficients(new PIDFCoefficients(0.5,0.0005,0.08,0.025))
+            .secondaryHeadingPIDFCoefficients(new PIDFCoefficients(0.668,0.0007,0.085,0.025))
 
-            .centripetalScaling(0)
+            .centripetalScaling(0.0004)
             ;
 
-    public static PathConstraints autoPathConstraints = new PathConstraints(0.994, 50, 1.5, 1.5);
+    public static PathConstraints autoPathConstraints = new PathConstraints(0.994, 50, 1.4, 1.4);
     public static PathConstraints teleOpPathConstraints = new PathConstraints(0.994, 50, 1.6, 1.5);
 
     public static MecanumConstants driveConstants = new MecanumConstants()

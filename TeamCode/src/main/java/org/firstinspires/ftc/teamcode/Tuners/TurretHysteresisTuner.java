@@ -68,10 +68,6 @@ public class TurretHysteresisTuner extends TeleOpBaseOpMode {
         telemetry.update();
     }
 
-    @Override
-    public void stop() {
-        closeLynxModule();
-    }
 
     private double getTurretFuturePosePredictionTime(double turretAcceleration) {
 

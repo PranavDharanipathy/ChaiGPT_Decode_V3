@@ -250,7 +250,7 @@ public class Shooter implements EffectivelySubsystem {
 
             distanceToGoal = Calculations.getDistanceFromGoal(turretPose.getX(), turretPose.getY(), goalCoordinatesForDistance.getCoordinate());
 
-            hoodPosition = Models.getCloseHoodPositionFromRegression(distanceToGoal); //ShooterConstants.HOOD_CLOSE_POSITION
+            hoodPosition = Models.getCloseHoodPosition(distanceToGoal); //ShooterConstants.HOOD_CLOSE_POSITION
         }
 
         //staticHoodUpdate();

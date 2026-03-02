@@ -46,8 +46,11 @@ public class Camera {
         limelight.reloadPipeline();
     }
 
-    private Pose botPose;
+    private Pose botPoseMT1;
+    private Pose botPoseMT2;
     private double distanceToTag;
+
+    private boolean eligibleForMT2 = false;
 
     public void update() {
 
@@ -59,12 +62,19 @@ public class Camera {
 
             distanceToTag = llResult.getBotposeAvgDist();
 
-            botPose = Calculations.convertPose3DtoPedroPose(llResult.getBotpose_MT2());
+            botPoseMT1 = Calculations.convertPose3DtoPedroPose(llResult.getBotpose());
+            botPoseMT2 = Calculations.convertPose3DtoPedroPose(llResult.getBotpose_MT2());
+
+
         }
+
     }
 
-    public Pose getBotPose() {
-        return botPose;
+    public Pose getBotPoseMT1() {
+        return botPoseMT1;
+    }
+    public Pose getBotPoseMT2() {
+        return botPoseMT2;
     }
     public double getDistanceToTag() {
         return distanceToTag;

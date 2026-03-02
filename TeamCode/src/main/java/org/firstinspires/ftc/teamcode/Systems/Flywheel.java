@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.Systems;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.chaigptrobotics.shenanigans.Peak;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -11,7 +12,7 @@ import org.firstinspires.ftc.teamcode.util.DoubleM;
 import org.firstinspires.ftc.teamcode.util.Encoder;
 import org.firstinspires.ftc.teamcode.util.MathUtil;
 
-@Peak
+@Config
 public final class Flywheel {
 
     private final Encoder encoder;
@@ -156,7 +157,9 @@ public final class Flywheel {
     }
 
     private double power = 0;
-
+    private int times = 0;
+    public static int loops = 3;
+    private double tempCur = 0;
     public void update() {
 
         //setting start time
@@ -170,14 +173,18 @@ public final class Flywheel {
 
         double lastPosition = position;
         position = encoder.getCurrentPosition();
-
         prevTime = currentTime;
         currentTime = getSeconds() - startTime;
         dt = currentTime - prevTime;
 
+        times++;
+        tempCur += encoder.getVelocity();//(position - lastPosition) / dt;
         lastCurrentVelocity = currentVelocity;
-        currentVelocity = (position - lastPosition) / dt;
-
+        if (times % loops == 0){
+            currentVelocity = tempCur / loops;
+            times = 0;
+            tempCur = 0;
+        }
         double error = targetVelocity - currentVelocity;
 
 

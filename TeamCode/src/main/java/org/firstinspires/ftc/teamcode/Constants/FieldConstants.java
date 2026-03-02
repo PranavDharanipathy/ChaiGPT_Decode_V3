@@ -36,7 +36,6 @@ public class FieldConstants {
             this.far = far;
         }
 
-        /// Sets the current the close and far {@link GoalCoordinate}
         public void setGoalCoordinates(Pose closeAlliance, Pose closeOpponent, Pose far) {
 
             this.closeAlliance = closeAlliance;

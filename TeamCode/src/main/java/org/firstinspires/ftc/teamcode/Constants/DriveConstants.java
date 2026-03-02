@@ -38,7 +38,7 @@ public class DriveConstants {
 
             .translationalPIDFSwitch(3)
             .headingPIDFSwitch(0.17453299)
-            .drivePIDFSwitch(20)
+            .drivePIDFSwitch(13)
 
             .secondaryTranslationalPIDFCoefficients(new PIDFCoefficients(0.0767,0.00009,0.0185,0.005))
 

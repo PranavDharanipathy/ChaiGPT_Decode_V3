@@ -35,8 +35,6 @@ public class PedroDrive extends Subsystem {
     @Override
     public void update() {
 
-        follower.update();
-
         if (state == DriveState.MANUAL) {
 
             if (!follower.getTeleopDrive()) follower.startTeleOpDrive(true);

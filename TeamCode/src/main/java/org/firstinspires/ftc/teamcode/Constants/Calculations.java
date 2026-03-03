@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.Constants;
 
+import com.pedropathing.ftc.FTCCoordinates;
 import com.pedropathing.geometry.PedroCoordinates;
 import com.pedropathing.geometry.Pose;
 
@@ -17,7 +18,7 @@ public class Calculations {
         double y = MathUtil.metersToInches(pose3d.getPosition().y);
         double yaw = pose3d.getOrientation().getYaw(AngleUnit.RADIANS);
 
-        return new Pose(x, y, yaw).getAsCoordinateSystem(PedroCoordinates.INSTANCE);
+        return new Pose(x, y, yaw, FTCCoordinates.INSTANCE).getAsCoordinateSystem(PedroCoordinates.INSTANCE);
     }
 
     /// The angle in degrees that is required for any system to look in to be pointing at the goal.
@@ -69,6 +70,11 @@ public class Calculations {
     /// @return robots translational velocity vector
     public static double getRobotTranslationalVelocity(double xVelocity, double yVelocity) {
         return Math.hypot(xVelocity, yVelocity);
+    }
+
+    /// @return robots translational velocity vector
+    public static double getRobotTranslationalVelocity(PoseVelocity poseVelocity) {
+        return Math.hypot(poseVelocity.getXVelocity(), poseVelocity.getYVelocity());
     }
 
     /// For turret hysteresis control - the amount of time in the future where the robot's pose

@@ -1,21 +1,22 @@
 package org.firstinspires.ftc.teamcode.Testing;
 
 import com.acmerobotics.dashboard.FtcDashboard;
-import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.pedropathing.geometry.Pose;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.Constants.Calculations;
 import org.firstinspires.ftc.teamcode.TeleOp.TeleOpBaseOpMode;
+import org.firstinspires.ftc.teamcode.TeleOp.drive.RobotCentricDrive;
 import org.firstinspires.ftc.teamcode.pedroPathing.PoseVelocity;
 import org.firstinspires.ftc.teamcode.pedroPathing.PoseVelocityTracker;
 
-@Config
 @TeleOp(group = "testing")
 public class PoseVelocityTrackerTesting extends TeleOpBaseOpMode {
 
     private PoseVelocityTracker poseVelocityTracker;
+
+    private RobotCentricDrive robotCentricDrive = new RobotCentricDrive();
 
     @Override
     public void init() {
@@ -25,7 +26,11 @@ public class PoseVelocityTrackerTesting extends TeleOpBaseOpMode {
 
         telemetry = new MultipleTelemetry(this.telemetry, FtcDashboard.getInstance().getTelemetry());
 
+        telemetry.setMsTransmissionInterval(30);
+
         poseVelocityTracker = new PoseVelocityTracker(follower);
+
+        robotCentricDrive.provideComponents(left_front, right_front, left_back, right_back, controller1);
     }
 
     @Override
@@ -56,10 +61,12 @@ public class PoseVelocityTrackerTesting extends TeleOpBaseOpMode {
         double[] yVelHistory = histories[1];
         double[] angVelHistory = histories[2];
 
-        telemetry.addData("xVelHistory", "P:%.2f, C:%.2f", xVelHistory[0], xVelHistory[1]);
-        telemetry.addData("yVelHistory", "P:%.2f, C:%.2f", yVelHistory[0], yVelHistory[1]);
-        telemetry.addData("angVelHistory", "P:%.2f, C:%.2f", angVelHistory[0], angVelHistory[1]);
+        telemetry.addData("xVelHistory", "OLD:%.2f, NEW:%.2f", xVelHistory[0], xVelHistory[1]);
+        telemetry.addData("yVelHistory", "OLD:%.2f, NEW:%.2f", yVelHistory[0], yVelHistory[1]);
+        telemetry.addData("angVelHistory", "OLD:%.2f, NEW:%.2f", angVelHistory[0], angVelHistory[1]);
 
         telemetry.update();
+
+        robotCentricDrive.update();
     }
 }

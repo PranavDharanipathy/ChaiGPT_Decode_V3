@@ -30,7 +30,7 @@ public class V3TeleOp_BLUE extends TeleOpBaseOpMode {
         pedroDrive.provideComponents(follower, controller1, controller2);
         intake.provideComponents(super.intake, transfer, controller1);
         blocker.provideComponents(super.blocker, controller1);
-        shooter.provideComponents(flywheel, turret, hoodAngler, follower, unstartedCamera, controller1, controller2);
+        shooter.provideComponents(flywheel, turret, hoodAngler, follower, camera, controller1, controller2);
         telemetry.provideComponents(super.telemetry, true, controller2);
         setUpLynxModule();
     }
@@ -54,6 +54,7 @@ public class V3TeleOp_BLUE extends TeleOpBaseOpMode {
         intake.update();
         shooter.update();
         blocker.update();
+        follower.update();
         pedroDrive.update();
 
         telemetry.runInstance(shooter, pedroDrive);

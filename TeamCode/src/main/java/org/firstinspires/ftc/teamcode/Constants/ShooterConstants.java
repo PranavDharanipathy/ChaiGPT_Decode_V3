@@ -32,6 +32,6 @@ public class ShooterConstants {
     /// Index 0 is translational, index 1 in angular (in radians).
     /// <p>
     /// Translational is in inches per second and angular is in radians per second.
-    public static double[] TURRET_HYSTERESIS_CONTROL_ENGAGE_VELOCITY = {10, Math.toRadians(15)};
+    public static double[] TURRET_HYSTERESIS_CONTROL_ENGAGE_VELOCITY = {20, Math.toRadians(7)};
 
 }

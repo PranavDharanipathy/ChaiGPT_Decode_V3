@@ -64,7 +64,7 @@ public class TurretBase {
         rightTurretBase.setPwmRange(new PwmControl.PwmRange(500, 2500));
 
         encoder = new Encoder(hardwareMap.get(DcMotorEx.class, MapSetterConstants.turretExternalEncoderMotorPairName));
-        encoder.setDirection(Encoder.Direction.FORWARD);
+        encoder.setDirection(Encoder.Direction.REVERSE);
 
         // first targetPosition is the start position
         double tsp = turretStartPosition != null ? turretStartPosition : encoder.getCurrentPosition();

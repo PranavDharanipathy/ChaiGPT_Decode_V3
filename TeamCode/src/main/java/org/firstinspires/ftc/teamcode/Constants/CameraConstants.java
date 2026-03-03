@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.Constants;
 
+import org.firstinspires.ftc.teamcode.Systems.CurrentAlliance;
+
 public class CameraConstants {
 
     public enum PIPELINES {
@@ -9,7 +11,7 @@ public class CameraConstants {
         BLUE_PIPELINE(2),
         TEST_PIPELINE(7);
 
-        private int index = 0; // default index
+        private int index; // default index
 
         PIPELINES(int index) {
             this.index = index;
@@ -18,7 +20,14 @@ public class CameraConstants {
         public int getPipelineIndex() {
             return index;
         }
+
+        public static PIPELINES getPipelineFromAlliance(CurrentAlliance.ALLIANCE alliance) {
+            return alliance == CurrentAlliance.ALLIANCE.BLUE_ALLIANCE ? BLUE_PIPELINE : RED_PIPELINE;
+        }
     }
 
     public static int CAMERA_POLL_RATE = 85;
+
+    public static double MT1_LOCALIZATION_STEPS = 3;
+    public static double ODOMETRY_RELOCALIZATION_FREQUENCY = 10; //in seconds
 }

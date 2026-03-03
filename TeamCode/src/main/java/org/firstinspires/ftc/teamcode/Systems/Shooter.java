@@ -326,8 +326,8 @@ public class Shooter implements EffectivelySubsystem {
 
     private double customTHC;
 
-    public void provideCustomTHCLookahead(DoubleUnaryOperator THCoperation) {
-        customTHC = THCoperation.applyAsDouble(turretAcceleration);
+    public void provideCustomTHCLookahead(DoubleUnaryOperator THCOperation) {
+        customTHC = THCOperation.applyAsDouble(turretAcceleration);
     }
 
 }

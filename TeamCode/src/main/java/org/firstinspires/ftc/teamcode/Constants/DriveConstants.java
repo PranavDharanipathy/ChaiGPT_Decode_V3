@@ -20,30 +20,31 @@ public class DriveConstants {
 
     public static FollowerConstants followerConstants = new FollowerConstants()
 
-            .mass(14.4)
+            .mass(14.2)
 
-            .forwardZeroPowerAcceleration(66.62530181163879)
-            .lateralZeroPowerAcceleration(-51.82186721441313)
+            .forwardZeroPowerAcceleration(-24.671359021186653)
+            .lateralZeroPowerAcceleration(-56.07608848166188)
 
             .useSecondaryTranslationalPIDF(true)
             .useSecondaryHeadingPIDF(true)
             .useSecondaryDrivePIDF(false)
 
-            .translationalPIDFCoefficients(new PIDFCoefficients(0.13, 0, 0.018, 0.175))
+            .translationalPIDFCoefficients(new PIDFCoefficients(0.1, 0, 0.01, 0.005))
 
-            .headingPIDFCoefficients(new PIDFCoefficients(1,0,0.055,0.1))
+            .headingPIDFCoefficients(new PIDFCoefficients(0.85,0,0.086,0.1))
 
-            .drivePIDFCoefficients(new FilteredPIDFCoefficients(0.01,0,0.0018,0.85,0.1))
+            .drivePIDFCoefficients(new FilteredPIDFCoefficients(0.071,0.0005,0.000615,0.15,0.065))
 
             .translationalPIDFSwitch(3)
-            .headingPIDFSwitch(Math.toRadians(8))
-            .drivePIDFSwitch(20)
+            .headingPIDFSwitch(0.19)
+            .drivePIDFSwitch(13)
 
-            .secondaryTranslationalPIDFCoefficients(new PIDFCoefficients(0.1,0,0.003,0.035))
 
-            .secondaryHeadingPIDFCoefficients(new PIDFCoefficients(1.1,0.0005,0,0.025))
+            .secondaryTranslationalPIDFCoefficients(new PIDFCoefficients(0.0767,0.00009,0.0185,0.005))
 
-            .centripetalScaling(0)
+            .secondaryHeadingPIDFCoefficients(new PIDFCoefficients(0.668,0.0007,0.085,0.025))
+
+            .centripetalScaling(0.0004)
             ;
 
     public static PathConstraints pathConstraints = new PathConstraints(0.994, 50, 1.5, 1.5);
@@ -59,8 +60,8 @@ public class DriveConstants {
             .rightFrontMotorDirection(DcMotorSimple.Direction.FORWARD)
             .rightRearMotorDirection(DcMotorSimple.Direction.FORWARD)
 
-            .xVelocity(-41.2745147944275)
-            .yVelocity(-61.15854729822397);
+            .xVelocity(82.51125978484868)
+            .yVelocity(61.454884446512054);
 
     public static PinpointConstants localizerConstants = new PinpointConstants()
             .forwardPodY(2.83464)

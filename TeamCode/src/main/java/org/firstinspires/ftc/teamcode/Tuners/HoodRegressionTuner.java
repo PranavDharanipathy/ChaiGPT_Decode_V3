@@ -111,6 +111,7 @@ public class HoodRegressionTuner extends TeleOpBaseOpMode {
 
         telemetry.addData("turret position + robot heading", "%.2f, %.2f, %.2f", turretPose.getX(), turretPose.getY(), Math.toDegrees(robotYawRad));
         telemetry.addData("distance to goal", distanceToGoal);
+        telemetry.addData("robot pose", robotPose);
 
         telemetry.addData("goal coordinate", "x:%.2f, y:%.2f", goal.getCoordinate().getX(), goal.getCoordinate().getY());
 
@@ -118,10 +119,6 @@ public class HoodRegressionTuner extends TeleOpBaseOpMode {
 
     }
 
-    @Override
-    public void stop() {
-        closeLynxModule();
-    }
 
     private void relocalization(Pose pose) {
         follower.setPose(pose);

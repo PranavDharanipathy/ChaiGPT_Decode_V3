@@ -71,6 +71,11 @@ public class Calculations {
         return Math.hypot(xVelocity, yVelocity);
     }
 
+    /// @return robots translational velocity vector
+    public static double getRobotTranslationalVelocity(PoseVelocity poseVelocity) {
+        return Math.hypot(poseVelocity.getXVelocity(), poseVelocity.getYVelocity());
+    }
+
     /// For turret hysteresis control - the amount of time in the future where the robot's pose
     /// will be predicted based on its current pose and velocity as well as the turret's acceleration.
     /// @param turretAcceleration is in rad/sec^2

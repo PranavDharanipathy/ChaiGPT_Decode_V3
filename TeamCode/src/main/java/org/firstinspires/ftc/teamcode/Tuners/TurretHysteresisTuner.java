@@ -39,7 +39,7 @@ public class TurretHysteresisTuner extends TeleOpBaseOpMode {
         telemetry.setMsTransmissionInterval(50);
 
         robotCentricDrive.provideComponents(left_front, right_front, left_back, right_back, controller1);
-        shooter.provideComponents(flywheel, turret, hoodAngler, follower, unstartedCamera, controller1, controller2);
+        shooter.provideComponents(flywheel, turret, hoodAngler, follower, camera, controller1, controller2);
         setUpLynxModule();
 
         shooter.setTHCTuning(true);

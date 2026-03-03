@@ -11,13 +11,18 @@ public class PoseVelocityTracker {
     private Follower follower;
 
     public PoseVelocityTracker(Follower follower) {
+
         this.follower = follower;
+
+        xVelHistory.ensureCapacity(2);
+        yVelHistory.ensureCapacity(2);
+        angVelHistory.ensureCapacity(2);
     }
 
     //index 0 is previous and index 1 is current
-    private List<Double> xVelHistory = new ArrayList<>(List.of(0.0, 0.0));
-    private List<Double> yVelHistory = new ArrayList<>(List.of(0.0, 0.0));
-    private List<Double> angVelHistory = new ArrayList<>(List.of(0.0, 0.0));
+    private ArrayList<Double> xVelHistory = new ArrayList<>(List.of(0.0, 0.0));
+    private ArrayList<Double> yVelHistory = new ArrayList<>(List.of(0.0, 0.0));
+    private ArrayList<Double> angVelHistory = new ArrayList<>(List.of(0.0, 0.0));
 
     private void buildVelHistory(List<Double> velHistory, double currentVel) {
 

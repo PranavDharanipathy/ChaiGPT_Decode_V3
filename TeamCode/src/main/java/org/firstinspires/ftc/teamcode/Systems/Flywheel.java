@@ -12,6 +12,7 @@ import org.firstinspires.ftc.teamcode.util.DoubleM;
 import org.firstinspires.ftc.teamcode.util.Encoder;
 import org.firstinspires.ftc.teamcode.util.MathUtil;
 
+@Peak
 @Config
 public final class Flywheel {
 

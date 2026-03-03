@@ -48,7 +48,7 @@ public abstract class TeleOpBaseOpMode extends OpMode {
     public DcMotor intake;
     public Blocker blocker;
 
-    public Camera unstartedCamera;
+    public Camera camera;
 
     public Follower follower;
 
@@ -102,7 +102,7 @@ public abstract class TeleOpBaseOpMode extends OpMode {
 
         blocker = new Blocker(hardwareMap.get(Servo.class, MapSetterConstants.blockerServoDeviceName));
 
-        unstartedCamera = new Camera(follower, Camera.from(hardwareMap, MapSetterConstants.limelight3AUSBDeviceName));
+        camera = new Camera(follower, Camera.from(hardwareMap, MapSetterConstants.limelight3AUSBDeviceName));
 
         flywheel = new Flywheel(
                 hardwareMap.get(DcMotorEx.class, MapSetterConstants.leftFlywheelMotorDeviceName),
@@ -151,7 +151,7 @@ public abstract class TeleOpBaseOpMode extends OpMode {
                 ConfigurationConstants.TRANSFER_PDF_COEFFICIENTS[2]
         );
 
-        unstartedCamera.setPollRateHz(CameraConstants.CAMERA_POLL_RATE);
+        camera.setPollRateHz(CameraConstants.CAMERA_POLL_RATE);
 
         flywheel.initVoltageSensor(hardwareMap);
         flywheel.setInternalParameters(

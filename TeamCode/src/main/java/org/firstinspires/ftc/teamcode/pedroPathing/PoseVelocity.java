@@ -23,4 +23,5 @@ public class PoseVelocity {
     public double getAngularVelocity() {
         return angVelocity;
     }
+
 }

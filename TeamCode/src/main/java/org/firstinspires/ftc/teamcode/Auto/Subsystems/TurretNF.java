@@ -25,7 +25,7 @@ public TurretNF() {}
 
 
         turret.setPIDFSCoefficients(ConfigurationConstants.TURRET_PIDFS_COEFFICIENTS);
-        turret.reverse();
+        //turret.reverse();
         goToHomePosition();
 
     }

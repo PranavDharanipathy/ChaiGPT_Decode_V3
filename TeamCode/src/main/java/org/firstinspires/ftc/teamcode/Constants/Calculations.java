@@ -1,11 +1,8 @@
 package org.firstinspires.ftc.teamcode.Constants;
 
-import com.pedropathing.ftc.FTCCoordinates;
-import com.pedropathing.geometry.PedroCoordinates;
 import com.pedropathing.geometry.Pose;
 
 import org.apache.commons.math3.util.FastMath;
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
 import org.firstinspires.ftc.teamcode.pedroPathing.PoseVelocity;
 import org.firstinspires.ftc.teamcode.util.MathUtil;
@@ -14,11 +11,11 @@ public class Calculations {
 
     public static Pose convertPose3DtoPedroPose(Pose3D pose3d) {
 
-        double x = MathUtil.metersToInches(pose3d.getPosition().x);
-        double y = MathUtil.metersToInches(pose3d.getPosition().y);
-        double yaw = pose3d.getOrientation().getYaw(AngleUnit.RADIANS);
+        double x = MathUtil.metersToInches(pose3d.getPosition().y);
+        double y = -MathUtil.metersToInches(pose3d.getPosition().x);
+        double yaw = Math.toRadians(pose3d.getOrientation().getYaw() - 90);
 
-        return new Pose(x, y, yaw, FTCCoordinates.INSTANCE).getAsCoordinateSystem(PedroCoordinates.INSTANCE);
+        return new Pose(x, y, yaw);
     }
 
     /// The angle in degrees that is required for any system to look in to be pointing at the goal.

@@ -14,6 +14,7 @@ import org.firstinspires.ftc.teamcode.Constants.ShooterConstants;
 import org.firstinspires.ftc.teamcode.pedroPathing.PoseVelocity;
 import org.firstinspires.ftc.teamcode.pedroPathing.PoseVelocityTracker;
 import org.firstinspires.ftc.teamcode.util.BetterGamepad;
+import org.firstinspires.ftc.teamcode.util.BooleanTrigger;
 import org.firstinspires.ftc.teamcode.util.EffectivelySubsystem;
 
 import static org.firstinspires.ftc.teamcode.Constants.ShooterConstants.TURRET_HYSTERESIS_CONTROL_ENGAGE_VELOCITY;
@@ -34,7 +35,7 @@ public class Shooter implements EffectivelySubsystem {
     public HoodAngler hoodAngler;
 
     private Follower follower;
-    private Camera camera;
+    public Camera camera;
     private PoseVelocityTracker poseVelocityTracker;
 
     public void provideComponents(Flywheel flywheel, TurretBase turret, HoodAngler hoodAngler, Follower follower, Camera unstartedCamera, BetterGamepad controller1, BetterGamepad controller2) {
@@ -109,8 +110,12 @@ public class Shooter implements EffectivelySubsystem {
         EOAPose = follower.getPose(); //starting pose
         relocalization(EOAPose); //runs full multi-sensor localization
 
+        camera.start();
+
         flywheel.reset();
     }
+
+    private final BooleanTrigger needToAttemptRelocalizationAtStartOfTeleOp = new BooleanTrigger(true);
 
     private boolean shooterToggle = false;
 
@@ -119,7 +124,7 @@ public class Shooter implements EffectivelySubsystem {
     private double turretPosition;
     private double turretAcceleration = 0;
 
-    private double robotYawRad;
+    private double robotHeadingRad;
     public double tt;
 
     private Pose goalCoordinate;
@@ -136,15 +141,16 @@ public class Shooter implements EffectivelySubsystem {
 
     public void update() {
 
-        //getting robot pose
-        if (controller2.main_buttonHasJustBeenPressed) relocalization(FieldConstants.RELOCALIZATION_POSE);
+        //getting robot pose/vel data
+        if (controller2.shareHasJustBeenPressed) camera.reloadPipeline();
+        camera.update(new BooleanTrigger(controller2.main_buttonHasJustBeenPressed).or(needToAttemptRelocalizationAtStartOfTeleOp));
+        if (needToAttemptRelocalizationAtStartOfTeleOp.get()) needToAttemptRelocalizationAtStartOfTeleOp.set(false);
 
-        follower.update();
         poseVelocityTracker.update();
         TurretHelper.update(turret);
 
-        currentRobotPose = follower.getPose();
-        robotYawRad = currentRobotPose.getHeading();
+        currentRobotPose = camera.canUseMT2Pose() ? camera.getBotPoseMT2() : follower.getPose();
+        robotHeadingRad = currentRobotPose.getHeading();
         PoseVelocity robotVelocity = poseVelocityTracker.getPoseVelocity();
         double translationalVelocity = Calculations.getRobotTranslationalVelocity(robotVelocity.getXVelocity(), robotVelocity.getYVelocity());
         //turret
@@ -185,7 +191,7 @@ public class Shooter implements EffectivelySubsystem {
         turretPose = Calculations.getTurretPoseFromBotPose(futureRobotPose, turretCurrentPosition, turretStartPosition);
 
         //changing the coordinate that the turret aims at based on targeted zones determined by distance
-        if (currentRobotPose.getX() > ShooterConstants.FAR_ZONE_CLOSE_ZONE_BARRIER) {
+        if (currentRobotPose.getY() > ShooterConstants.FAR_ZONE_CLOSE_ZONE_BARRIER) {
             goalCoordinate = goalCoordinates.getCloseCoordinate(futureRobotPose.getY(), goalCoordinates);
         }
         else {
@@ -196,7 +202,7 @@ public class Shooter implements EffectivelySubsystem {
 
         angleToGoal = Calculations.getAngleToGoal(turretPose.getX(), turretPose.getY(), goalCoordinate);
 
-        double rawtt = angleToGoal - Math.toDegrees(robotYawRad);
+        double rawtt = angleToGoal - Math.toDegrees(robotHeadingRad);
         tt = Calculations.routeTurret(rawtt);
 
         turretPosition = tt * ShooterConstants.TURRET_TICKS_PER_DEGREE + turretStartPosition;
@@ -274,33 +280,6 @@ public class Shooter implements EffectivelySubsystem {
         }
         return flywheelTargetVelocity;
     }
-
-//    private void staticHoodUpdate() {
-//
-//        if (controller2.xHasJustBeenPressed) {//lower hood
-//
-//            if (flywheelTargetVelocityZone == ZONE.CLOSE) {
-//                ShooterConstants.HOOD_CLOSE_POSITION+=ShooterConstants.HOOD_POSITION_MANUAL_INCREMENT;
-//                hoodPosition = ShooterConstants.HOOD_CLOSE_POSITION;
-//            }
-//            else {
-//                ShooterConstants.HOOD_FAR_POSITION+=ShooterConstants.HOOD_POSITION_MANUAL_INCREMENT;
-//                hoodPosition = ShooterConstants.HOOD_FAR_POSITION;
-//            }
-//
-//        }
-//        else if (controller2.bHasJustBeenPressed) {//increase hood
-//
-//            if (flywheelTargetVelocityZone == ZONE.CLOSE) {
-//                ShooterConstants.HOOD_CLOSE_POSITION-=ShooterConstants.HOOD_POSITION_MANUAL_INCREMENT;
-//                hoodPosition = ShooterConstants.HOOD_CLOSE_POSITION;
-//            }
-//            else {
-//                ShooterConstants.HOOD_FAR_POSITION-=ShooterConstants.HOOD_POSITION_MANUAL_INCREMENT;
-//                hoodPosition = ShooterConstants.HOOD_FAR_POSITION;
-//            }
-//        }
-//    }
 
     private void relocalization(Pose reZeroPose) {
         follower.setPose(reZeroPose);

@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Constants.GeneralConstants;
+import org.firstinspires.ftc.teamcode.Constants.ShooterConstants;
 import org.firstinspires.ftc.teamcode.Systems.Shooter;
 import org.firstinspires.ftc.teamcode.util.BetterGamepad;
 import org.firstinspires.ftc.teamcode.util.TickrateChecker;
@@ -43,7 +44,9 @@ public class TelemetrySubsystem implements EffectivelySubsystem {
 
         telem.addData("Tick rate", TickrateChecker.getTimePerTick());
 
-        telem.addData("EOA Pose", shooter.EOAPose.toString());
+        telem.addData("LL Localization Outcome", shooter.camera.getMt1LocalizationOutcome());
+
+        telem.addData("EOA Pose", "x: %.2f, y: %.2f, heading: %.2f", shooter.EOAPose.getX(), shooter.EOAPose.getY(), Math.toDegrees(shooter.EOAPose.getHeading()));
 
         telem.addData("ZONE", shooter.getZone().toString());
         telem.addData(TelemetryMode.RAW_DATA, "on alliance side?", shooter.accessGoalCoordinates().onAllianceSide(shooter.futureRobotPose.getY()));
@@ -54,6 +57,7 @@ public class TelemetrySubsystem implements EffectivelySubsystem {
         telem.addData(TelemetryMode.INFO, "flywheel target velocity", shooter.flywheel.getTargetVelocity());
 
         telem.addData(TelemetryMode.INFO, "turret target angle", shooter.tt);
+        telem.addData(TelemetryMode.INFO, "turret current angle", ((shooter.turret.getTargetPosition() - shooter.turret.startPosition) / ShooterConstants.TURRET_TICKS_PER_DEGREE) - Math.toDegrees(shooter.currentRobotPose.getHeading()));
         telem.addData(TelemetryMode.INFO, "turret position error", shooter.turret.getError());
 
         telem.addData(TelemetryMode.RAW_DATA, "current robot pose", "x: %.2f, y: %.2f, heading: %.2f", shooter.currentRobotPose.getX(), shooter.currentRobotPose.getY(), Math.toDegrees(shooter.currentRobotPose.getHeading()));

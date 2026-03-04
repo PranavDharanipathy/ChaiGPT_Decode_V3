@@ -12,15 +12,23 @@ public class BooleanTrigger {
         this.trigger = trigger;
     }
 
-    public void and(BooleanTrigger booleanTrigger) {
+    public BooleanTrigger and(BooleanTrigger booleanTrigger) {
+        return new BooleanTrigger(booleanTrigger.get() && trigger);
+    }
+
+    public BooleanTrigger or(BooleanTrigger booleanTrigger) {
+        return new BooleanTrigger(booleanTrigger.get() || trigger);
+    }
+
+    public void setAnd(BooleanTrigger booleanTrigger) {
         trigger = booleanTrigger.get() && trigger;
     }
 
-    public void or(BooleanTrigger booleanTrigger) {
+    public void setOr(BooleanTrigger booleanTrigger) {
         trigger = booleanTrigger.get() || trigger;
     }
 
-    public void not(BooleanTrigger booleanTrigger) {
+    public void setNot(BooleanTrigger booleanTrigger) {
         trigger = !booleanTrigger.get();
     }
 

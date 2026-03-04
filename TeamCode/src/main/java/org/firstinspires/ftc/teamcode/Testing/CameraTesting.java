@@ -13,6 +13,8 @@ import org.firstinspires.ftc.teamcode.Systems.CurrentAlliance;
 import org.firstinspires.ftc.teamcode.TeleOp.TeleOpBaseOpMode;
 import org.firstinspires.ftc.teamcode.TeleOp.drive.RobotCentricDrive;
 import org.firstinspires.ftc.teamcode.util.BooleanTrigger;
+import org.firstinspires.ftc.teamcode.util.MathUtil;
+import org.firstinspires.ftc.teamcode.util.TickrateChecker;
 
 @Config
 @TeleOp(group = "testing")
@@ -41,11 +43,15 @@ public class CameraTesting extends TeleOpBaseOpMode {
     @Override
     public void start() {
 
+        follower.setPose(new Pose(0,0,Math.toRadians(90)));
+
         camera.start();
     }
 
     @Override
     public void loop() {
+
+        telemetry.addData("Loop time", TickrateChecker.getTimePerTick());
 
         controller1.getInformation();
         controller2.getInformation();
@@ -55,16 +61,28 @@ public class CameraTesting extends TeleOpBaseOpMode {
 
         robotCentricDrive.update();
 
-        telemetry.addData("Localize Pose", camera.getLocalizePose());
-        telemetry.addData("LL Pose", camera.getBotPoseMT2());
-        telemetry.addData("Follower Pose", follower.getPose());
-        telemetry.addLine();
+        telemetry.addData("Localize Pose", tfp(camera.getLocalizePose()));
+        telemetry.addData("LL Pose", tfp(camera.getBotPoseMT2()));
+        telemetry.addData("Follower Pose", tfp(follower.getPose()));
 
         Pose finalPose = camera.isEligibleForMT2() ? camera.getBotPoseMT2() : follower.getPose();
 
         telemetry.addData("Final Pose", finalPose);
 
+        telemetry.addData("isRobotOrientationUpdated", camera.isRobotOrientationUpdated());
+        telemetry.addData("isEligibleForMT2", camera.isEligibleForMT2());
+        telemetry.addData("MT1 Localization Outcome", camera.getMt1LocalizationOutcome());
+
         telemetry.update();
 
+    }
+
+    private String tfp(Pose pose) { // telemetry friendly pose
+
+        if (pose == null) return "NULL";
+
+        return "x: " + MathUtil.truncate(pose.getX(), 100) +
+                ", y: " + MathUtil.truncate(pose.getY(), 100) +
+                ", heading: " + Math.toDegrees(MathUtil.truncate(pose.getHeading(), 100));
     }
 }

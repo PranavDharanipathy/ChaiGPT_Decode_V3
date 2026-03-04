@@ -21,7 +21,7 @@ public class ShooterConstants {
 
     public static double TURRET_TICKS_PER_DEGREE = 91.0222222222;
 
-    public static double TURRET_HOME_POSITION_INCREMENT = 150;
+    public static double TURRET_HOME_POSITION_INCREMENT = 200;
 
     public static double TURRET_TARGET_POSITION_ACCEPTABLE_ERROR_MARGIN = 50;
 

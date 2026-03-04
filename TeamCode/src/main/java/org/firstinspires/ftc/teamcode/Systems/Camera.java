@@ -13,8 +13,10 @@ import org.firstinspires.ftc.teamcode.Constants.Models;
 import org.firstinspires.ftc.teamcode.pedroPathing.PoseVelocityTracker;
 import org.firstinspires.ftc.teamcode.util.BooleanTrigger;
 import org.firstinspires.ftc.teamcode.util.LowPassFilter;
+import org.firstinspires.ftc.teamcode.util.MathUtil;
 
 public class Camera {
+
 
     public enum MT1LocalizationOutcome {
         PENDING, FAILED, SUCCESSFUL, BACKUP;
@@ -92,15 +94,17 @@ public class Camera {
 
     private Pose filteredMT1BotPose;
     private Pose botPoseMT2;
+    private boolean hasValidResult;
     private double distanceToTag;
 
-    public boolean isRobotOrientationUpdated;
+    private boolean isRobotOrientationUpdated;
 
     private boolean eligibleForMT2 = false;
 
-    public void update(BooleanTrigger trigger) { // Assumes follower is already updated
+    public void update(BooleanTrigger localizationTrigger) { // Assumes follower is already updated
 
         if (!isPipelineSwitched) reloadPipeline();
+
         poseVelocityTracker.update();
 
         translationalVelMagFromOdo = Math.abs(Calculations.getRobotTranslationalVelocity(poseVelocityTracker.getPoseVelocity()));
@@ -108,27 +112,30 @@ public class Camera {
         isRobotOrientationUpdated = false;
 
         if (eligibleForMT2) {
-            isRobotOrientationUpdated = limelight.updateRobotOrientation(Math.toDegrees(follower.getHeading()) - 90);
+            isRobotOrientationUpdated = limelight.updateRobotOrientation(Math.toDegrees(follower.getHeading()) + 90);
         }
 
         LLResult llResult = limelight.getLatestResult();
 
-        if (limelight.isConnected() && llResult != null && llResult.isValid()) {
+        hasValidResult = limelight.isConnected() && llResult != null && llResult.isValid();
+        if (hasValidResult) {
 
             distanceToTag = llResult.getBotposeAvgDist();
 
             if (isRobotOrientationUpdated) {
 
                 botPoseMT2 = Calculations.convertPose3DtoPedroPose(llResult.getBotpose_MT2());
+                botPoseMT2 = botPoseMT2.withHeading(MathUtil.normalizeAngleRad(botPoseMT2.getHeading())); //normalizing heading
 
                 if (timer.seconds() >= CameraConstants.ODOMETRY_RELOCALIZATION_FREQUENCY) {
-                    follower.setPose(botPoseMT2);
+                    follower.setX(botPoseMT2.getX());
+                    follower.setY(botPoseMT2.getY());
                     timer.reset();
                 }
             }
         }
 
-        relocalizeMT1(trigger.get());
+        relocalizeMT1(localizationTrigger.get());
 
     }
 
@@ -206,6 +213,15 @@ public class Camera {
     public Pose getBotPoseMT2() {
         return botPoseMT2;
     }
+
+    public boolean canUseMT2Pose() {
+        return isEligibleForMT2() && hasValidResult() && isRobotOrientationUpdated() && botPoseMT2 != null;
+    }
+
+    public boolean hasValidResult() {
+        return hasValidResult;
+    }
+
     public double getDistanceToTag() {
         return distanceToTag;
     }

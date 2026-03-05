@@ -232,7 +232,7 @@ public class RedClose extends NextFTCOpMode {
 
 
                 new FollowPath(paths.firstReturn, true),
-                new Delay(2),
+                new Delay(1),
                 TurretNF.INSTANCE.setPosition(TURRET_POSITIONS[1]),
 
 
@@ -274,7 +274,7 @@ public class RedClose extends NextFTCOpMode {
                 //SECOND RETURN
 
                 new FollowPath(paths.secondReturn, true),
-                new Delay(2),
+                new Delay(1.5),
                 TurretNF.INSTANCE.setPosition(TURRET_POSITIONS[2]),
 
 
@@ -315,7 +315,7 @@ public class RedClose extends NextFTCOpMode {
 
                 new FollowPath(paths.thirdIntake),
                 followCancelable(paths.thirdReturn, 5000),
-                new Delay(3.5),
+                new Delay(1.5),
 
 
                 resetShootTimer(),
@@ -405,7 +405,7 @@ public class RedClose extends NextFTCOpMode {
                 new WaitUntil(() -> (FlywheelNF.INSTANCE.flywheel.getCurrentVelocity() >= flywheel_target - 100)),
 
                 TransferNF.INSTANCE.transfer(),
-                new Delay(2)
+                new Delay(1.4)
         );
     }
 

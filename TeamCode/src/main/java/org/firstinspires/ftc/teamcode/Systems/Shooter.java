@@ -146,6 +146,8 @@ public class Shooter implements EffectivelySubsystem {
         camera.update(new BooleanTrigger(controller2.main_buttonHasJustBeenPressed).or(needToAttemptRelocalizationAtStartOfTeleOp));
         if (needToAttemptRelocalizationAtStartOfTeleOp.get()) needToAttemptRelocalizationAtStartOfTeleOp.set(false);
 
+        if (controller2.yHasJustBeenPressed) relocalization(FieldConstants.RELOCALIZATION_POSE);
+
         poseVelocityTracker.update();
         TurretHelper.update(turret);
 

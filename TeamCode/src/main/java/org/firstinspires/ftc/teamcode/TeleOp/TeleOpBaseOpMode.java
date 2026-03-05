@@ -109,12 +109,7 @@ public abstract class TeleOpBaseOpMode extends OpMode {
                 hardwareMap.get(DcMotorEx.class, MapSetterConstants.rightFlywheelMotorDeviceName)
         );
 
-        if (localizationFromAuto) {
-            turret = new TurretBase(hardwareMap, localizationData.getTurretStartPosition());
-        }
-        else {
-            turret = new TurretBase(hardwareMap);
-        }
+        turret = new TurretBase(hardwareMap);
 
         hoodAngler = new HoodAngler(hardwareMap,
                 MapSetterConstants.hoodAnglerLeftServoDeviceName,

@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Auto.Close12.Blue;
+package org.firstinspires.ftc.teamcode.Auto.Solo.Blue;
 
 import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.BezierCurve;
@@ -6,8 +6,6 @@ import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.HeadingInterpolator;
 import com.pedropathing.paths.PathChain;
-
-import dev.nextftc.core.commands.delays.Delay;
 
 public class BlueClosePaths {
     public PathChain preload;

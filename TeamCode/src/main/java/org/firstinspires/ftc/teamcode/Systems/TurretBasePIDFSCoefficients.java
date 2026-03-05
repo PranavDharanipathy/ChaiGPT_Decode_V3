@@ -40,6 +40,12 @@ public class TurretBasePIDFSCoefficients {
     private boolean tuning = false;
 
     /// @param tuning true means that turret's in tuning mode while false means that turret is in normal mode.
+    public TurretBasePIDFSCoefficients withTuning(boolean tuning) {
+        this.tuning = tuning;
+        return this;
+    }
+
+    /// @param tuning true means that turret's in tuning mode while false means that turret is in normal mode.
     public void setTuning(boolean tuning) {
         this.tuning = tuning;
     }

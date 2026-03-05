@@ -73,22 +73,22 @@ public class ConfigurationConstants {
     public static double FLYWHEEL_STABILITY_MARGIN_OF_ERROR = 10;
 
     public static TurretBasePIDFSCoefficients TURRET_PIDFS_COEFFICIENTS = new TurretBasePIDFSCoefficients(
+            0.00016,
+            new double[] {0.0000002, 0.0000002},
+            new double[] {0.0000015, 0.0000015},
+            0.0003,
             0.0,
-            new double[] {5.3e-9, 5.2e-9},
-            new double[] {3.37e-7, 3.365e-7},
-            0.0,
-            null,
-            0.05,
-            new double[] {650, 650},
-            new double[] {0.12, 0.145},
+            0.07,
             new double[] {200, 200},
+            new double[] {0.12, 0.145},
+            new double[] {0, 0},
             new double[] {0.9, 0.9},
             1,
-            new double[] {-16, 1},
+            new double[] {3, 1},
             0,
             -0.45,
             0.45
-    );
+    ).withTuning(true);
 
     public static List<Double> TURRET_PD_POSITIONS = new ArrayList<>(List.of(-14000.0,   -13000.0,   -12000.0,   -11000.0,   -10000.0,   -9000.0,    -8000.0,    -7000.0,    -6000.0,    -5000.0,      -4000.0,    -3000.0,    -2000.0,     -1000.0,       0.0,        1000.0,    2000.0,     3000.0,    4000.0,     5000.0,     6000.0,    7000.0,     8000.0,     9000.0,   10000.0));
     public static List<Double> TURRET_KPS =          new ArrayList<>(List.of(0.000215,    0.0002,     0.0002,     0.00021,    0.00021,   0.00022,     0.0002,    0.00017,    0.00014,     0.0001,      0.000095,   0.00009,   0.0000885,   0.00008985,  0.0000995,   0.0000899, 0.000088,   0.00009,  0.000092,    0.0000833,   0.00008,   0.00008,    0.00008,    0.00008,   0.0001));

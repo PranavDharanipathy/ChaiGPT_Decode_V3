@@ -1,9 +1,9 @@
-package org.firstinspires.ftc.teamcode.Auto.Close12.Blue;
+package org.firstinspires.ftc.teamcode.Auto.Alliance;
+
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
-import com.bylazar.field.Style;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.PathChain;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -18,8 +18,6 @@ import org.firstinspires.ftc.teamcode.Auto.Subsystems.TurretNF;
 import org.firstinspires.ftc.teamcode.Auto.Subsystems.IntakeNF;
 import org.firstinspires.ftc.teamcode.Constants.DriveConstants;
 import org.firstinspires.ftc.teamcode.Constants.IntakeConstants;
-import org.firstinspires.ftc.teamcode.Systems.Flywheel;
-import org.firstinspires.ftc.teamcode.Systems.Intake;
 
 import dev.nextftc.core.commands.Command;
 import dev.nextftc.core.commands.delays.Delay;
@@ -34,22 +32,22 @@ import dev.nextftc.extensions.pedro.PedroComponent;
 import dev.nextftc.ftc.NextFTCOpMode;
 import dev.nextftc.ftc.components.BulkReadComponent;
 
-//        follower.setTeleOpDrive(-gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x, true);
-@Autonomous(name = "BLUE CLOSE", group = "CLOSE_AUTO", preselectTeleOp = "V3TeleOp_BLUE")
+
+@Autonomous(name = "AUTO BLUE FAR 15", group = "AAA_MatchPurpose", preselectTeleOp = "V2TeleOp_BLUE")
 @Config
-public class BlueClose extends NextFTCOpMode {
+public class BlueFar15 extends NextFTCOpMode {
     private Telemetry telemetry;
 
-    public static double[] TURRET_POSITIONS = {0,500,500,0};
+    public static double[] TURRET_POSITIONS = {8750, 8750, 8800, 8900, 8750};
 
     //CHANGED HOOD POS FROM 0.11 to 0.19(shoots slightly higher)
     public static double hoodPos = 0.19;
-    public static double flywheel_target = 900;
+    public static double flywheel_target = 1900;
 
-    private BlueClosePaths paths;
+    private BlueFar15Paths paths;
 
 
-    public BlueClose() {
+    public BlueFar15() {
         addComponents(
                 new SubsystemComponent(
                         RobotNF.robot,
@@ -70,10 +68,10 @@ public class BlueClose extends NextFTCOpMode {
 
         telemetry = new MultipleTelemetry(super.telemetry, FtcDashboard.getInstance().getTelemetry());
 
-        PedroComponent.follower().setStartingPose(new Pose(20.29268292682926, 123.12195121951221, Math.toRadians(135)));
+        PedroComponent.follower().setStartingPose(new Pose(64, 9.5, Math.PI));
 
 
-        paths = new BlueClosePaths(PedroComponent.follower());
+        paths = new BlueFar15Paths(PedroComponent.follower());
 
 
         telemetry.addData("flywheel vel: ", FlywheelNF.INSTANCE.flywheel.getCurrentVelocity());
@@ -97,10 +95,9 @@ public class BlueClose extends NextFTCOpMode {
 
 
         //setup
-        FlywheelNF.INSTANCE.flywheel.setVelocity(flywheel_target, true);
+        FlywheelNF.INSTANCE.setVelCatch(flywheel_target, 423_000, 300_000);
         IntakeNF.INSTANCE.intake.setPower(IntakeConstants.INTAKE_POWER);
-        HoodNF.INSTANCE.setPosition(hoodPos);
-        TransferNF.INSTANCE.antiNormal();
+        HoodNF.INSTANCE.hood.setPosition(hoodPos);
         TurretNF.INSTANCE.setPosition(TURRET_POSITIONS[0]);
 
         universalTimer.reset();
@@ -110,18 +107,17 @@ public class BlueClose extends NextFTCOpMode {
         //auto
         new SequentialGroup(
                 new ParallelRaceGroup(
-
-                       auto(),
+                        auto(),
                         new WaitUntil(() -> universalTimer.milliseconds() > 35_000)
 
                 ),
 
                 TurretNF.INSTANCE.goToHomePositionCmd(),
                 FlywheelNF.INSTANCE.setVel(0, true),
-                //TransferNF.INSTANCE.antiNormal(),
-                IntakeNF.INSTANCE.fullReverse()
+                TransferNF.INSTANCE.antiVeryStrong(),
+                IntakeNF.INSTANCE.fullReverse(),
 
-                //new FollowPath(paths.movementRP, true)
+                new FollowPath(paths.movementRP, true)
         ).schedule();
 
     }
@@ -129,12 +125,6 @@ public class BlueClose extends NextFTCOpMode {
 
     @Override
     public void onUpdate() {
-
-        FlywheelNF.INSTANCE.flywheel.setVelocity(flywheel_target, true);
-
-
-telemetry.addData("turret start", TurretNF.INSTANCE.turret.startPosition);
-        telemetry.addData("current path: ", PedroComponent.follower().getCurrentPath());
         telemetry.addData("flywheel target vel: ", FlywheelNF.INSTANCE.flywheel.getTargetVelocity());
         telemetry.addData("flywheel current vel: ", FlywheelNF.INSTANCE.flywheel.getCurrentVelocity());
         telemetry.addLine();
@@ -156,13 +146,28 @@ telemetry.addData("turret start", TurretNF.INSTANCE.turret.startPosition);
     @Override
     public void onStop() {
 
-        //TurretNF.INSTANCE.turret.setPosition(TurretNF.INSTANCE.turret.startPosition);
+        /*EOAOffset offset = Constants.EOA_OFFSETS.get("auto12");
 
-        FlywheelNF.INSTANCE.flywheel.setVelocity(0, true);
+        EOALocalization.write(
+                EOALocalization.autoFormatToTeleOpFormat(
+                        PedroComponent.follower().getPose(),
+                        offset.getXOffset(),
+                        offset.getYOffset()
+                ),
+                TurretNF.INSTANCE.turret.startPosition
+        ); */
 
-        IntakeNF.INSTANCE.intake.setPower(0);
-        TransferNF.INSTANCE.antiNormal();
 
+
+//        blackboard.put("EOALocalization", new LocalizationData(
+//                EOALocalization.autoFormatToTeleOpFormat(
+//                        PedroComponent.follower().getPose(),
+//                        offset.getXOffset(),
+//                        offset.getYOffset()
+//                ),
+//                TurretNF.INSTANCE.turret.startPosition
+//                )
+//        );
     }
 
     Command resetShootTimer() {
@@ -170,53 +175,79 @@ telemetry.addData("turret start", TurretNF.INSTANCE.turret.startPosition);
                 () -> shootTime.reset());
     }
 
-    Command changeShootVel(double increment) {
-        return new InstantCommand(
-                () -> flywheel_target += increment
-        );
-    }
-
     private Command auto() {
 
 
         return new SequentialGroup(
 
-                TransferNF.INSTANCE.antiVeryStrong(),
-
-
 
 
                 //PRELOAD SHOOTING
-                new FollowPath(paths.preload, true),
-
-
+                //new FollowPath(paths.preload),
 
 
                 resetShootTimer(),
                 new ParallelRaceGroup(
 
                         new SequentialGroup(
-
-                                IntakeNF.INSTANCE.intake(),
-                                //TurretNF.INSTANCE.setPosition(TURRET_POSITIONS[0]),
+                                TurretNF.INSTANCE.setPosition(TURRET_POSITIONS[0]),
 
                                 new WaitUntil(() -> (
                                         FlywheelNF.INSTANCE.flywheel.getCurrentVelocity() >= flywheel_target - 1000)
 
                                         //&& Math.abs(TurretNF.INSTANCE.turret.getError()) < 200
                                 ),
-
-
                                 TurretNF.INSTANCE.setPosition(TURRET_POSITIONS[0]),
-
-
                                 shootBalls(
                                         new double[] {0.35, 0.375, 0.4},
                                         new double[] {0, 0},
                                         new double[] {0.4, 0.4},
-                                        300
+                                        300,
+                                        450
+                                )
+                        ),
+                        new WaitUntil(() -> shootTime.seconds() > 9)
+
+
+                        //END OF SEQUENTIALGROUP
+                ),
+
+
+
+                //FIRST INTAKE
+
+
+
+                new ParallelGroup(
+                        RobotNF.robot.intakeClearingSpecial(0.4),
+                        gating( //followCancelable(paths.FirstIntake, 5000),
+                                paths.FirstIntake, 5000,
+                                4000,
+                                200, 1)
+                ),
+
+
+                //FIRST RETURN
+                followCancelable(paths.FirstReturn, 4000),//new FollowPath(paths.intake),
+
+                resetShootTimer(),
+                new ParallelRaceGroup(
+
+                        new SequentialGroup(
+                                TurretNF.INSTANCE.setPosition(TURRET_POSITIONS[1]),
+
+                                new WaitUntil(() -> (
+                                        FlywheelNF.INSTANCE.flywheel.getCurrentVelocity() >= flywheel_target - 1000)
+                                        //&& Math.abs(TurretNF.INSTANCE.turret.getError()) < 200
                                 ),
-                                TransferNF.INSTANCE.antiVeryStrong()
+                                TurretNF.INSTANCE.setPosition(TURRET_POSITIONS[1]),
+                                shootBalls(
+                                        new double[] {0.35, 0.375, 0.4},
+                                        new double[] {0, 0},
+                                        new double[] {0.4, 0.4},
+                                        300,
+                                        450
+                                )
                         ),
                         new WaitUntil(() -> shootTime.seconds() > 9)
 
@@ -226,195 +257,21 @@ telemetry.addData("turret start", TurretNF.INSTANCE.turret.startPosition);
 
                 //SECOND INTAKE
                 new ParallelGroup(
-
-                        IntakeNF.INSTANCE.intake(),
-                        followCancelable(paths.secondIntake, 4000) ,//new FollowPath(paths.intake),
-
-                        changeShootVel(90)
-                ),
-
-                new Delay(0.12
+                        RobotNF.robot.intakeClearingSpecial(0.25),
+                        followCancelable(paths.SecondIntake, 4000) //new FollowPath(paths.intake),
                 ),
 
                 //SECOND RETURN
 
-
-
-
-                new FollowPath(paths.secondReturn, true),
-                new Delay(0.7),
-                resetShootTimer(),
-                new ParallelRaceGroup(
-
-                        new SequentialGroup(
-
-                                IntakeNF.INSTANCE.intake(),
-                                //TurretNF.INSTANCE.setPosition(TURRET_POSITIONS[0]),
-
-                                new WaitUntil(() -> (
-                                        FlywheelNF.INSTANCE.flywheel.getCurrentVelocity() >= flywheel_target - 1000)
-
-                                        //&& Math.abs(TurretNF.INSTANCE.turret.getError()) < 200
-                                ),
-
-
-                                TurretNF.INSTANCE.setPosition(TURRET_POSITIONS[0]),
-
-
-                                shootBalls(
-                                        new double[] {0.35, 0.375, 0.4},
-                                        new double[] {0, 0},
-                                        new double[] {0.4, 0.4},
-                                        300
-                                ),
-                                TransferNF.INSTANCE.antiVeryStrong()
-                        ),
-                        new WaitUntil(() -> shootTime.seconds() > 9)
-
-
-                        //END OF SEQUENTIALGROUP
-                ),
-
-
-                //FIRST GATE
-                new FollowPath(paths.gate),
-
-                new Delay(1.35),
-
-                new FollowPath(paths.gateReturn),
+                followCancelable(paths.SecondReturn, 4500),
 
                 resetShootTimer(),
                 new ParallelRaceGroup(
 
                         new SequentialGroup(
-                                IntakeNF.INSTANCE.intake(),                                //TurretNF.INSTANCE.setPosition(TURRET_POSITIONS[0]),
+                                TurretNF.INSTANCE.setPosition(TURRET_POSITIONS[2]),
 
                                 new WaitUntil(() -> (
-                                        FlywheelNF.INSTANCE.flywheel.getCurrentVelocity() >= flywheel_target - 1000)
-
-                                        //&& Math.abs(TurretNF.INSTANCE.turret.getError()) < 200
-                                ),
-
-
-                                TurretNF.INSTANCE.setPosition(TURRET_POSITIONS[0]),
-
-
-                                shootBalls(
-                                        new double[] {0.35, 0.375, 0.4},
-                                        new double[] {0, 0},
-                                        new double[] {0.4, 0.4},
-                                        300
-                                ),
-                                TransferNF.INSTANCE.antiVeryStrong()
-                        ),
-                        new WaitUntil(() -> shootTime.seconds() > 9)
-
-
-                        //END OF SEQUENTIALGROUP
-                ),
-
-
-                //FIRST INTAKE
-
-
-
-                new FollowPath(paths.firstIntake),
-
-                        IntakeNF.INSTANCE.intake(),
-
-
-                //FIRST RETURN
-                //followCancelable(paths.firstReturn, 4000),//new FollowPath(paths.intake),
-                new FollowPath(paths.firstReturn, true),
-
-
-                //changeShootVel(40),
-
-                new Delay(1),
-                resetShootTimer(),
-                new ParallelRaceGroup(
-
-                        new SequentialGroup(
-                                IntakeNF.INSTANCE.intake(),
-                                TurretNF.INSTANCE.setPosition(TURRET_POSITIONS[1]),
-
-                                new WaitUntil(() -> (
-                                        FlywheelNF.INSTANCE.flywheel.getCurrentVelocity() >= flywheel_target - 1000)
-                                        //&& Math.abs(TurretNF.INSTANCE.turret.getError()) < 200
-                                ),
-
-
-                                TurretNF.INSTANCE.setPosition(TURRET_POSITIONS[1]),
-                                shootBalls(
-                                        new double[] {0.35, 0.375, 0.4},
-                                        new double[] {0, 0},
-                                        new double[] {0.4, 0.4},
-                                        300
-                                ),
-                                TransferNF.INSTANCE.antiVeryStrong()
-                        ),
-                        new WaitUntil(() -> shootTime.seconds() > 9)
-
-
-                        //END OF SEQUENTIALGROUP
-                ),
-
-                //FIRST GATE
-                new FollowPath(paths.gate),
-
-                new Delay(3.1),
-
-                new FollowPath(paths.gateReturn),
-
-                resetShootTimer(),
-                new ParallelRaceGroup(
-
-                        new SequentialGroup(
-                                IntakeNF.INSTANCE.intake(),                                //TurretNF.INSTANCE.setPosition(TURRET_POSITIONS[0]),
-
-                                new WaitUntil(() -> (
-                                        FlywheelNF.INSTANCE.flywheel.getCurrentVelocity() >= flywheel_target - 1000)
-
-                                        //&& Math.abs(TurretNF.INSTANCE.turret.getError()) < 200
-                                ),
-
-
-                                TurretNF.INSTANCE.setPosition(TURRET_POSITIONS[0]),
-
-
-                                shootBalls(
-                                        new double[] {0.35, 0.375, 0.4},
-                                        new double[] {0, 0},
-                                        new double[] {0.4, 0.4},
-                                        300
-                                ),
-                                TransferNF.INSTANCE.antiVeryStrong()
-                        ),
-                        new WaitUntil(() -> shootTime.seconds() > 9)
-
-
-                        //END OF SEQUENTIALGROUP
-                ),
-
-
-
-
-                //END OF SEQUENTIALGROUP
-
-
-
-
-                //followCancelable(paths.secondReturn, 4500),
-
-                resetShootTimer(),
-                new ParallelRaceGroup(
-
-                        new SequentialGroup(
-                                IntakeNF.INSTANCE.intake(),
-                               // TurretNF.INSTANCE.setPosition(TURRET_POSITIONS[2]),
-
-                                new WaitUntil(() -> (
-
                                         FlywheelNF.INSTANCE.flywheel.getCurrentVelocity() >= flywheel_target - 1000)
                                         //&& Math.abs(TurretNF.INSTANCE.turret.getError()) < 200
                                 ),
@@ -424,9 +281,9 @@ telemetry.addData("turret start", TurretNF.INSTANCE.turret.startPosition);
                                         new double[] {0.35, 0.375, 0.4},
                                         new double[] {0, 0},
                                         new double[] {0.4, 0.4},
-                                        300
-                                ),
-                                TransferNF.INSTANCE.antiVeryStrong()
+                                        300,
+                                        450
+                                )
                         ),
                         new WaitUntil(() -> shootTime.seconds() > 9)
 
@@ -435,31 +292,73 @@ telemetry.addData("turret start", TurretNF.INSTANCE.turret.startPosition);
                 ),
 
 
-                //THIRD INTAKE
+                //EXTRA INTAKE
 
-                new FollowPath(paths.thirdIntake),
-                followCancelable(paths.thirdReturn, 5000),
-                new Delay(1),
+
+                new ParallelGroup(
+                        RobotNF.robot.intakeClearingSpecial(0.5),
+                        followCancelable(paths.setupForFirstIntake, 7000)
+                ),
+                followCancelable(paths.hpIntake, 4000),
+
+                //INTAKE EXTRA RETURN
+
+
+                new FollowPath(paths.hpReturn, true),
+
+                //followCancelable(paths.firstReturnn, 9000),
+
 
                 resetShootTimer(),
                 new ParallelRaceGroup(
 
                         new SequentialGroup(
-                                //TurretNF.INSTANCE.setPosition(TURRET_POSITIONS[3]),
+                                TurretNF.INSTANCE.setPosition(TURRET_POSITIONS[3]- TurretNF.INSTANCE.turret.startPosition),
 
                                 new WaitUntil(() -> (
                                         FlywheelNF.INSTANCE.flywheel.getCurrentVelocity() >= flywheel_target - 1000)
                                         //&& Math.abs(TurretNF.INSTANCE.turret.getError()) < 200
                                 ),
-                                TurretNF.INSTANCE.setPosition(TURRET_POSITIONS[3]),
+                                TurretNF.INSTANCE.setPosition(TURRET_POSITIONS[3]- TurretNF.INSTANCE.turret.startPosition),
 
                                 shootBalls(
                                         new double[] {0.35, 0.375, 0.4},
                                         new double[] {0, 0},
                                         new double[] {0.4, 0.4},
-                                        300
+                                        300,
+                                        450
+                                )
+                        ),
+                        new WaitUntil(() -> shootTime.seconds() > 9)
+
+
+                        //END OF SEQUENTIALGROUP
+                ),
+
+                followCancelable(paths.intake, 1000),
+
+                new FollowPath(paths.returnn),
+
+
+                resetShootTimer(),
+                new ParallelRaceGroup(
+
+                        new SequentialGroup(
+                                TurretNF.INSTANCE.setPosition(TURRET_POSITIONS[4]),
+
+                                new WaitUntil(() -> (
+                                        FlywheelNF.INSTANCE.flywheel.getCurrentVelocity() >= flywheel_target - 1000)
+                                        //&& Math.abs(TurretNF.INSTANCE.turret.getError()) < 200
                                 ),
-                                TransferNF.INSTANCE.antiVeryStrong()
+
+                                TurretNF.INSTANCE.setPosition(TURRET_POSITIONS[3]),
+                                shootBalls(
+                                        new double[] {0.35, 0.375, 0.4},
+                                        new double[] {0, 0},
+                                        new double[] {0.4, 0.4},
+                                        300,
+                                        450
+                                )
                         ),
                         new WaitUntil(() -> shootTime.seconds() > 9)
 
@@ -517,18 +416,34 @@ telemetry.addData("turret start", TurretNF.INSTANCE.turret.startPosition);
         );
     }
 
-    private Command shootBalls(double[] transferTime, double[] minTimeBetweenTransfers, double[] maxTimeBetweenTransfers, double flywheelVelMargin) {
+    private Command shootBalls(double[] transferTime, double[] minTimeBetweenTransfers, double[] maxTimeBetweenTransfers, double flywheelVelMargin, double secondShootFlywheelMargin) {
 
         ElapsedTime timer = new ElapsedTime();
 
         return new SequentialGroup(
 
                 //1
-
-                new WaitUntil(() -> (FlywheelNF.INSTANCE.flywheel.getCurrentVelocity() >= flywheel_target - 50)),
-
                 TransferNF.INSTANCE.transfer(),
-                new Delay(1)
+                new Delay(transferTime[0]),
+                TransferNF.INSTANCE.antiStrong(),
+
+                new Delay(minTimeBetweenTransfers[0]),
+                new InstantCommand((timer::reset)),
+                new WaitUntil(() -> (FlywheelNF.INSTANCE.flywheel.getCurrentVelocity() >= flywheel_target - secondShootFlywheelMargin || timer.seconds() > maxTimeBetweenTransfers[0])),
+
+                //2
+                TransferNF.INSTANCE.transfer(),
+                new Delay(transferTime[1]),
+                TransferNF.INSTANCE.antiStrong(),
+
+                new Delay(minTimeBetweenTransfers[1]),
+                new InstantCommand((timer::reset)),
+                new WaitUntil(() -> (FlywheelNF.INSTANCE.flywheel.getCurrentVelocity() >= flywheel_target - flywheelVelMargin || timer.seconds() > maxTimeBetweenTransfers[1])),
+
+                //3
+                TransferNF.INSTANCE.transfer(),
+                new Delay(transferTime[2]),
+                TransferNF.INSTANCE.antiStrong()
         );
     }
 

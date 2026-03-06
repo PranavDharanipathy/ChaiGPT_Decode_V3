@@ -35,7 +35,8 @@ public final class Flywheel {
         this.leftFlywheel.setDirection(ConfigurationConstants.FLYWHEEL_MOTOR_DIRECTIONS[0]);
         this.rightFlywheel.setDirection(ConfigurationConstants.FLYWHEEL_MOTOR_DIRECTIONS[1]);
 
-        encoder = new Encoder(leftFlywheel);
+        encoder = new Encoder(this.rightFlywheel);
+        encoder.setDirection(Encoder.Direction.FORWARD);
 
         this.leftFlywheel.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         this.rightFlywheel.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);

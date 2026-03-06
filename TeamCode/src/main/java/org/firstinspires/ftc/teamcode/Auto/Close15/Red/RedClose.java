@@ -32,6 +32,8 @@ import dev.nextftc.ftc.NextFTCOpMode;
 import dev.nextftc.ftc.components.BulkReadComponent;
 
 //        follower.setTeleOpDrive(-gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x, true);
+
+// THIS IS THE AUTO
 @Autonomous(name = "RED CLOSE", group = "CLOSE_AUTO", preselectTeleOp = "V3TeleOp_BLUE")
 @Config
 public class RedClose extends NextFTCOpMode {

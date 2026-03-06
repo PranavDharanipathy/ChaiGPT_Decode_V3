@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Auto.Close15.Red;
+package org.firstinspires.ftc.teamcode.Auto.SOLO_CLOSE_12.RED;
 
 import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.BezierCurve;

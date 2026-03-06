@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Auto.Close12;
+package org.firstinspires.ftc.teamcode.Auto.SOLO_CLOSE_12.BLUE;
 
 import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.BezierCurve;
@@ -45,7 +45,7 @@ public class Close12Paths {
 
                                 new Pose(58.805, 89.488)
                         )
-                ).setLinearHeadingInterpolation(Math.PI, Math.toRadians(135))
+                ).setLinearHeadingInterpolation(Math.PI, Math.toRadians(141))
 
                 .build();
 
@@ -53,7 +53,7 @@ public class Close12Paths {
                         new BezierCurve(
                                 new Pose(38.854, 104.537),
                                 new Pose(60.683, 69.878),
-                                new Pose(30.720, 61.890)
+                                new Pose(28.720, 61.890)
 
                         )
                 ).setTangentHeadingInterpolation()
@@ -61,7 +61,7 @@ public class Close12Paths {
                 .addPath(
                         new BezierLine(
 
-                        new Pose(30.720, 61.890),
+                        new Pose(28.720, 61.890),
                         new Pose(12.000, 57.707)
                 )).setConstantHeadingInterpolation(Math.PI)
 
@@ -122,9 +122,9 @@ public class Close12Paths {
         thirdIntake = follower.pathBuilder().addPath(
                         new BezierCurve(
                                 new Pose(58.805, 89.488),
-                                new Pose(24.451, 59.207),
-                                new Pose(25.549, 55.183),
-                                new Pose(30.098, 35.951)
+                                new Pose(44.451, 59.207),
+                                new Pose(34.549, 55.183),
+                                new Pose(26.098, 35.951)
                         )
                 ).setHeadingInterpolation(
                         HeadingInterpolator.piecewise(
@@ -143,6 +143,12 @@ public class Close12Paths {
 
                 .build();
 
+        /*
+
+        port 0 - SErvo(Axon) - spin axon for 1 second
+        port 2 - Spin a CRServo with power 1
+         */
+
         thirdReturn = follower.pathBuilder().addPath(
                         new BezierLine(
                                 new Pose(28.829, 35.951),
@@ -159,7 +165,7 @@ public class Close12Paths {
                                 new HeadingInterpolator.PiecewiseNode(
                                         0.6,
                                         1,
-                                        HeadingInterpolator.constant(Math.toRadians(145))
+                                        HeadingInterpolator.constant(Math.toRadians(150))
                                 )
                         )
                 )

@@ -31,9 +31,9 @@ public class Close12Paths {
                         new BezierCurve(
                                 new Pose(56.488, 83.829),
                                 new Pose(24.434, 110.071),
-                                new Pose(21.078, 110.899),
-                                new Pose(20.098, 91.878),
-                                new Pose(15.610, 86.488)
+                                new Pose(23.078, 110.899),
+                                new Pose(23.098, 91.878),
+                                new Pose(21.610, 86.488)
                         )
                 ).setConstantHeadingInterpolation(Math.toRadians(270))
 
@@ -147,19 +147,19 @@ public class Close12Paths {
                         new BezierLine(
                                 new Pose(28.829, 35.951),
 
-                                new Pose(55.146, 98.683)
+                                new Pose(59.146, 103.683)
                         )
                 ).setHeadingInterpolation(
                         HeadingInterpolator.piecewise(
                                 new HeadingInterpolator.PiecewiseNode(
                                         0,
                                         0.6,
-                                        HeadingInterpolator.tangent
+                                        HeadingInterpolator.tangent.reverse()
                                 ),
                                 new HeadingInterpolator.PiecewiseNode(
                                         0.6,
                                         1,
-                                        HeadingInterpolator.constant(Math.toRadians(140))
+                                        HeadingInterpolator.constant(Math.toRadians(145))
                                 )
                         )
                 )

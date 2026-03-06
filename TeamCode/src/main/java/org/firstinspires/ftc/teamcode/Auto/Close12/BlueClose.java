@@ -311,7 +311,7 @@ public class BlueClose extends NextFTCOpMode {
 
                 new FollowPath(paths.thirdIntake),
 
-                new Delay(1),
+                new Delay(0.75),
                 followCancelable(paths.thirdReturn, 5000),
                 new Delay(1),
 

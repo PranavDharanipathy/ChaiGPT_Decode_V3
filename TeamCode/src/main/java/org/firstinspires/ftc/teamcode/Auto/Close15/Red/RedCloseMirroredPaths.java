@@ -51,9 +51,9 @@ public class RedCloseMirroredPaths {
 
         secondIntake = follower.pathBuilder().addPath(
                         new BezierCurve(
-                                new Pose(58.805, 89.488).mirror(),
-                                new Pose(60.683, 69.878).mirror(),
-                                new Pose(30.720, 61.890).mirror()
+                                new Pose(39.854, 104.537).mirror(),
+                                new Pose(65.683, 69.878).mirror(),
+                                new Pose(35.720, 61.890).mirror()
 
                         )
                 ).setTangentHeadingInterpolation()
@@ -61,8 +61,8 @@ public class RedCloseMirroredPaths {
                 .addPath(
                         new BezierLine(
 
-                                new Pose(30.720, 61.890).mirror(),
-                                new Pose(12.000, 57.707).mirror()
+                                new Pose(35.720, 61.890).mirror(),
+                                new Pose(16.000, 57.707).mirror()
                         )).setConstantHeadingInterpolation(0)
 
                 .addPath(
@@ -70,17 +70,20 @@ public class RedCloseMirroredPaths {
                                 new Pose(12, 57.707).mirror(),
                                 new Pose(18, 55.707).mirror(),
                                 new Pose(19, 65.707).mirror(),
-                                new Pose(12, 65.707).mirror()
+                                new Pose(15, 65.707).mirror()
 
                         )).setConstantHeadingInterpolation(0)
 
                 .build();
 
         secondReturn = follower.pathBuilder().addPath(
-                        new BezierLine(
+                        new BezierCurve(
                                 new Pose(13.000, 59.707).mirror(),
 
-                                new Pose(52.488, 94.829).mirror()
+                                new Pose(30, 60).mirror(),
+                                new Pose(40, 80).mirror(),
+
+                                new Pose(47.488, 97.829).mirror()
                         )
 
                 ).setReversed()
@@ -113,7 +116,7 @@ public class RedCloseMirroredPaths {
                                 new Pose(58.805, 89.488).mirror(),
                                 new Pose(24.451, 59.207).mirror(),
                                 new Pose(21.549, 55.183).mirror(),
-                                new Pose(20.098, 35.951).mirror()
+                                new Pose(20.098, 31.951).mirror()
                         )
                 ).setHeadingInterpolation(
                         HeadingInterpolator.piecewise(
@@ -136,19 +139,19 @@ public class RedCloseMirroredPaths {
                         new BezierLine(
                                 new Pose(23.829, 35.951).mirror(),
 
-                                new Pose(47.146, 91.683).mirror()
+                                new Pose(49.146, 102.683).mirror()
                         )
                 ).setHeadingInterpolation(
                         HeadingInterpolator.piecewise(
                                 new HeadingInterpolator.PiecewiseNode(
                                         0,
-                                        0.6,
-                                        HeadingInterpolator.tangent
+                                        0.8,
+                                        HeadingInterpolator.tangent.reverse()
                                 ),
                                 new HeadingInterpolator.PiecewiseNode(
-                                        0.6,
+                                        0.8,
                                         1,
-                                        HeadingInterpolator.constant(Math.toRadians(55))
+                                        HeadingInterpolator.constant(Math.toRadians(36))
                                 )
                         )
                 )

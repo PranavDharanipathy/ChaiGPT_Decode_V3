@@ -211,9 +211,7 @@ public class RedClose extends NextFTCOpMode {
 
                         //END OF SEQUENTIALGROUP
                 ),
-                changeShootVel(80),
-
-
+                changeShootVel(30),
 
 
                 //FIRST INTAKE
@@ -232,7 +230,7 @@ public class RedClose extends NextFTCOpMode {
 
 
                 new FollowPath(paths.secondReturn, true),
-                new Delay(0.7),
+                new Delay(0.6),
                 TurretNF.INSTANCE.setPosition(TURRET_POSITIONS[1]),
 
 
@@ -257,7 +255,7 @@ public class RedClose extends NextFTCOpMode {
                                 ),
                         TurretNF.INSTANCE.setPosition(TURRET_POSITIONS[2]),
 
-                        changeShootVel(30),
+                        changeShootVel(10),
 
                 TransferNF.INSTANCE.antiVeryStrong()
 
@@ -265,7 +263,7 @@ public class RedClose extends NextFTCOpMode {
                         //END OF SEQUENTIALGROUP
                 ),
 
-                changeShootVel(-20),
+                changeShootVel(-30),
 
                 //SECOND INTAKE
                 new ParallelGroup(
@@ -278,7 +276,7 @@ public class RedClose extends NextFTCOpMode {
                 //SECOND RETURN
 
                 new FollowPath(paths.firstReturn,true),
-                new Delay(0.5),
+                new Delay(0.4),
                 TurretNF.INSTANCE.setPosition(TURRET_POSITIONS[2]),
 
 
@@ -317,9 +315,12 @@ public class RedClose extends NextFTCOpMode {
 
                 //THIRD INTAKE
 
+                changeShootVel(-20),
+
                 new FollowPath(paths.thirdIntake),
+                new Delay(1),
                 followCancelable(paths.thirdReturn, 5000),
-                new Delay(1.5),
+                new Delay(0.8),
 
 
                 resetShootTimer(),

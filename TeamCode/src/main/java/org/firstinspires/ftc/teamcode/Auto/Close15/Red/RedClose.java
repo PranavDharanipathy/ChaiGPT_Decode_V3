@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Auto.Solo.Red;
+package org.firstinspires.ftc.teamcode.Auto.Close15.Red;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
@@ -37,13 +37,13 @@ import dev.nextftc.ftc.components.BulkReadComponent;
 public class RedClose extends NextFTCOpMode {
     private Telemetry telemetry;
 
-    public static double[] TURRET_POSITIONS = {-300,-900,900,0};
+    public static double[] TURRET_POSITIONS = {-300,-400,0,0};
 
     //CHANGED HOOD POS FROM 0.11 to 0.19(shoots slightly higher)
     public static double hoodPos = 0.19;
-    public static double flywheel_target = 940;
+    public static double flywheel_target = 960;
 
-    private RedClosePaths paths;
+    private RedCloseMirroredPaths paths;
 
 
     public RedClose() {
@@ -70,7 +70,7 @@ public class RedClose extends NextFTCOpMode {
         PedroComponent.follower().setStartingPose(new Pose(123.70731707317074, 123.12195121951221, Math.toRadians(45)));
 
 
-        paths = new RedClosePaths(PedroComponent.follower());
+        paths = new RedCloseMirroredPaths(PedroComponent.follower());
 
 
         telemetry.addData("flywheel vel: ", FlywheelNF.INSTANCE.flywheel.getCurrentVelocity());
@@ -220,7 +220,8 @@ public class RedClose extends NextFTCOpMode {
 
 
 
-                new FollowPath(paths.firstIntake),
+                new FollowPath(paths.secondIntake),
+
 
 
 
@@ -230,8 +231,8 @@ public class RedClose extends NextFTCOpMode {
                 //followCancelable(paths.firstReturn, 4000),//new FollowPath(paths.intake),
 
 
-                new FollowPath(paths.firstReturn, true),
-                new Delay(1),
+                new FollowPath(paths.secondReturn, true),
+                new Delay(0.7),
                 TurretNF.INSTANCE.setPosition(TURRET_POSITIONS[1]),
 
 
@@ -264,16 +265,20 @@ public class RedClose extends NextFTCOpMode {
                         //END OF SEQUENTIALGROUP
                 ),
 
+                changeShootVel(-20),
+
                 //SECOND INTAKE
                 new ParallelGroup(
                         RobotNF.robot.intakeClearingSpecial(0.25),
-                        followCancelable(paths.secondIntake, 4000) //new FollowPath(paths.intake),
+                        followCancelable(paths.firstIntake, 4000) //new FollowPath(paths.intake),
                 ),
+
+                new Delay(1),
 
                 //SECOND RETURN
 
-                new FollowPath(paths.secondReturn, true),
-                new Delay(1.5),
+                new FollowPath(paths.firstReturn,true),
+                new Delay(0.5),
                 TurretNF.INSTANCE.setPosition(TURRET_POSITIONS[2]),
 
 

@@ -78,7 +78,7 @@ public class ConfigurationConstants {
             new double[] {0.0000015, 0.0000015},
             0.0003,
             0.0,
-            0.07,
+            0.065,
             new double[] {200, 200},
             new double[] {0.12, 0.145},
             new double[] {0, 0},

@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Auto.Solo.Blue;
+package org.firstinspires.ftc.teamcode.Auto.Close15.Blue;
 
 import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.BezierCurve;
@@ -35,20 +35,20 @@ public class BlueClosePaths {
                                 new Pose(60.683, 68.878),
                                 new Pose(34.427, 69.451),
                                 new Pose(48.329, 58.305),
-                                new Pose(20.939, 62.573),
-                                new Pose(16.366, 61.439)
+                                new Pose(25.939, 60.573)
+                                //new Pose(16.366, 61.439)
                         )
                 ).setHeadingInterpolation(
                         HeadingInterpolator.piecewise(
                                 new HeadingInterpolator.PiecewiseNode(
                                         0,
-                                        0.6,
+                                        0.5,
                                         HeadingInterpolator.tangent
                                 ),
                                 new HeadingInterpolator.PiecewiseNode(
-                                        0.6,
+                                        0.5,
                                         1,
-                                        HeadingInterpolator.constant(Math.toRadians(168))
+                                        HeadingInterpolator.constant(Math.PI)
                                 )
                         )
 
@@ -58,7 +58,7 @@ public class BlueClosePaths {
 
         secondReturn = follower.pathBuilder().addPath(
                         new BezierCurve(
-                                new Pose(9.366, 62.439),
+                                new Pose(25.366, 60.439),
                                 new Pose(47.268, 63.805),
                                 new Pose(52.220, 70.463),
                                 new Pose(64.000, 84.098)
@@ -81,7 +81,7 @@ public class BlueClosePaths {
 
                 .build();
 
-        gate = follower.pathBuilder().addPath(
+        /*gate = follower.pathBuilder().addPath(
                         new BezierCurve(
                                 new Pose(52.488, 87.829),
                                 new Pose(53.829, 61.720),
@@ -89,6 +89,8 @@ public class BlueClosePaths {
                                 new Pose(16.463, 64.220),
                                 new Pose(12.463, 64.220)
                         )
+
+
                 ).setHeadingInterpolation(
                         HeadingInterpolator.piecewise(
                                 new HeadingInterpolator.PiecewiseNode(
@@ -124,7 +126,39 @@ public class BlueClosePaths {
                         )
                 ).setConstantHeadingInterpolation(Math.PI)
 
+                .build();   */
+
+
+        gate = follower.pathBuilder().addPath(
+                        new BezierCurve(
+                                new Pose(52.488, 87.829),
+                                new Pose(53.829, 61.720),
+                                new Pose(25.829, 52.207),
+                                new Pose(16.463, 60.220),
+                                new Pose(12.463, 60.220)
+                        )
+                ).setHeadingInterpolation(
+                        HeadingInterpolator.piecewise(
+                                new HeadingInterpolator.PiecewiseNode(
+                                        0,
+                                        0.7,
+                                        HeadingInterpolator.tangent
+                                ),
+                                new HeadingInterpolator.PiecewiseNode(
+                                        0.7,
+                                        0.8,
+                                        HeadingInterpolator.constant(Math.toRadians(158))
+                                ),
+                                new HeadingInterpolator.PiecewiseNode(
+                                        0.8,
+                                        1,
+                                        HeadingInterpolator.constant(Math.toRadians(163))
+                                )
+                        )
+                )
+
                 .build();
+
 
         gateReturn = follower.pathBuilder().addPath(
                         new BezierLine(

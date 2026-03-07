@@ -150,34 +150,34 @@ public class BlueFarAlliance extends NextFTCOpMode {
                 RobotNF.robot.shootBalls(0.9),
 
                 //FIRST INTAKE
-                followCancelable(BlueAllianceFarPaths.intakeFirst(PedroComponent.follower()), 4),
+                followCancelable(BlueAllianceFarPaths.intakeFirst(PedroComponent.follower()), 4000),
                 new Delay(1),
-                driveShootPara(BlueAllianceFarPaths.returnGeneral(PedroComponent.follower()), 4),
+                driveShootPara(BlueAllianceFarPaths.returnGeneral(PedroComponent.follower())),
 
                 new Delay(1),
 
                 //GENERAL INTAKE
                 followCancelable(BlueAllianceFarPaths.intakeGeneral(PedroComponent.follower()), 4000),
                 new Delay(1),
-                driveShootPara(BlueAllianceFarPaths.returnGeneral(PedroComponent.follower()), 4000),
+                driveShootPara(BlueAllianceFarPaths.returnGeneral(PedroComponent.follower())),
 
                 new Delay(1),
 
                 followCancelable(BlueAllianceFarPaths.intakeGeneral(PedroComponent.follower()), 4000),
                 new Delay(1),
-                driveShootPara(BlueAllianceFarPaths.returnGeneral(PedroComponent.follower()), 4000),
+                driveShootPara(BlueAllianceFarPaths.returnGeneral(PedroComponent.follower())),
 
                 new Delay(1),
 
                 followCancelable(BlueAllianceFarPaths.intakeGeneral(PedroComponent.follower()), 4000),
                 new Delay(1),
-                driveShootPara(BlueAllianceFarPaths.returnGeneral(PedroComponent.follower()), 4000),
+                driveShootPara(BlueAllianceFarPaths.returnGeneral(PedroComponent.follower())),
 
                 new Delay(1),
 
                 followCancelable(BlueAllianceFarPaths.intakeGeneral(PedroComponent.follower()), 4000),
                 new Delay(1),
-                driveShootPara(BlueAllianceFarPaths.returnGeneral(PedroComponent.follower()), 4000),
+                driveShootPara(BlueAllianceFarPaths.returnGeneral(PedroComponent.follower())),
 
                 new Delay(2),
 
@@ -187,12 +187,11 @@ public class BlueFarAlliance extends NextFTCOpMode {
         );
     }
 
-    private Command driveShootPara(PathChain pathChain, double timeTilCancel) {
+    private Command driveShootPara(PathChain pathChain) {
 
         return new SequentialGroup(
 
-                followCancelable(pathChain, timeTilCancel),
-                new Delay(5),
+                new FollowPath(pathChain),
                 RobotNF.robot.shootBalls(1.5)
         );
     }

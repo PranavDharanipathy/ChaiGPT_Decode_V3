@@ -179,11 +179,15 @@ public strictfp class MathUtil {
     }
 
     /// @param theta - how much the coordinates are being rotated in radians
-    public double[] rotateCartesian(double x, double y, double theta) {
+    public static double[] rotateCartesian(double x, double y, double theta) {
 
         double xNew = x * Math.cos(theta) - y * Math.sin(theta);
         double yNew = x * Math.sin(theta) + y * Math.cos(theta);
 
         return new double[] {xNew, yNew};
+    }
+
+    public static double increaseMagnitude(double value, double increment) {
+        return value >= 0 ? value + increment : value - increment;
     }
 }

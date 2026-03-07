@@ -17,7 +17,7 @@ public class BlueAllianceFarPaths {
         return follower.pathBuilder()
                 .addPath(
                         new BezierLine(
-                                follower.getPose(),
+                                new Pose(follower.getPose().getX(), follower.getPose().getY()),
                                 new Pose(INTAKE_DIST, WALL_CLEARANCE)
                         )
                 )
@@ -30,7 +30,7 @@ public class BlueAllianceFarPaths {
         return follower.pathBuilder()
                 .addPath(
                         new BezierLine(
-                                follower.getPose(),
+                                new Pose(follower.getPose().getX(), follower.getPose().getY()),
                                 new Pose(56, WALL_CLEARANCE)
                         )
                 )
@@ -43,7 +43,7 @@ public class BlueAllianceFarPaths {
         return follower.pathBuilder()
                 .addPath(
                         new BezierLine(
-                                follower.getPose(),
+                                new Pose(follower.getPose().getX(), follower.getPose().getY()),
                                 new Pose(INTAKE_DIST, WALL_CLEARANCE)
                         )
                 )
@@ -56,7 +56,7 @@ public class BlueAllianceFarPaths {
         return follower.pathBuilder()
                 .addPath(
                         new BezierLine(
-                                follower.getPose(),
+                                new Pose(follower.getPose().getX(), follower.getPose().getY()),
                                 new Pose(33, 9)
                         )
                 )

@@ -53,9 +53,9 @@ public class V3TeleOp_RED extends TeleOpBaseOpMode{
         controller2.getInformation();
 
         intake.update();
+        follower.update();
         shooter.update();
         blocker.update();
-        follower.update();
         pedroDrive.update();
 
         telemetry.runInstance(shooter, pedroDrive);

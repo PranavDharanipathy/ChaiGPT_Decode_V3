@@ -102,9 +102,6 @@ public class Shooter implements EffectivelySubsystem {
 
         turretPosition = turretStartPosition = turret.startPosition;
 
-        EOAPose = follower.getPose(); //starting pose
-        relocalization(EOAPose); //runs full multi-sensor localization
-
         camera.start();
 
         flywheel.reset();
@@ -154,12 +151,7 @@ public class Shooter implements EffectivelySubsystem {
         turretAcceleration = TurretHelper.getAcceleration(AngleUnit.RADIANS);
         double turretCurrentPosition = turret.getCurrentPosition(); //used to calculate turret pose
 
-        if (controller2.dpad_leftHasJustBeenPressed) {
-            turretStartPosition+=ShooterConstants.TURRET_HOME_POSITION_INCREMENT;
-        }
-        else if (controller2.dpad_rightHasJustBeenPressed) {
-            turretStartPosition-=ShooterConstants.TURRET_HOME_POSITION_INCREMENT;
-        }
+        goalAimUpdate();
 
         //hysteresis control is only used if the robot is moving fast enough
         isTurretLookingAhead = Math.abs(translationalVelocity) > TURRET_HYSTERESIS_CONTROL_ENGAGE_VELOCITY[0] || Math.abs(robotVelocity.getAngularVelocity()) > TURRET_HYSTERESIS_CONTROL_ENGAGE_VELOCITY[1];
@@ -276,6 +268,32 @@ public class Shooter implements EffectivelySubsystem {
             flywheelTargetVelocity = ShooterConstants.CLOSE_SIDE_FLYWHEEL_SHOOT_VELOCITY;
         }
         return flywheelTargetVelocity;
+    }
+
+    private void goalAimUpdate() {
+
+        //OLD
+        if (controller2.dpad_leftHasJustBeenPressed) {
+            turretStartPosition+=ShooterConstants.TURRET_HOME_POSITION_INCREMENT;
+        }
+        else if (controller2.dpad_rightHasJustBeenPressed) {
+            turretStartPosition-=ShooterConstants.TURRET_HOME_POSITION_INCREMENT;
+        }
+
+
+//        if (controller2.dpad_leftHasJustBeenPressed) {
+//            goalCoordinates.incrementAll(ShooterConstants.GOAL_X_POSITION_INCREMENT, 0);
+//        }
+//        else if (controller2.dpad_rightHasJustBeenPressed) {
+//            goalCoordinates.incrementAll(-ShooterConstants.GOAL_X_POSITION_INCREMENT, 0);
+//        }
+//
+//        if (controller2.dpad_upHasJustBeenPressed) {
+//            goalCoordinates.incrementAll(0, ShooterConstants.GOAL_Y_POSITION_INCREMENT);
+//        }
+//        else if (controller2.dpad_downHasJustBeenPressed) {
+//            goalCoordinates.incrementAll(0, -ShooterConstants.GOAL_Y_POSITION_INCREMENT);
+//        }
     }
 
     private void relocalization(Pose reZeroPose) {

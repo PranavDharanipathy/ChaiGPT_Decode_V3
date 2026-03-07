@@ -32,7 +32,6 @@ public abstract class TeleOpBaseOpMode extends OpMode {
     public void useEOALocalizationData() {
 
         localizationData = EOALocalization.read();
-        //localizationData = (LocalizationData) blackboard.get("EOALocalization");
 
         localizationFromAuto = true;
     }
@@ -109,7 +108,8 @@ public abstract class TeleOpBaseOpMode extends OpMode {
                 hardwareMap.get(DcMotorEx.class, MapSetterConstants.rightFlywheelMotorDeviceName)
         );
 
-        turret = new TurretBase(hardwareMap);
+        if (localizationFromAuto) turret = new TurretBase(hardwareMap, localizationData.getTurretStartPosition());
+        else turret = new TurretBase(hardwareMap);
 
         hoodAngler = new HoodAngler(hardwareMap,
                 MapSetterConstants.hoodAnglerLeftServoDeviceName,
@@ -128,12 +128,7 @@ public abstract class TeleOpBaseOpMode extends OpMode {
         left_back.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         right_back.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        if (localizationFromAuto) {
-            follower.setPose(localizationData.getPose());
-        }
-        else {
-            follower.setPose(FieldConstants.RELOCALIZATION_POSE);
-        }
+        follower.setPose(FieldConstants.RELOCALIZATION_POSE);
 
         follower.update();
 

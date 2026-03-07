@@ -66,12 +66,6 @@ public class TransferNF implements Subsystem {
         );
     }
 
-    public Command anti() {
-        return new SequentialGroup(
-                actualTransfer(),
-                block()
-        );
-    }
     public Command idleFull() {
         return new InstantCommand(() -> {
             blocker.setState(Blocker.BlockerState.BLOCK);

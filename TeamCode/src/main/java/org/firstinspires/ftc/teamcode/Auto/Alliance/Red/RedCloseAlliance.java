@@ -18,6 +18,7 @@ import org.firstinspires.ftc.teamcode.Auto.Subsystems.TurretNF;
 import org.firstinspires.ftc.teamcode.Auto.Subsystems.IntakeNF;
 import org.firstinspires.ftc.teamcode.Constants.DriveConstants;
 import org.firstinspires.ftc.teamcode.Constants.IntakeConstants;
+import org.firstinspires.ftc.teamcode.data.EOALocalization;
 import org.firstinspires.ftc.teamcode.util.MirroredPose;
 
 import dev.nextftc.core.commands.Command;
@@ -130,6 +131,8 @@ public class RedCloseAlliance extends NextFTCOpMode {
 
     @Override
     public void onStop() {
+
+        EOALocalization.write(new Pose(), TurretNF.INSTANCE.turret.startPosition);
 
         RobotNF.robot.end();
         TurretNF.INSTANCE.turret.setPosition(TurretNF.INSTANCE.turret.startPosition);

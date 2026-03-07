@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.Auto.Subsystems;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 import org.firstinspires.ftc.teamcode.Constants.ConfigurationConstants;
+import org.firstinspires.ftc.teamcode.Constants.MapSetterConstants;
 import org.firstinspires.ftc.teamcode.Systems.Flywheel;
 
 import dev.nextftc.core.commands.Command;
@@ -25,8 +26,8 @@ public class FlywheelNF implements Subsystem {
 
 
         flywheel = new Flywheel(
-                ActiveOpMode.hardwareMap().get(DcMotorEx.class, "left_flywheel"),
-                ActiveOpMode.hardwareMap().get(DcMotorEx.class, "right_flywheel")
+                ActiveOpMode.hardwareMap().get(DcMotorEx.class, MapSetterConstants.leftFlywheelMotorDeviceName),
+                ActiveOpMode.hardwareMap().get(DcMotorEx.class, MapSetterConstants.rightFlywheelMotorDeviceName)
         );
 
         flywheel.setInternalParameters(
@@ -37,15 +38,7 @@ public class FlywheelNF implements Subsystem {
         );
 
         flywheel.initVoltageSensor(ActiveOpMode.hardwareMap());
-
-
-        // NO FUNCTION FOUND CALLED SETVOLTAGE FILTER ALPHA
-        //flywheel.setVoltageFilterAlpha(FlywheelDriveTuning.VOLTAGE_FILTER_ALPHA);
         flywheel.setVelocityPIDVSCoefficients(ConfigurationConstants.FLYWHEEL_PIDVS_COEFFICIENTS);
-
-
-        //NO FUNCTION FOUND TO SET I CONSTRAINTS.
-        //flywheel.setIConstraints(Constants.FLYWHEEL_MIN_INTEGRAL_LIMIT, Constants.FLYWHEEL_MAX_INTEGRAL_LIMIT);
 
         flywheel.reset();
 
@@ -56,32 +49,8 @@ public class FlywheelNF implements Subsystem {
         return new InstantCommand(() -> flywheel.setVelocity(vel, allowIntegralReset));
     }
 
-    private double velWanted, velInflated, velSwitch;
-    private boolean useVelCatching = false;
-
-    public void setVelCatch(double m_velWanted, double m_velInflated, double m_velSwitch) {
-
-        useVelCatching = true;
-        velWanted = m_velWanted;
-        velInflated = m_velInflated;
-        velSwitch = m_velSwitch;
-    }
-
-    public Command setVelCatchCmd(double m_velWanted, double m_velInflated, double m_velSwitch) {
-
-        return new Command() {
-
-            @Override
-            public boolean isDone() {
-
-                useVelCatching = true;
-                velWanted = m_velWanted;
-                velInflated = m_velInflated;
-                velSwitch = m_velSwitch;
-
-                return true;
-            }
-        };
+    public Command setVel(double vel) {
+        return new InstantCommand(() -> flywheel.setVelocity(vel, true));
     }
 
     public void end() {
@@ -91,17 +60,6 @@ public class FlywheelNF implements Subsystem {
     @Override
     public void periodic() {
 
-        if (useVelCatching) {
-
-            if (Math.abs(flywheel.getTargetVelocity() - flywheel.getCurrentVelocity()) > velSwitch) {
-                flywheel.setVelocity(velInflated, false);
-            }
-            else {
-                flywheel.setVelocity(velWanted, false);
-            }
-        }
-
-        //flywheel.updateKvBasedOnVoltage();
         flywheel.update();
     }
 }

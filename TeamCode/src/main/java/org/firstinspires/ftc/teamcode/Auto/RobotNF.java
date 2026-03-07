@@ -33,68 +33,37 @@ public class RobotNF extends SubsystemGroup {
     public static final RobotNF robot = new RobotNF();
 
     //transfer
-    public final Command shootBalls(double transferTime, double timeBetweenTransfers) {
+    public final Command shootBalls(double transferTime) {
 
         return new SequentialGroup(
-                TransferNF.INSTANCE.transfer(),
-                new Delay(transferTime),
-                TransferNF.INSTANCE.antiStrong(),
-
-                new Delay(timeBetweenTransfers),
 
                 TransferNF.INSTANCE.transfer(),
                 new Delay(transferTime),
-                TransferNF.INSTANCE.antiStrong(),
-
-                new Delay(timeBetweenTransfers),
-
-                TransferNF.INSTANCE.transfer(),
-                new Delay(transferTime),
-                TransferNF.INSTANCE.antiStrong()
+                TransferNF.INSTANCE.idleFull()
         );
     }
 
-    public final Command shootBallsAtParametricEnd(double transferTime, double timeBetweenTransfers, PathChain pathChain) {
+    public final Command shootBallsAtParametricEnd(double transferTime, PathChain pathChain) {
 
         return new SequentialGroup(
+
                 new WaitUntil(() -> pathChain.lastPath().isAtParametricEnd()),
-                TransferNF.INSTANCE.transfer(),
-                new Delay(transferTime),
-                TransferNF.INSTANCE.antiStrong(),
-
-                new Delay(timeBetweenTransfers),
 
                 TransferNF.INSTANCE.transfer(),
                 new Delay(transferTime),
-                TransferNF.INSTANCE.antiStrong(),
-
-                new Delay(timeBetweenTransfers),
-
-                TransferNF.INSTANCE.transfer(),
-                new Delay(transferTime),
-                TransferNF.INSTANCE.antiStrong()
+                TransferNF.INSTANCE.idleFull()
         );
     }
 
-    public final Command shootBalls(double transferTime, double timeBetweenTransfers, double distance, PathChain pathChain) {
+    public final Command shootBalls(double transferTime, double distance, PathChain pathChain) {
 
         return new SequentialGroup(
+
                 new WaitUntil(() -> pathChain.lastPath().getDistanceRemaining() <= distance),
-                TransferNF.INSTANCE.transfer(),
-                new Delay(transferTime),
-                TransferNF.INSTANCE.antiStrong(),
-
-                new Delay(timeBetweenTransfers),
 
                 TransferNF.INSTANCE.transfer(),
                 new Delay(transferTime),
-                TransferNF.INSTANCE.antiStrong(),
-
-                new Delay(timeBetweenTransfers),
-
-                TransferNF.INSTANCE.transfer(),
-                new Delay(transferTime),
-                TransferNF.INSTANCE.antiStrong()
+                TransferNF.INSTANCE.idleFull()
         );
     }
 
@@ -103,19 +72,18 @@ public class RobotNF extends SubsystemGroup {
         return new InstantCommand(() -> HoodNF.INSTANCE.setPosition(position));
     }
 
-    //intake
-
     /// Intakes first and then outtakes
     public final Command intakeClearingSpecial(double outtakeTime) {
 
         return new SequentialGroup(
 
-                IntakeNF.INSTANCE.fullReverse(),
+                IntakeNF.INSTANCE.reverse(),
                 new Delay(outtakeTime),
                 IntakeNF.INSTANCE.intake()
         );
     }
 
+    /// No turret
     public final void end() {
         IntakeNF.INSTANCE.end();
         TransferNF.INSTANCE.end();

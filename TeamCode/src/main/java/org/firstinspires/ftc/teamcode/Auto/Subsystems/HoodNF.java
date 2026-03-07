@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.Auto.Subsystems;
 import android.content.res.Configuration;
 
 import org.firstinspires.ftc.teamcode.Constants.ConfigurationConstants;
+import org.firstinspires.ftc.teamcode.Constants.MapSetterConstants;
 import org.firstinspires.ftc.teamcode.Systems.HoodAngler;
 
 import dev.nextftc.control.feedback.PIDCoefficients;
@@ -22,7 +23,7 @@ public class HoodNF implements Subsystem {
     @Override
 
     public void initialize() {
-    hood = new HoodAngler(ActiveOpMode.hardwareMap(), "left_hood_angler", "right_hood_angler");
+    hood = new HoodAngler(ActiveOpMode.hardwareMap(), MapSetterConstants.hoodAnglerLeftServoDeviceName, MapSetterConstants.hoodAnglerRightServoDeviceName);
     hood.setServoDirections(ConfigurationConstants.HOOD_ANGLER_SERVO_DIRECTIONS);
         hood.setPosition(0.4); //init position
     }

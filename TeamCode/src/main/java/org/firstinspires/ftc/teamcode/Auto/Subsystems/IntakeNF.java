@@ -3,7 +3,9 @@ package org.firstinspires.ftc.teamcode.Auto.Subsystems;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 
+import org.firstinspires.ftc.teamcode.Constants.ConfigurationConstants;
 import org.firstinspires.ftc.teamcode.Constants.IntakeConstants;
+import org.firstinspires.ftc.teamcode.Constants.MapSetterConstants;
 
 import dev.nextftc.core.commands.Command;
 import dev.nextftc.core.subsystems.Subsystem;
@@ -27,13 +29,9 @@ public class IntakeNF implements Subsystem {
     @Override
     public void initialize() {
 
-        intake = new MotorEx("intake");
+        intake = new MotorEx(MapSetterConstants.intakeMotorDeviceName);
         intake.getMotor().setDirection(DcMotorSimple.Direction.REVERSE);
 
-
-        //CODE NOT ADDEED
-        //liftPTO = new LiftPTO(ActiveOpMode.hardwareMap());
-        //liftPTO.setState(LiftPTO.PTOState.DISENGAGE);
     }
 
     public Command customPower(double power) {
@@ -50,10 +48,6 @@ public class IntakeNF implements Subsystem {
 
     public Command stop() {
         return new SetPower(intake, 0);
-    }
-
-    public Command fullReverse() {
-        return new SetPower(intake, -1);
     }
 
     public void end() {

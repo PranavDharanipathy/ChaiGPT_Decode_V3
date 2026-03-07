@@ -84,13 +84,9 @@ public class Shooter implements EffectivelySubsystem {
     public void switchAlliance(CurrentAlliance.ALLIANCE alliance) {
 
         if (alliance == CurrentAlliance.ALLIANCE.BLUE_ALLIANCE) {
-
-            camera.pipelineSwitch(CameraConstants.PIPELINES.BLUE_PIPELINE.getPipelineIndex());
             goalCoordinates = FieldConstants.GoalCoordinates.BLUE;
         }
         else {
-
-            camera.pipelineSwitch(CameraConstants.PIPELINES.RED_PIPELINE.getPipelineIndex());
             goalCoordinates = FieldConstants.GoalCoordinates.RED;
         }
 
@@ -102,8 +98,7 @@ public class Shooter implements EffectivelySubsystem {
 
         goalCoordinates = alliance == CurrentAlliance.ALLIANCE.BLUE_ALLIANCE ? FieldConstants.GoalCoordinates.BLUE : FieldConstants.GoalCoordinates.RED;
 
-        CameraConstants.PIPELINES pipeline = alliance == CurrentAlliance.ALLIANCE.BLUE_ALLIANCE ? CameraConstants.PIPELINES.BLUE_PIPELINE : CameraConstants.PIPELINES.RED_PIPELINE;
-        camera.pipelineSwitch(pipeline.getPipelineIndex());
+        camera.pipelineSwitch(CameraConstants.PIPELINES.GENERAL_GOAL_PIPELINE.getPipelineIndex());
 
         turretPosition = turretStartPosition = turret.startPosition;
 

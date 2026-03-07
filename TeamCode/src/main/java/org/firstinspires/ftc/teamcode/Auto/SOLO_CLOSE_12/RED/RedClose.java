@@ -43,7 +43,7 @@ public class RedClose extends NextFTCOpMode {
 
     //CHANGED HOOD POS FROM 0.11 to 0.19(shoots slightly higher)
     public static double hoodPos = 0.19;
-    public static double flywheel_target = 960;
+    public double flywheel_target = 960;
 
     private RedCloseMirroredPaths paths;
 

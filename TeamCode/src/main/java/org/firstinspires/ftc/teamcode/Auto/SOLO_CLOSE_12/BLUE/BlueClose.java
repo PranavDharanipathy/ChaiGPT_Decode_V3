@@ -44,7 +44,7 @@ public class BlueClose extends NextFTCOpMode {
 
     //CHANGED HOOD POS FROM 0.11 to 0.19(shoots slightly higher)
     public static double hoodPos = 0.19;
-    public static double flywheel_target = 900;
+    public double flywheel_target = 900;
 
     private Close12Paths paths;
 
@@ -66,6 +66,8 @@ public class BlueClose extends NextFTCOpMode {
 
 
     public void onInit() {
+
+        flywheel_target = 900;
 
 
         telemetry = new MultipleTelemetry(super.telemetry, FtcDashboard.getInstance().getTelemetry());

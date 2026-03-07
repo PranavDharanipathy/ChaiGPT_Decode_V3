@@ -22,29 +22,27 @@ import dev.nextftc.core.commands.Command;
 import dev.nextftc.core.commands.delays.Delay;
 import dev.nextftc.core.commands.delays.WaitUntil;
 import dev.nextftc.core.commands.groups.ParallelGroup;
+import dev.nextftc.core.commands.groups.ParallelRaceGroup;
 import dev.nextftc.core.commands.groups.SequentialGroup;
 import dev.nextftc.core.commands.utility.InstantCommand;
 import dev.nextftc.core.components.SubsystemComponent;
 import dev.nextftc.extensions.pedro.FollowPath;
 import dev.nextftc.extensions.pedro.PedroComponent;
+import dev.nextftc.ftc.ActiveOpMode;
 import dev.nextftc.ftc.NextFTCOpMode;
 import dev.nextftc.ftc.components.BulkReadComponent;
 
-@Autonomous(name = "BLUE CLOSE ALLIANCE", group = "CLOSE_AUTO", preselectTeleOp = "V3TeleOp_BLUE")
+@Autonomous(name = "BLUE FAR ALLIANCE", group = "FAR_AUTO", preselectTeleOp = "V3TeleOp_BLUE")
 @Config
-public class BlueCloseAlliance extends NextFTCOpMode {
+public class BlueFarAlliance extends NextFTCOpMode {
     private Telemetry telemetry;
 
-    public static double[] TURRET_POSITIONS = {-4400, -9150, -7900, -6150};
+    public static double TURRET_POSITION = -6500;
 
-    public static double hoodPos = 0.19;
-    public static double[] FLYWHEEL_VELOCITIES = {1030, 1035, 1030, 1005, 1000};
-    public static double[] GATE_TIMES = {1.6, 1.6, 1.6};
+    public static double hoodPos = 0.21;
+    public static double FLYWHEEL_VELOCITY = 1350;
 
-    private BlueAllianceClosePaths paths;
-
-
-    public BlueCloseAlliance() {
+    public BlueFarAlliance() {
         addComponents(
                 new SubsystemComponent(
                         RobotNF.robot,
@@ -65,11 +63,7 @@ public class BlueCloseAlliance extends NextFTCOpMode {
 
         telemetry = new MultipleTelemetry(super.telemetry, FtcDashboard.getInstance().getTelemetry());
 
-        PedroComponent.follower().setStartingPose(new Pose(20.29268292682926, 123.12195121951221, Math.toRadians(135)));
-
-
-        paths = new BlueAllianceClosePaths(PedroComponent.follower());
-
+        PedroComponent.follower().setStartingPose(new Pose(56, 8, Math.PI));
 
         telemetry.addData("flywheel vel: ", FlywheelNF.INSTANCE.flywheel.getCurrentVelocity());
         telemetry.addData("turret start pos: ", TurretNF.INSTANCE.turret.startPosition);
@@ -80,31 +74,40 @@ public class BlueCloseAlliance extends NextFTCOpMode {
 
     private ElapsedTime universalTimer = new ElapsedTime();
 
-    private ElapsedTime shootTime = new ElapsedTime();
-
     @Override
     public void onStartButtonPressed() {
 
         telemetry.clearAll();
 
         //setup
-        FlywheelNF.INSTANCE.flywheel.setVelocity(FLYWHEEL_VELOCITIES[0], true);
+        FlywheelNF.INSTANCE.flywheel.setVelocity(FLYWHEEL_VELOCITY, true);
         IntakeNF.INSTANCE.intake.setPower(IntakeConstants.INTAKE_POWER);
         HoodNF.INSTANCE.hood.setPosition(hoodPos);
-        TurretNF.INSTANCE.turret.setPosition(TURRET_POSITIONS[0]);
-
-        universalTimer.reset();
-
-        shootTime.reset();
+        TurretNF.INSTANCE.turret.setPosition(TURRET_POSITION);
 
         //auto
-        auto().schedule();
+        universalTimer.reset();
+        new SequentialGroup(
+                new ParallelRaceGroup(
+                        auto(),
+                        new WaitUntil(() -> universalTimer.milliseconds() > 29_000)
+
+                ),
+
+                TurretNF.INSTANCE.goToHomePositionCmd(),
+                TransferNF.INSTANCE.idleFull(),
+                IntakeNF.INSTANCE.reverse(),
+
+                new FollowPath(BlueAllianceFarPaths.movementRP(PedroComponent.follower()), true)
+        ).schedule();
 
     }
 
 
     @Override
     public void onUpdate() {
+
+        telemetry.addData("Blocked state", TransferNF.INSTANCE.blocker.getState());
 
         telemetry.addData("turret start", TurretNF.INSTANCE.turret.startPosition);
         telemetry.addData("current path: ", PedroComponent.follower().getCurrentPath());
@@ -119,7 +122,6 @@ public class BlueCloseAlliance extends NextFTCOpMode {
         telemetry.addData("turret error: ", TurretNF.INSTANCE.turret.getError());
         telemetry.addData("turret target pos: ", TurretNF.INSTANCE.turret.getTargetPosition());
 
-
         telemetry.update();
 
 
@@ -133,10 +135,6 @@ public class BlueCloseAlliance extends NextFTCOpMode {
         TurretNF.INSTANCE.turret.setPosition(TurretNF.INSTANCE.turret.startPosition);
     }
 
-    private Command resetShootTimer() {
-        return new InstantCommand(
-                () -> shootTime.reset());
-    }
 
     private Command auto() {
 
@@ -146,59 +144,42 @@ public class BlueCloseAlliance extends NextFTCOpMode {
                 IntakeNF.INSTANCE.intake(),
 
                 //PRELOAD SHOOTING
-                new FollowPath(paths.preload),
-
-                resetShootTimer(),
-                new SequentialGroup(
-
-                        IntakeNF.INSTANCE.intake(),
-
-                        new WaitUntil(() -> (
-                                FlywheelNF.INSTANCE.flywheel.getCurrentVelocity() >= FLYWHEEL_VELOCITIES[0] - 50)
-                        ),
-
-                        RobotNF.robot.shootBalls(1)
+                new WaitUntil(() -> (
+                        FlywheelNF.INSTANCE.flywheel.getCurrentVelocity() >= FLYWHEEL_VELOCITY - 50)
                 ),
-                TurretNF.INSTANCE.setPosition(TURRET_POSITIONS[1]),
-                FlywheelNF.INSTANCE.setVel(FLYWHEEL_VELOCITIES[1]),
-
-                //SECOND INTAKE
-                new ParallelGroup(
-
-                        IntakeNF.INSTANCE.intake(),
-                        followCancelable(paths.secondIntake, 4000)
-                ),
-                new Delay(GATE_TIMES[0]),
-
-
-                //SECOND RETURN
-                driveShootPara(paths.secondReturn),
-                TurretNF.INSTANCE.setPosition(TURRET_POSITIONS[2]),
-                FlywheelNF.INSTANCE.setVel(FLYWHEEL_VELOCITIES[2]),
-
+                RobotNF.robot.shootBalls(0.9),
 
                 //FIRST INTAKE
-                new FollowPath(paths.firstIntake),
-                new Delay(GATE_TIMES[1]),
+                followCancelable(BlueAllianceFarPaths.intakeFirst(PedroComponent.follower()), 4),
+                new Delay(1),
+                driveShootPara(BlueAllianceFarPaths.returnGeneral(PedroComponent.follower()), 4),
 
-                IntakeNF.INSTANCE.intake(),
+                new Delay(1),
 
-                //FIRST RETURN
-                driveShootPara(paths.firstReturn),
-                TurretNF.INSTANCE.setPosition(TURRET_POSITIONS[3]),
-                FlywheelNF.INSTANCE.setVel(FLYWHEEL_VELOCITIES[3]),
+                //GENERAL INTAKE
+                followCancelable(BlueAllianceFarPaths.intakeGeneral(PedroComponent.follower()), 4000),
+                new Delay(1),
+                driveShootPara(BlueAllianceFarPaths.returnGeneral(PedroComponent.follower()), 4000),
 
+                new Delay(1),
 
-                //THIRD INTAKE
+                followCancelable(BlueAllianceFarPaths.intakeGeneral(PedroComponent.follower()), 4000),
+                new Delay(1),
+                driveShootPara(BlueAllianceFarPaths.returnGeneral(PedroComponent.follower()), 4000),
 
-                new FollowPath(paths.thirdIntake),
-                new Delay(0.5),
-                new FollowPath(paths.thirdIntakeGate),
-                new Delay(GATE_TIMES[2]),
-                driveShootPara(paths.thirdReturn),
-                FlywheelNF.INSTANCE.setVel(FLYWHEEL_VELOCITIES[4]),
+                new Delay(1),
 
-                new Delay(0.3),
+                followCancelable(BlueAllianceFarPaths.intakeGeneral(PedroComponent.follower()), 4000),
+                new Delay(1),
+                driveShootPara(BlueAllianceFarPaths.returnGeneral(PedroComponent.follower()), 4000),
+
+                new Delay(1),
+
+                followCancelable(BlueAllianceFarPaths.intakeGeneral(PedroComponent.follower()), 4000),
+                new Delay(1),
+                driveShootPara(BlueAllianceFarPaths.returnGeneral(PedroComponent.follower()), 4000),
+
+                new Delay(2),
 
                 //RESET
                 TurretNF.INSTANCE.setPosition(TurretNF.INSTANCE.turret.startPosition),
@@ -206,16 +187,13 @@ public class BlueCloseAlliance extends NextFTCOpMode {
         );
     }
 
-    private Command driveShootPara(PathChain pathChain) {
+    private Command driveShootPara(PathChain pathChain, double timeTilCancel) {
 
-        return new ParallelGroup(
+        return new SequentialGroup(
 
-                new FollowPath(pathChain, true),
-
-                new SequentialGroup(
-                        new Delay(0.01),
-                        RobotNF.robot.shootBallsAtParametricEnd(0.9, pathChain)
-                )
+                followCancelable(pathChain, timeTilCancel),
+                new Delay(5),
+                RobotNF.robot.shootBalls(1.5)
         );
     }
 
@@ -246,7 +224,7 @@ public class BlueCloseAlliance extends NextFTCOpMode {
 
                         }
 
-                        return PedroComponent.follower().atParametricEnd() || cancel;
+                        return cancel || PedroComponent.follower().atParametricEnd();
                     }
                 }
         );

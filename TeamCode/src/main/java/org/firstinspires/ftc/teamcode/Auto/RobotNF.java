@@ -39,7 +39,7 @@ public class RobotNF extends SubsystemGroup {
 
                 TransferNF.INSTANCE.transfer(),
                 new Delay(transferTime),
-                TransferNF.INSTANCE.idleFull()
+                TransferNF.INSTANCE.idle()
         );
     }
 
@@ -51,7 +51,7 @@ public class RobotNF extends SubsystemGroup {
 
                 TransferNF.INSTANCE.transfer(),
                 new Delay(transferTime),
-                TransferNF.INSTANCE.idleFull()
+                TransferNF.INSTANCE.idle()
         );
     }
 

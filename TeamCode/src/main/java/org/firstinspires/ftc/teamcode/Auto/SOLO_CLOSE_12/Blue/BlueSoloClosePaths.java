@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Auto.Solo.Red;
+package org.firstinspires.ftc.teamcode.Auto.SOLO_CLOSE_12.Blue;
 
 import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.BezierCurve;
@@ -7,7 +7,7 @@ import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.HeadingInterpolator;
 import com.pedropathing.paths.PathChain;
 
-public class RedSoloClosePaths {
+public class BlueSoloClosePaths {
     public PathChain preload;
     public PathChain firstIntake;
     public PathChain firstReturn;
@@ -16,24 +16,24 @@ public class RedSoloClosePaths {
     public PathChain thirdIntake;
     public PathChain thirdReturn;
 
-    public RedSoloClosePaths(Follower follower) {
+    public BlueSoloClosePaths(Follower follower) {
         preload = follower.pathBuilder().addPath(
                         new BezierCurve(
-                                new Pose(20.293, 123.122).mirror(),
-                                new Pose(30.866, 112.268).mirror(),
-                                new Pose(38.854, 104.537).mirror()
+                                new Pose(20.293, 123.122),
+                                new Pose(30.866, 112.268),
+                                new Pose(38.854, 104.537)
                         )
-                ).setConstantHeadingInterpolation(Math.toRadians(45))
+                ).setConstantHeadingInterpolation(Math.toRadians(135))
 
                 .build();
 
         firstIntake = follower.pathBuilder().addPath(
                         new BezierCurve(
-                                new Pose(48.805, 96.537).mirror(),
-                                new Pose(22.434, 100.071).mirror(),
-                                new Pose(21.078, 94.899).mirror(),
-                                new Pose(15.098, 89.878).mirror(),
-                                new Pose(13.610, 86.488).mirror()
+                                new Pose(56.488, 83.829),
+                                new Pose(24.434, 110.071),
+                                new Pose(23.078, 110.899),
+                                new Pose(23.098, 91.878),
+                                new Pose(21.610, 86.488)
                         )
                 ).setConstantHeadingInterpolation(Math.toRadians(270))
 
@@ -41,19 +41,19 @@ public class RedSoloClosePaths {
 
         firstReturn = follower.pathBuilder().addPath(
                         new BezierLine(
-                                new Pose(10.610, 86.488).mirror(),
+                                new Pose(21.610, 86.488),
 
-                                new Pose(51.805, 89.488).mirror()
+                                new Pose(58.805, 89.488)
                         )
-                ).setLinearHeadingInterpolation(0, Math.toRadians(45))
+                ).setLinearHeadingInterpolation(Math.PI, Math.toRadians(141))
 
                 .build();
 
         secondIntake = follower.pathBuilder().addPath(
                         new BezierCurve(
-                                new Pose(39.854, 104.537).mirror(),
-                                new Pose(65.683, 69.878).mirror(),
-                                new Pose(35.720, 61.890).mirror()
+                                new Pose(38.854, 104.537),
+                                new Pose(60.683, 69.878),
+                                new Pose(28.720, 61.890)
 
                         )
                 ).setTangentHeadingInterpolation()
@@ -61,29 +61,26 @@ public class RedSoloClosePaths {
                 .addPath(
                         new BezierLine(
 
-                                new Pose(35.720, 61.890).mirror(),
-                                new Pose(16.000, 57.707).mirror()
-                        )).setConstantHeadingInterpolation(0)
+                                new Pose(28.720, 61.890),
+                                new Pose(12.000, 57.707)
+                        )).setConstantHeadingInterpolation(Math.PI)
 
                 .addPath(
                         new BezierCurve(
-                                new Pose(12, 57.707).mirror(),
-                                new Pose(18, 55.707).mirror(),
-                                new Pose(19, 65.707).mirror(),
-                                new Pose(15, 65.707).mirror()
+                                new Pose(12, 57.707),
+                                new Pose(18, 55.707),
+                                new Pose(19, 65.707),
+                                new Pose(15, 65.707)
 
-                        )).setConstantHeadingInterpolation(0)
+                        )).setConstantHeadingInterpolation(Math.PI)
 
                 .build();
 
         secondReturn = follower.pathBuilder().addPath(
-                        new BezierCurve(
-                                new Pose(13.000, 59.707).mirror(),
+                        new BezierLine(
+                                new Pose(13.000, 59.707),
 
-                                new Pose(30, 60).mirror(),
-                                new Pose(40, 80).mirror(),
-
-                                new Pose(47.488, 97.829).mirror()
+                                new Pose(56.488, 83.829)
                         )
 
                 ).setReversed()
@@ -92,7 +89,7 @@ public class RedSoloClosePaths {
                                 new HeadingInterpolator.PiecewiseNode(
                                         0,
                                         0.25,
-                                        HeadingInterpolator.constant(0)
+                                        HeadingInterpolator.constant(Math.PI)
 
                                 ),
                                 new HeadingInterpolator.PiecewiseNode(
@@ -103,20 +100,31 @@ public class RedSoloClosePaths {
                                 new HeadingInterpolator.PiecewiseNode(
                                         0.6,
                                         1,
-                                        HeadingInterpolator.constant(Math.toRadians(45))
+                                        HeadingInterpolator.constant(Math.toRadians(135))
                                 )
                         )
                 )
 
                 .build();
 
+        /*thirdIntake = follower.pathBuilder().addPath(
+                        new BezierCurve(
+                                new Pose(52.488, 94.829),
+                                new Pose(71.524, 40.854),
+                                new Pose(36.427, 26.927),
+                                new Pose(33.988, 39.000),
+                                new Pose(18.829, 36.341)
+                        )
+                ).setTangentHeadingInterpolation()
+
+                .build(); */
 
         thirdIntake = follower.pathBuilder().addPath(
                         new BezierCurve(
-                                new Pose(58.805, 89.488).mirror(),
-                                new Pose(24.451, 59.207).mirror(),
-                                new Pose(21.549, 55.183).mirror(),
-                                new Pose(20.098, 31.951).mirror()
+                                new Pose(58.805, 89.488),
+                                new Pose(44.451, 59.207),
+                                new Pose(34.549, 55.183),
+                                new Pose(26.098, 35.951)
                         )
                 ).setHeadingInterpolation(
                         HeadingInterpolator.piecewise(
@@ -135,23 +143,29 @@ public class RedSoloClosePaths {
 
                 .build();
 
+        /*
+
+        port 0 - SErvo(Axon) - spin axon for 1 second
+        port 2 - Spin a CRServo with power 1
+         */
+
         thirdReturn = follower.pathBuilder().addPath(
                         new BezierLine(
-                                new Pose(23.829, 35.951).mirror(),
+                                new Pose(28.829, 35.951),
 
-                                new Pose(49.146, 102.683).mirror()
+                                new Pose(59.146, 103.683)
                         )
                 ).setHeadingInterpolation(
                         HeadingInterpolator.piecewise(
                                 new HeadingInterpolator.PiecewiseNode(
                                         0,
-                                        0.8,
+                                        0.6,
                                         HeadingInterpolator.tangent.reverse()
                                 ),
                                 new HeadingInterpolator.PiecewiseNode(
-                                        0.8,
+                                        0.6,
                                         1,
-                                        HeadingInterpolator.constant(Math.toRadians(36))
+                                        HeadingInterpolator.constant(Math.toRadians(150))
                                 )
                         )
                 )

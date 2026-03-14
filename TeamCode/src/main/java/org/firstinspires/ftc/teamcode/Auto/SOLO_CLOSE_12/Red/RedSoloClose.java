@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Auto.Solo.Red;
+package org.firstinspires.ftc.teamcode.Auto.SOLO_CLOSE_12.Red;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;

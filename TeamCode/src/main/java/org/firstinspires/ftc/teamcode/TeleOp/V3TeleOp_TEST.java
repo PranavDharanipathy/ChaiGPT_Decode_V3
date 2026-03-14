@@ -24,8 +24,6 @@ public class V3TeleOp_TEST extends TeleOpBaseOpMode {
     @Override
     public void init() {
 
-        useEOALocalizationData();
-
         initializeDevices();
         applyComponentTraits();
 
@@ -56,9 +54,9 @@ public class V3TeleOp_TEST extends TeleOpBaseOpMode {
         shooter.switchAlliance(ALLIANCE);
 
         intake.update();
+        follower.update();
         shooter.update();
         blocker.update();
-        follower.update();
         pedroDrive.update();
 
         telemetry.runInstance(shooter, pedroDrive);

@@ -10,8 +10,8 @@ public class FieldConstants {
 
     public static Pose RELOCALIZATION_POSE = new Pose(0, -56.1, Math.toRadians(-90));
 
-    public static Pose BLUE_BASE_POSE = new Pose();
-    public static Pose RED_BASE_POSE = new Pose();
+    public static Pose BLUE_BASE_POSE = new Pose(-36, 60);
+    public static Pose RED_BASE_POSE = new Pose(36, 60);
 
     /**
      * x is forward-backward with forward being positive and backward being negative
@@ -22,8 +22,8 @@ public class FieldConstants {
     public enum GoalCoordinates {
 
         //        CLOSE ALLIANCE       CLOSE OPPONENT            FAR
-        RED(new Pose(67,70), new Pose(67,70), new Pose(66,72)),
-        BLUE(new Pose(-67,70), new Pose(-67,70), new Pose(-66,72));
+        RED(new Pose(68,68), new Pose(68.5,70), new Pose(65,72)),
+        BLUE(new Pose(-68,68), new Pose(-68.5,70), new Pose(-65,72));
 
         private Pose closeAlliance;
         private Pose closeOpponent;
@@ -41,6 +41,29 @@ public class FieldConstants {
             this.closeAlliance = closeAlliance;
             this.closeOpponent = closeOpponent;
             this.far = far;
+        }
+
+        /// Added on the current pose
+        public void incrementAll(double xIncPP, double yIncPP) { //PP means player perspective
+
+            closeAlliance = new Pose(MathUtil.increaseMagnitude(closeAlliance.getX(), yIncPP), MathUtil.increaseMagnitude(closeAlliance.getY(), xIncPP));
+            closeOpponent = new Pose(MathUtil.increaseMagnitude(closeOpponent.getX(), yIncPP), MathUtil.increaseMagnitude(closeOpponent.getY(), xIncPP));
+            far = new Pose(MathUtil.increaseMagnitude(far.getX(), yIncPP), MathUtil.increaseMagnitude(far.getY(), xIncPP));
+        }
+
+        /// Added on the current pose
+        public void incrementCloseAlliance(double xIncPP, double yIncPP) {
+            closeAlliance = new Pose(MathUtil.increaseMagnitude(closeAlliance.getX(), yIncPP), MathUtil.increaseMagnitude(closeAlliance.getY(), xIncPP));
+        }
+
+        /// Added on the current pose
+        public void incrementCloseOpponent(double xIncPP, double yIncPP) {
+            closeOpponent = new Pose(MathUtil.increaseMagnitude(closeOpponent.getX(), yIncPP), MathUtil.increaseMagnitude(closeOpponent.getY(), xIncPP));
+        }
+
+        /// Added on the current pose
+        public void incrementFar(double xIncPP, double yIncPP) {
+            far = new Pose(MathUtil.increaseMagnitude(far.getX(), yIncPP), MathUtil.increaseMagnitude(far.getY(), xIncPP));
         }
 
         public Pose getCloseAllianceCoordinate() {

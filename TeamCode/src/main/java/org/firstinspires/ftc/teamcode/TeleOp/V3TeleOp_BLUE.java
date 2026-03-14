@@ -52,9 +52,9 @@ public class V3TeleOp_BLUE extends TeleOpBaseOpMode {
         controller2.getInformation();
 
         intake.update();
+        follower.update();
         shooter.update();
         blocker.update();
-        follower.update();
         pedroDrive.update();
 
         telemetry.runInstance(shooter, pedroDrive);

@@ -7,8 +7,9 @@ public class CameraConstants {
     public enum PIPELINES {
 
         OBELISK_PIPELINE(0),
-        RED_PIPELINE(1),
-        BLUE_PIPELINE(2),
+        RED_GOAL_PIPELINE(1),
+        BLUE_GOAL_PIPELINE(2),
+        GENERAL_GOAL_PIPELINE(3),
         TEST_PIPELINE(7);
 
         private int index; // default index
@@ -22,7 +23,7 @@ public class CameraConstants {
         }
 
         public static PIPELINES getPipelineFromAlliance(CurrentAlliance.ALLIANCE alliance) {
-            return alliance == CurrentAlliance.ALLIANCE.BLUE_ALLIANCE ? BLUE_PIPELINE : RED_PIPELINE;
+            return alliance == CurrentAlliance.ALLIANCE.BLUE_ALLIANCE ? BLUE_GOAL_PIPELINE : RED_GOAL_PIPELINE;
         }
     }
 

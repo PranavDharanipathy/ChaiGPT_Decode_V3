@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Auto.SOLO_CLOSE_18.RED;
+package org.firstinspires.ftc.teamcode.Auto.SOLO_CLOSE_18;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
@@ -31,24 +31,23 @@ import dev.nextftc.extensions.pedro.PedroComponent;
 import dev.nextftc.ftc.NextFTCOpMode;
 import dev.nextftc.ftc.components.BulkReadComponent;
 
-//        follower.setTeleOpDrive(-gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x, true);
-
-// THIS IS THE AUTO
-@Autonomous(name = "(SOLO) RED CLOSE 18", group = "SOLO", preselectTeleOp = "V3TeleOp_RED")
+//follower.setTeleOpDrive(-gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x, true);
+@Autonomous(name = "(SOLO) BLUE CLOSE 18", group = "SOLO", preselectTeleOp = "V3TeleOp_BLUE")
 @Config
-public class RedClose extends NextFTCOpMode {
+public class BlueClose extends NextFTCOpMode {
     private Telemetry telemetry;
 
-    public static double[] TURRET_POSITIONS = {-300,-400,0,0};
+    public static double[] TURRET_POSITIONS = {0,0,0,0, 300};
+
 
     //CHANGED HOOD POS FROM 0.11 to 0.19(shoots slightly higher)
     public static double hoodPos = 0.19;
-    public double flywheel_target = 960;
+    public double flywheel_target = 900;
 
-    private RedCloseMirroredPaths paths;
+    private Close18Paths paths;
 
 
-    public RedClose() {
+    public BlueClose() {
         addComponents(
                 new SubsystemComponent(
                         RobotNF.robot,
@@ -58,7 +57,7 @@ public class RedClose extends NextFTCOpMode {
                         IntakeNF.INSTANCE,
                         TransferNF.INSTANCE
                 ),
-                new PedroComponent(DriveConstants::createAutoFollower),
+                new PedroComponent(DriveConstants::createFollower),
                 BulkReadComponent.INSTANCE
         );
     }
@@ -66,15 +65,15 @@ public class RedClose extends NextFTCOpMode {
 
     public void onInit() {
 
-        flywheel_target = 960;
+        flywheel_target = 900;
 
 
         telemetry = new MultipleTelemetry(super.telemetry, FtcDashboard.getInstance().getTelemetry());
 
-        PedroComponent.follower().setStartingPose(new Pose(123.70731707317074, 123.12195121951221, Math.toRadians(45)));
+        PedroComponent.follower().setStartingPose(new Pose(20.29268292682926, 123.12195121951221, Math.toRadians(135)));
 
 
-        paths = new RedCloseMirroredPaths(PedroComponent.follower());
+        paths = new Close18Paths(PedroComponent.follower());
 
 
         telemetry.addData("flywheel vel: ", FlywheelNF.INSTANCE.flywheel.getCurrentVelocity());
@@ -96,12 +95,11 @@ public class RedClose extends NextFTCOpMode {
 
 
         //setup
-        //FlywheelNF.INSTANCE.setVel(flywheel_target,true);
         FlywheelNF.INSTANCE.flywheel.setVelocity(flywheel_target, true);
         IntakeNF.INSTANCE.intake.setPower(IntakeConstants.INTAKE_POWER);
         HoodNF.INSTANCE.setPosition(hoodPos);
+        TransferNF.INSTANCE.block();
         TurretNF.INSTANCE.setPosition(TURRET_POSITIONS[0]);
-        TransferNF.INSTANCE.antiNormal();
 
         universalTimer.reset();
 
@@ -110,6 +108,7 @@ public class RedClose extends NextFTCOpMode {
         //auto
         new SequentialGroup(
                 new ParallelRaceGroup(
+
                         auto(),
                         new WaitUntil(() -> universalTimer.milliseconds() > 35_000)
 
@@ -117,8 +116,8 @@ public class RedClose extends NextFTCOpMode {
 
                 TurretNF.INSTANCE.goToHomePositionCmd(),
                 FlywheelNF.INSTANCE.setVel(0, true),
-                TransferNF.INSTANCE.antiNormal(),
-                IntakeNF.INSTANCE.fullReverse()
+                //TransferNF.INSTANCE.antiNormal(),
+                IntakeNF.INSTANCE.reverse()
 
                 //new FollowPath(paths.movementRP, true)
         ).schedule();
@@ -160,7 +159,7 @@ public class RedClose extends NextFTCOpMode {
         FlywheelNF.INSTANCE.flywheel.setVelocity(0, true);
 
         IntakeNF.INSTANCE.intake.setPower(0);
-        TransferNF.INSTANCE.antiNormal();
+        TransferNF.INSTANCE.block();
 
     }
 
@@ -180,30 +179,15 @@ public class RedClose extends NextFTCOpMode {
 
         return new SequentialGroup(
 
-                TransferNF.INSTANCE.antiVeryStrong(),
-
-
-
-
+                TransferNF.INSTANCE.block(),
                 //PRELOAD SHOOTING
                 new FollowPath(paths.preload, true),
-
 
                 resetShootTimer(),
                 new ParallelRaceGroup(
 
                         new SequentialGroup(
-                                //TurretNF.INSTANCE.setPosition(TURRET_POSITIONS[0]),
-
-                                new WaitUntil(() -> (
-                                        FlywheelNF.INSTANCE.flywheel.getCurrentVelocity() >= flywheel_target - 1000)
-
-                                        //&& Math.abs(TurretNF.INSTANCE.turret.getError()) < 200
-                                ),
-
-
                                 TurretNF.INSTANCE.setPosition(TURRET_POSITIONS[0]),
-
 
                                 shootBalls(
                                         new double[] {0.35, 0.375, 0.4},
@@ -211,7 +195,7 @@ public class RedClose extends NextFTCOpMode {
                                         new double[] {0.4, 0.4},
                                         300
                                 ),
-                                TransferNF.INSTANCE.antiVeryStrong()
+                                TransferNF.INSTANCE.block()
                         ),
                         new WaitUntil(() -> shootTime.seconds() > 9)
 
@@ -219,18 +203,13 @@ public class RedClose extends NextFTCOpMode {
                         //END OF SEQUENTIALGROUP
                 ),
 
-
-
                 //FIRST INTAKE
 
                 changeShootVel(20),
 
-
-
                 new FollowPath(paths.secondIntake),
 
                 new Delay(0.7),
-
 
                 //FIRST RETURN
                 //followCancelable(paths.firstReturn, 4000),//new FollowPath(paths.intake),
@@ -246,20 +225,13 @@ public class RedClose extends NextFTCOpMode {
                         new SequentialGroup(
                                 TurretNF.INSTANCE.setPosition(TURRET_POSITIONS[1]),
 
-                                new WaitUntil(() -> (
-                                        FlywheelNF.INSTANCE.flywheel.getCurrentVelocity() >= flywheel_target - 1000)
-                                        //&& Math.abs(TurretNF.INSTANCE.turret.getError()) < 200
-                                ),
-
-
-                                TurretNF.INSTANCE.setPosition(TURRET_POSITIONS[1]),
                                 shootBalls(
                                         new double[] {0.35, 0.375, 0.4},
                                         new double[] {0, 0},
                                         new double[] {0.4, 0.4},
                                         300
                                 ),
-                                TransferNF.INSTANCE.antiVeryStrong()
+                                TransferNF.INSTANCE.block()
                         ),
                         new WaitUntil(() -> shootTime.seconds() > 9)
 
@@ -272,7 +244,7 @@ public class RedClose extends NextFTCOpMode {
 
                 new FollowPath(paths.gate),
 
-                new Delay(1.68),
+                new Delay(1.9),
                 followCancelable(paths.gateReturn, 5000),
                 new Delay(1),
 
@@ -280,12 +252,6 @@ public class RedClose extends NextFTCOpMode {
                 new ParallelRaceGroup(
 
                         new SequentialGroup(
-                                //TurretNF.INSTANCE.setPosition(TURRET_POSITIONS[3]),
-
-                                new WaitUntil(() -> (
-                                        FlywheelNF.INSTANCE.flywheel.getCurrentVelocity() >= flywheel_target - 1000)
-                                        //&& Math.abs(TurretNF.INSTANCE.turret.getError()) < 200
-                                ),
                                 TurretNF.INSTANCE.setPosition(TURRET_POSITIONS[3]),
 
                                 shootBalls(
@@ -294,11 +260,9 @@ public class RedClose extends NextFTCOpMode {
                                         new double[] {0.4, 0.4},
                                         300
                                 ),
-                                TransferNF.INSTANCE.antiVeryStrong()
+                                TransferNF.INSTANCE.block()
                         ),
                         new WaitUntil(() -> shootTime.seconds() > 9)
-
-
                         //END OF SEQUENTIALGROUP
                 ),
 
@@ -313,12 +277,7 @@ public class RedClose extends NextFTCOpMode {
                 new ParallelRaceGroup(
 
                         new SequentialGroup(
-                                //TurretNF.INSTANCE.setPosition(TURRET_POSITIONS[3]),
 
-                                new WaitUntil(() -> (
-                                        FlywheelNF.INSTANCE.flywheel.getCurrentVelocity() >= flywheel_target - 1000)
-                                        //&& Math.abs(TurretNF.INSTANCE.turret.getError()) < 200
-                                ),
                                 TurretNF.INSTANCE.setPosition(TURRET_POSITIONS[3]),
 
                                 shootBalls(
@@ -327,7 +286,7 @@ public class RedClose extends NextFTCOpMode {
                                         new double[] {0.4, 0.4},
                                         300
                                 ),
-                                TransferNF.INSTANCE.antiVeryStrong()
+                                TransferNF.INSTANCE.block()
                         ),
                         new WaitUntil(() -> shootTime.seconds() > 9)
 
@@ -411,7 +370,7 @@ public class RedClose extends NextFTCOpMode {
                 new WaitUntil(() -> (FlywheelNF.INSTANCE.flywheel.getCurrentVelocity() >= flywheel_target - 100)),
 
                 TransferNF.INSTANCE.transfer(),
-                new Delay(1.4)
+                new Delay(1)
         );
     }
 
@@ -489,5 +448,4 @@ public class RedClose extends NextFTCOpMode {
     }
 
 }
-
 

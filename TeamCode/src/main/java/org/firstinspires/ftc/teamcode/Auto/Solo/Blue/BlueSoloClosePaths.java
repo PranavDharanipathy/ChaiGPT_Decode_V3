@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Auto.SOLO_CLOSE_18.BLUE;
+package org.firstinspires.ftc.teamcode.Auto.Solo.Blue;
 
 import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.BezierCurve;
@@ -7,7 +7,7 @@ import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.HeadingInterpolator;
 import com.pedropathing.paths.PathChain;
 
-public class Close18Paths {
+public class BlueSoloClosePaths {
     public PathChain preload;
     public PathChain firstIntake;
     public PathChain firstReturn;
@@ -16,11 +16,7 @@ public class Close18Paths {
     public PathChain thirdIntake;
     public PathChain thirdReturn;
 
-    public PathChain gate;
-
-    public PathChain gateReturn;
-
-    public Close18Paths(Follower follower) {
+    public BlueSoloClosePaths(Follower follower) {
         preload = follower.pathBuilder().addPath(
                         new BezierCurve(
                                 new Pose(20.293, 123.122),
@@ -33,15 +29,11 @@ public class Close18Paths {
 
         firstIntake = follower.pathBuilder().addPath(
                         new BezierCurve(
-                                /*new Pose(56.488, 83.829),
+                                new Pose(56.488, 83.829),
                                 new Pose(24.434, 110.071),
                                 new Pose(23.078, 110.899),
                                 new Pose(23.098, 91.878),
-                                new Pose(21.610, 86.488)*/
-
-                                new Pose(81.634, 88.463),
-                                new Pose(101.761, 83.095),
-                                new Pose(124.878, 84.293)
+                                new Pose(21.610, 86.488)
                         )
                 ).setConstantHeadingInterpolation(Math.toRadians(270))
 
@@ -69,16 +61,16 @@ public class Close18Paths {
                 .addPath(
                         new BezierLine(
 
-                        new Pose(28.720, 61.890),
-                        new Pose(15.000, 57.707)
-                )).setConstantHeadingInterpolation(Math.PI)
+                                new Pose(28.720, 61.890),
+                                new Pose(12.000, 57.707)
+                        )).setConstantHeadingInterpolation(Math.PI)
 
                 .addPath(
                         new BezierCurve(
-                                new Pose(15, 57.707),
-                                new Pose(18, 52.707),
-                                new Pose(22, 66.707),
-                                new Pose(16, 65.707)
+                                new Pose(12, 57.707),
+                                new Pose(18, 55.707),
+                                new Pose(19, 65.707),
+                                new Pose(15, 65.707)
 
                         )).setConstantHeadingInterpolation(Math.PI)
 
@@ -86,7 +78,7 @@ public class Close18Paths {
 
         secondReturn = follower.pathBuilder().addPath(
                         new BezierLine(
-                                new Pose(13.000, 68.707),
+                                new Pose(13.000, 59.707),
 
                                 new Pose(56.488, 83.829)
                         )
@@ -96,60 +88,17 @@ public class Close18Paths {
                         HeadingInterpolator.piecewise(
                                 new HeadingInterpolator.PiecewiseNode(
                                         0,
-                                        0.76,
-                                        HeadingInterpolator.tangent.reverse()
+                                        0.25,
+                                        HeadingInterpolator.constant(Math.PI)
 
                                 ),
                                 new HeadingInterpolator.PiecewiseNode(
-                                        0.76,
-                                        1,
-                                        HeadingInterpolator.constant(Math.toRadians(135))
-                                )
-                        )
-                )
-
-                .build();
-
-
-        gate = follower.pathBuilder().addPath(
-                        new BezierCurve(
-                                new Pose(56.000, 84.098),
-                                new Pose(53.829, 60.720),
-                                new Pose(25.829, 61.207),
-                                new Pose(12.463, 62.220)
-                        )
-                ).setHeadingInterpolation(
-                        HeadingInterpolator.piecewise(
-                                new HeadingInterpolator.PiecewiseNode(
-                                        0,
+                                        0.25,
                                         0.6,
                                         HeadingInterpolator.tangent
                                 ),
                                 new HeadingInterpolator.PiecewiseNode(
                                         0.6,
-                                        1,
-                                        HeadingInterpolator.constant(Math.toRadians(145))
-                                )
-                        )
-                )
-
-                .build();
-
-        gateReturn = follower.pathBuilder().addPath(
-                        new BezierLine(
-                                new Pose(13.463, 64.220),
-
-                                new Pose(56.366, 88.463)
-                        )
-                ).setHeadingInterpolation(
-                        HeadingInterpolator.piecewise(
-                                new HeadingInterpolator.PiecewiseNode(
-                                        0,
-                                        0.8,
-                                        HeadingInterpolator.tangent.reverse()
-                                ),
-                                new HeadingInterpolator.PiecewiseNode(
-                                        0.8,
                                         1,
                                         HeadingInterpolator.constant(Math.toRadians(135))
                                 )

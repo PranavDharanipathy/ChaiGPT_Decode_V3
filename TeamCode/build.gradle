@@ -43,8 +43,6 @@ buildscript {
 
 repositories {
     maven { url = 'https://maven.brott.dev/' }
-    maven { url 'https://repo.dairy.foundation/releases' }
-
     maven {
         url = "https://repo.dairy.foundation/releases"
     }
@@ -65,7 +63,7 @@ dependencies {
     implementation project(':chaigptrobotics')
 
 
-    /// SLOTH IMPLEMENTATIONS:
+    /*/// SLOTH IMPLEMENTATIONS:
 
     implementation("com.acmerobotics.slothboard:dashboard:0.2.4+0.5.1")
 
@@ -81,7 +79,24 @@ dependencies {
     implementation("com.bylazar.sloth:fullpanels:0.2.4+1.0.12")
 
 
-    //\\
+    //\\  */
+
+    /// SLOTH IMPLEMENTATIONS:
+
+    implementation("com.acmerobotics.slothboard:dashboard:0.2.4+0.5.1")
+
+    implementation("com.acmerobotics.roadrunner:ftc:0.1.25") {
+        exclude group: "com.acmerobotics.dashboard"
+    }
+    implementation("com.acmerobotics.roadrunner:actions:1.0.1") {
+        exclude group: "com.acmerobotics.dashboard"
+    }
+
+    implementation("dev.frozenmilk.sinister:Sloth:0.2.4")
+
+    implementation("com.bylazar.sloth:fullpanels:0.2.4+1.0.12") {
+        exclude group: "com.bylazar"
+    }
 
 
     //noinspection NewerVersionAvailable

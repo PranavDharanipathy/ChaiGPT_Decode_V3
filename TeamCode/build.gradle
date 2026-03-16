@@ -12,8 +12,13 @@
 // Custom definitions may go here
 
 // Include common definitions from above.
+
+
 apply from: '../build.common.gradle'
 apply from: '../build.dependencies.gradle'
+
+apply plugin: 'dev.frozenmilk.sinister.sloth.load'
+
 
 android {
     namespace = 'org.firstinspires.ftc.teamcode'
@@ -23,32 +28,85 @@ android {
     }
 }
 
+buildscript {
+    repositories {
+        mavenCentral()
+        maven {
+            url "https://repo.dairy.foundation/releases"
+        }
+    }
+    dependencies {
+        classpath "dev.frozenmilk:Load:0.2.4"
+    }
+}
+
+
 repositories {
     maven { url = 'https://maven.brott.dev/' }
     maven { url 'https://repo.dairy.foundation/releases' }
+
+    maven {
+        url = "https://repo.dairy.foundation/releases"
+    }
+    // Dairy snapshots repository
+    maven {
+        url = "https://repo.dairy.foundation/snapshots"
+    }
 }
 
+
+
+
 dependencies {
+
 
     implementation project(':FtcRobotController')
     implementation project(':CPPOptimizations')
     implementation project(':chaigptrobotics')
 
-    implementation "com.acmerobotics.dashboard:dashboard:0.5.1"
 
-    implementation 'org.psilynx.psikit:core:0.2.0-beta1'
-    implementation 'org.psilynx.psikit:ftc:0.2.0-beta1'
+    /// SLOTH IMPLEMENTATIONS:
+
+    implementation("com.acmerobotics.slothboard:dashboard:0.2.4+0.5.1")
+
+    implementation("com.acmerobotics.roadrunner:ftc:0.1.25") {
+        exclude group: "com.acmerobotics.dashboard"
+    }
+    implementation ("com.acmerobotics.roadrunner:actions:1.0.1"){
+        exclude group: "com.acmerobotics.dashboard"
+    }
+
+    implementation("dev.frozenmilk.sinister:Sloth:0.2.4")
+
+    implementation("com.bylazar.sloth:fullpanels:0.2.4+1.0.12")
+
+
+    //\\
+
 
     //noinspection NewerVersionAvailable
     implementation 'org.jetbrains:annotations:15.0'
-
-    //implementation 'org.ftclib.ftclib:core:2.1.1'
-
     implementation 'org.apache.commons:commons-math3:3.6.1'
-    //implementation 'com.google.code.gson:gson:2.13.2' //already implemented
 
-    implementation 'dev.nextftc:ftc:1.1.0' //implementation 'dev.nextftc:ftc:1.1.0-beta.'5
+
+    //\\
+
+    // NEXT FTC DEPENDENCIES
+
+    implementation 'dev.nextftc:ftc:1.1.0'
     implementation 'dev.nextftc:hardware:1.1.0'
     implementation 'dev.nextftc.extensions:pedro:1.0.0'
-    //implementation 'androidx.core:core-ktx:1.17.0'
+
+
+
+    //PSI KIT
+
+    implementation 'org.psilynx.psikit:core:0.2.0-beta1'
+    implementation 'org.psilynx.psikit:ftc:0.2.0-beta1'
+                             //\\
+
+                       //OTHER STUFF
+
+                           //\\
+
 }

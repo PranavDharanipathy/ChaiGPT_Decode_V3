@@ -209,7 +209,7 @@ public class BlueClose extends NextFTCOpMode {
 
                 new FollowPath(paths.secondIntake),
 
-                new Delay(0.7),
+                new Delay(0.9),
 
                 //FIRST RETURN
                 //followCancelable(paths.firstReturn, 4000),//new FollowPath(paths.intake),
@@ -242,11 +242,13 @@ public class BlueClose extends NextFTCOpMode {
                 changeShootVel(-10),
                 //THIRD INTAKE
 
-                new FollowPath(paths.gate),
+                new FollowPath(paths.gate, true),
 
                 new Delay(1.9),
                 followCancelable(paths.gateReturn, 5000),
                 new Delay(1),
+
+                changeShootVel(20),
 
                 resetShootTimer(),
                 new ParallelRaceGroup(
@@ -267,11 +269,13 @@ public class BlueClose extends NextFTCOpMode {
                 ),
 
 
-                new FollowPath(paths.gate),
+                new FollowPath(paths.gate, true),
 
-                new Delay(0.92),
-                followCancelable(paths.gateReturn, 5000),
-                new Delay(1),
+
+
+                new Delay(1.4),
+                followCancelable(paths.gateReturn, 4000),
+                new Delay(0.7),
 
                 resetShootTimer(),
                 new ParallelRaceGroup(

@@ -3,6 +3,8 @@ package org.firstinspires.ftc.teamcode.Auto.SOLO_CLOSE_18;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.chaigptrobotics.shenanigans.No_u;
+import com.chaigptrobotics.shenanigans.Peak;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.PathChain;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -21,7 +23,6 @@ import org.firstinspires.ftc.teamcode.Constants.IntakeConstants;
 import dev.nextftc.core.commands.Command;
 import dev.nextftc.core.commands.delays.Delay;
 import dev.nextftc.core.commands.delays.WaitUntil;
-import dev.nextftc.core.commands.groups.ParallelGroup;
 import dev.nextftc.core.commands.groups.ParallelRaceGroup;
 import dev.nextftc.core.commands.groups.SequentialGroup;
 import dev.nextftc.core.commands.utility.InstantCommand;
@@ -36,13 +37,11 @@ import dev.nextftc.ftc.components.BulkReadComponent;
 @Config
 public class BlueClose extends NextFTCOpMode {
     private Telemetry telemetry;
-
-    public static double[] TURRET_POSITIONS = {0,0,0,0, 300};
-
+    public static double[] TURRET_POSITIONS = {-8500,-4050,-5200,-3100, -2000};
 
     //CHANGED HOOD POS FROM 0.11 to 0.19(shoots slightly higher)
     public static double hoodPos = 0.19;
-    public double flywheel_target = 900;
+    public double flywheel_target = 960;
 
     private Close18Paths paths;
 
@@ -65,7 +64,7 @@ public class BlueClose extends NextFTCOpMode {
 
     public void onInit() {
 
-        flywheel_target = 900;
+        flywheel_target = 960;
 
 
         telemetry = new MultipleTelemetry(super.telemetry, FtcDashboard.getInstance().getTelemetry());
@@ -180,8 +179,11 @@ public class BlueClose extends NextFTCOpMode {
         return new SequentialGroup(
 
                 TransferNF.INSTANCE.block(),
+
+                TurretNF.INSTANCE.setPosition(TURRET_POSITIONS[0]),
                 //PRELOAD SHOOTING
                 new FollowPath(paths.preload, true),
+
 
                 resetShootTimer(),
                 new ParallelRaceGroup(
@@ -209,7 +211,11 @@ public class BlueClose extends NextFTCOpMode {
 
                 new FollowPath(paths.secondIntake),
 
-                new Delay(0.9),
+                changeShootVel(-60),
+
+                new Delay(0.25),
+                TurretNF.INSTANCE.setPosition(TURRET_POSITIONS[1]),
+
 
                 //FIRST RETURN
                 //followCancelable(paths.firstReturn, 4000),//new FollowPath(paths.intake),
@@ -242,11 +248,17 @@ public class BlueClose extends NextFTCOpMode {
                 changeShootVel(-10),
                 //THIRD INTAKE
 
-                new FollowPath(paths.gate, true),
+                followCancelable(paths.gate,5000),
 
-                new Delay(1.9),
+                new Delay(0.3),
+                TurretNF.INSTANCE.setPosition(TURRET_POSITIONS[2]),
+
+                //new TurnTo(turnTo),
+
+
+                new Delay(1.3),
                 followCancelable(paths.gateReturn, 5000),
-                new Delay(1),
+                new Delay(0.6),
 
                 changeShootVel(20),
 
@@ -254,7 +266,6 @@ public class BlueClose extends NextFTCOpMode {
                 new ParallelRaceGroup(
 
                         new SequentialGroup(
-                                TurretNF.INSTANCE.setPosition(TURRET_POSITIONS[3]),
 
                                 shootBalls(
                                         new double[] {0.35, 0.375, 0.4},
@@ -272,18 +283,19 @@ public class BlueClose extends NextFTCOpMode {
                 new FollowPath(paths.gate, true),
 
 
+                changeShootVel(-20),
 
-                new Delay(1.4),
+                //TurretNF.INSTANCE.setPosition(TURRET_POSITIONS[2]),
+                changeShootVel(30),
+
+                new Delay(1.8),
                 followCancelable(paths.gateReturn, 4000),
-                new Delay(0.7),
+                new Delay(0.5),
 
                 resetShootTimer(),
                 new ParallelRaceGroup(
 
                         new SequentialGroup(
-
-                                TurretNF.INSTANCE.setPosition(TURRET_POSITIONS[3]),
-
                                 shootBalls(
                                         new double[] {0.35, 0.375, 0.4},
                                         new double[] {0, 0},
@@ -301,26 +313,73 @@ public class BlueClose extends NextFTCOpMode {
 
                 new FollowPath(paths.firstIntake),
 
-                new Delay(0.92),
+                changeShootVel(-50),
+                TurretNF.INSTANCE.setPosition(TURRET_POSITIONS[3]),
+
+
+                new Delay(0.4),
                 followCancelable(paths.firstReturn, 5000),
                 new Delay(1),
 
 
+                resetShootTimer(),
+                new ParallelRaceGroup(
+
+                        new SequentialGroup(
+
+                                TurretNF.INSTANCE.setPosition(TURRET_POSITIONS[3]),
+
+                                shootBalls(
+                                        new double[] {0.35, 0.375, 0.4},
+                                        new double[] {0, 0},
+                                        new double[] {0.4, 0.4},
+                                        300
+                                ),
+                                TransferNF.INSTANCE.block()
+                        ),
+                        new WaitUntil(() -> shootTime.seconds() > 9)
+
+
+                        //END OF SEQUENTIALGROUP
+                ),
+
+
                 new FollowPath(paths.thirdIntake),
+
 
                 new Delay(0.92),
                 followCancelable(paths.thirdReturn, 5000),
-                new Delay(1),
+                new Delay(2.5),
+
+                resetShootTimer(),
+                new ParallelRaceGroup(
+
+                        new SequentialGroup(
+
+                                shootBalls(
+                                        new double[] {0.35, 0.375, 0.4},
+                                        new double[] {0, 0},
+                                        new double[] {0.4, 0.4},
+                                        300
+                                ),
+                                TransferNF.INSTANCE.block()
+                        ),
+                        new WaitUntil(() -> shootTime.seconds() > 9)
 
 
+                        //END OF SEQUENTIALGROUP
+                ),
 
 
                 //SET TURRET TO END POS
                 TurretNF.INSTANCE.setPosition(TurretNF.INSTANCE.turret.startPosition),
                 IntakeNF.INSTANCE.reverse()
 
+
         );
     }
+
+
 
 
     // compensate paths fo rstart pos
@@ -377,79 +436,5 @@ public class BlueClose extends NextFTCOpMode {
                 new Delay(1)
         );
     }
-
-    public Command gating(PathChain cancelablePath, double timeTilCancel, double allowedTimeAtGateWhenFollowing, double uncancelledHoldTime, double cancelledHoldTime) {
-
-        return new Command() {
-
-            final String[] STAGES = {"START", "FOLLOW", "TIME_STOP", "HOLD_TIME_DECISION", "DELAY", "DONE"};
-
-            String stage = STAGES[0];
-
-            private ElapsedTime openGateTimer = new ElapsedTime();
-
-            private double timeAlreadyAtGate = 0;
-
-            private double holdTime = 0;
-
-            @Override
-            public boolean isDone() {
-
-                switch (stage) {
-
-                    case "START":
-
-                        openGateTimer.reset();
-                        PedroComponent.follower().followPath(cancelablePath);
-                        stage = STAGES[1];
-                        break;
-
-                    case "FOLLOW":
-
-                        boolean cancel = false;
-
-                        if (openGateTimer.milliseconds() >= timeTilCancel) {
-
-                            cancel = true;
-                            PedroComponent.follower().breakFollowing();
-                        }
-
-                        if (cancel || PedroComponent.follower().atParametricEnd()) {
-                            stage = STAGES[2];
-                        }
-                        break;
-
-                    case "TIME_STOP":
-
-                        timeAlreadyAtGate = openGateTimer.milliseconds();
-                        stage = STAGES[3];
-                        break;
-
-                    case "HOLD_TIME_DECISION":
-
-                        if (timeAlreadyAtGate > allowedTimeAtGateWhenFollowing) {
-                            holdTime = cancelledHoldTime;
-                        }
-                        else {
-                            holdTime = uncancelledHoldTime;
-                        }
-
-                        openGateTimer.reset();
-
-                        stage = STAGES[4];
-                        break;
-
-                    case "DELAY":
-
-                        if (openGateTimer.milliseconds() > holdTime) stage = STAGES[5];
-                        break;
-                }
-
-                return stage.equals("DONE");
-            }
-        };
-
-    }
-
 }
 

@@ -73,12 +73,12 @@ public class ConfigurationConstants {
     public static double FLYWHEEL_STABILITY_MARGIN_OF_ERROR = 10;
 
     public static TurretBasePIDFSCoefficients TURRET_PIDFS_COEFFICIENTS = new TurretBasePIDFSCoefficients(
-            0.00009,
-            new double[] {0.0000002, 0.0000002},
-            new double[] {1.5e-11, 0.0000015},
-            0.0003,
+            0.00005,
+            new double[] {2e-7, 2e-7},
+            new double[] {1.5e-6, 0.0000019},
+            0.000296,
             0.0,
-            0.0251,
+            0.0240,
             new double[] {200, 200},
             new double[] {0.12, 0.145},
             new double[] {0, 0},

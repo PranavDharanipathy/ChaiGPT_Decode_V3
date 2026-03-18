@@ -25,8 +25,10 @@ import dev.nextftc.core.commands.groups.ParallelRaceGroup;
 import dev.nextftc.core.commands.groups.SequentialGroup;
 import dev.nextftc.core.commands.utility.InstantCommand;
 import dev.nextftc.core.components.SubsystemComponent;
+import dev.nextftc.core.units.Angle;
 import dev.nextftc.extensions.pedro.FollowPath;
 import dev.nextftc.extensions.pedro.PedroComponent;
+import dev.nextftc.extensions.pedro.TurnTo;
 import dev.nextftc.ftc.NextFTCOpMode;
 import dev.nextftc.ftc.components.BulkReadComponent;
 
@@ -38,7 +40,7 @@ import dev.nextftc.ftc.components.BulkReadComponent;
 public class RedClose extends NextFTCOpMode {
     private Telemetry telemetry;
 
-    public static double[] TURRET_POSITIONS = {4500,-400,0,0};
+    public static double[] TURRET_POSITIONS = {5900,3800,3700,4800};
 
     //CHANGED HOOD POS FROM 0.11 to 0.19(shoots slightly higher)
     public static double hoodPos = 0.19;
@@ -187,6 +189,10 @@ TransferNF.INSTANCE.block();
         );
     }
 
+
+
+
+
     private Command auto() {
 
 
@@ -197,6 +203,7 @@ TransferNF.INSTANCE.block();
                 TurretNF.INSTANCE.setPosition(TURRET_POSITIONS[0]),
                 //PRELOAD SHOOTING
                 new FollowPath(paths.preload, true),
+
 
                 resetShootTimer(),
                 new ParallelRaceGroup(
@@ -224,7 +231,11 @@ TransferNF.INSTANCE.block();
 
                 new FollowPath(paths.secondIntake),
 
-                new Delay(0.9),
+                changeShootVel(-40),
+
+                new Delay(0.25),
+                TurretNF.INSTANCE.setPosition(TURRET_POSITIONS[1]),
+
 
                 //FIRST RETURN
                 //followCancelable(paths.firstReturn, 4000),//new FollowPath(paths.intake),
@@ -257,11 +268,17 @@ TransferNF.INSTANCE.block();
                 changeShootVel(-10),
                 //THIRD INTAKE
 
-                followCancelable(paths.gate,4000),
+                followCancelable(paths.gate,5000),
+
+                new Delay(0.3),
+                TurretNF.INSTANCE.setPosition(TURRET_POSITIONS[2]),
+
+                //new TurnTo(turnTo),
+
 
                 new Delay(1.3),
                 followCancelable(paths.gateReturn, 5000),
-                new Delay(1),
+                new Delay(0.6),
 
                 changeShootVel(20),
 
@@ -269,7 +286,6 @@ TransferNF.INSTANCE.block();
                 new ParallelRaceGroup(
 
                         new SequentialGroup(
-                                TurretNF.INSTANCE.setPosition(TURRET_POSITIONS[3]),
 
                                 shootBalls(
                                         new double[] {0.35, 0.375, 0.4},
@@ -287,10 +303,14 @@ TransferNF.INSTANCE.block();
                 new FollowPath(paths.gate, true),
 
 
+                changeShootVel(-20),
 
-                new Delay(1.4),
+                TurretNF.INSTANCE.setPosition(TURRET_POSITIONS[2]),
+                changeShootVel(30),
+
+                new Delay(1.8),
                 followCancelable(paths.gateReturn, 4000),
-                new Delay(0.7),
+                new Delay(0.5),
 
                 resetShootTimer(),
                 new ParallelRaceGroup(
@@ -315,19 +335,62 @@ TransferNF.INSTANCE.block();
 
 
                 new FollowPath(paths.firstIntake),
+                TurretNF.INSTANCE.setPosition(TURRET_POSITIONS[3]),
 
-                new Delay(0.92),
+
+                new Delay(0.52),
                 followCancelable(paths.firstReturn, 5000),
                 new Delay(1),
+
+
+                resetShootTimer(),
+                new ParallelRaceGroup(
+
+                        new SequentialGroup(
+
+                                TurretNF.INSTANCE.setPosition(TURRET_POSITIONS[3]),
+
+                                shootBalls(
+                                        new double[] {0.35, 0.375, 0.4},
+                                        new double[] {0, 0},
+                                        new double[] {0.4, 0.4},
+                                        300
+                                ),
+                                TransferNF.INSTANCE.block()
+                        ),
+                        new WaitUntil(() -> shootTime.seconds() > 9)
+
+
+                        //END OF SEQUENTIALGROUP
+                ),
 
 
                 new FollowPath(paths.thirdIntake),
 
                 new Delay(0.92),
                 followCancelable(paths.thirdReturn, 5000),
-                new Delay(1),
+                new Delay(2.5),
+
+                resetShootTimer(),
+                new ParallelRaceGroup(
+
+                        new SequentialGroup(
+
+                                TurretNF.INSTANCE.setPosition(TURRET_POSITIONS[3]),
+
+                                shootBalls(
+                                        new double[] {0.35, 0.375, 0.4},
+                                        new double[] {0, 0},
+                                        new double[] {0.4, 0.4},
+                                        300
+                                ),
+                                TransferNF.INSTANCE.block()
+                        ),
+                        new WaitUntil(() -> shootTime.seconds() > 9)
 
 
+                        //END OF SEQUENTIALGROUP
+                ),
 
 
                 //SET TURRET TO END POS

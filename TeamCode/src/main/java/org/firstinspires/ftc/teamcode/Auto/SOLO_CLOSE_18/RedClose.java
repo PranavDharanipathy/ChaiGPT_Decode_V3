@@ -191,7 +191,7 @@ TransferNF.INSTANCE.block();
 
 
 
-
+        Angle endTurn = Angle.fromDeg(180+45);
 
     private Command auto() {
 
@@ -337,8 +337,6 @@ TransferNF.INSTANCE.block();
                 new FollowPath(paths.firstIntake),
                 TurretNF.INSTANCE.setPosition(TURRET_POSITIONS[3]),
 
-
-                new Delay(0.52),
                 followCancelable(paths.firstReturn, 5000),
                 new Delay(1),
 
@@ -365,7 +363,7 @@ TransferNF.INSTANCE.block();
                 ),
 
 
-                new FollowPath(paths.thirdIntake),
+                /*new FollowPath(paths.thirdIntake),
 
                 new Delay(0.92),
                 followCancelable(paths.thirdReturn, 5000),
@@ -391,6 +389,11 @@ TransferNF.INSTANCE.block();
 
                         //END OF SEQUENTIALGROUP
                 ),
+
+
+                 */
+
+                new TurnTo(endTurn),
 
 
                 //SET TURRET TO END POS

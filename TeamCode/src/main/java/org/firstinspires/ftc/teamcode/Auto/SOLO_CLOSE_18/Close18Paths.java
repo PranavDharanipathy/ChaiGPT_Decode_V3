@@ -88,7 +88,7 @@ public class Close18Paths {
                         new BezierCurve(
                                 new Pose(52, 88),
                                 new Pose(60.683, 69.878),
-                                new Pose(17.720, 61.890)
+                                new Pose(30.720, 61.890)
 
                         )
                 ).setHeadingInterpolation(

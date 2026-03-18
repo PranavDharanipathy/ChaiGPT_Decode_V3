@@ -26,7 +26,7 @@ public class ShooterConstants {
     public static double GOAL_X_POSITION_INCREMENT = 1;
     public static double GOAL_Y_POSITION_INCREMENT = 1;
 
-    public static double TURRET_TARGET_POSITION_ACCEPTABLE_ERROR_MARGIN = 50;
+    public static double TURRET_TARGET_POSITION_ACCEPTABLE_ERROR_MARGIN = 40;
 
     public static double TURRET_POSITIONAL_OFFSET = -0.7893685;
 

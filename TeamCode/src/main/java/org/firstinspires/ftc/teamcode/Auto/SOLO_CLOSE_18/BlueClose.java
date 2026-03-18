@@ -27,8 +27,10 @@ import dev.nextftc.core.commands.groups.ParallelRaceGroup;
 import dev.nextftc.core.commands.groups.SequentialGroup;
 import dev.nextftc.core.commands.utility.InstantCommand;
 import dev.nextftc.core.components.SubsystemComponent;
+import dev.nextftc.core.units.Angle;
 import dev.nextftc.extensions.pedro.FollowPath;
 import dev.nextftc.extensions.pedro.PedroComponent;
+import dev.nextftc.extensions.pedro.TurnTo;
 import dev.nextftc.ftc.NextFTCOpMode;
 import dev.nextftc.ftc.components.BulkReadComponent;
 
@@ -173,6 +175,8 @@ public class BlueClose extends NextFTCOpMode {
         );
     }
 
+
+    Angle endTurn = Angle.fromDeg(-45);
     private Command auto() {
 
 
@@ -316,8 +320,6 @@ public class BlueClose extends NextFTCOpMode {
                 changeShootVel(-50),
                 TurretNF.INSTANCE.setPosition(TURRET_POSITIONS[3]),
 
-
-                new Delay(0.4),
                 followCancelable(paths.firstReturn, 5000),
                 new Delay(1),
 
@@ -343,8 +345,10 @@ public class BlueClose extends NextFTCOpMode {
                         //END OF SEQUENTIALGROUP
                 ),
 
+                new TurnTo(endTurn),
 
-                new FollowPath(paths.thirdIntake),
+
+                /*new FollowPath(paths.thirdIntake),
 
 
                 new Delay(0.92),
@@ -368,8 +372,7 @@ public class BlueClose extends NextFTCOpMode {
 
 
                         //END OF SEQUENTIALGROUP
-                ),
-
+                ), */
 
                 //SET TURRET TO END POS
                 TurretNF.INSTANCE.setPosition(TurretNF.INSTANCE.turret.startPosition),

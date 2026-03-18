@@ -26,8 +26,10 @@ import dev.nextftc.core.commands.groups.ParallelGroup;
 import dev.nextftc.core.commands.groups.SequentialGroup;
 import dev.nextftc.core.commands.utility.InstantCommand;
 import dev.nextftc.core.components.SubsystemComponent;
+import dev.nextftc.core.units.Angle;
 import dev.nextftc.extensions.pedro.FollowPath;
 import dev.nextftc.extensions.pedro.PedroComponent;
+import dev.nextftc.extensions.pedro.TurnTo;
 import dev.nextftc.ftc.NextFTCOpMode;
 import dev.nextftc.ftc.components.BulkReadComponent;
 
@@ -102,7 +104,7 @@ public class RedCloseAlliance extends NextFTCOpMode {
         auto().schedule();
 
     }
-
+Angle endTurn = Angle.fromDeg(180+45);
 
     @Override
     public void onUpdate() {
@@ -202,6 +204,8 @@ public class RedCloseAlliance extends NextFTCOpMode {
                 FlywheelNF.INSTANCE.setVel(FLYWHEEL_VELOCITIES[4]),
 
                 new Delay(0.3),
+
+                new TurnTo(endTurn),
 
                 //RESET
                 TurretNF.INSTANCE.setPosition(TurretNF.INSTANCE.turret.startPosition),

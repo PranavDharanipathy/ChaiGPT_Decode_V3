@@ -26,8 +26,10 @@ import dev.nextftc.core.commands.groups.ParallelGroup;
 import dev.nextftc.core.commands.groups.SequentialGroup;
 import dev.nextftc.core.commands.utility.InstantCommand;
 import dev.nextftc.core.components.SubsystemComponent;
+import dev.nextftc.core.units.Angle;
 import dev.nextftc.extensions.pedro.FollowPath;
 import dev.nextftc.extensions.pedro.PedroComponent;
+import dev.nextftc.extensions.pedro.TurnTo;
 import dev.nextftc.ftc.NextFTCOpMode;
 import dev.nextftc.ftc.components.BulkReadComponent;
 
@@ -103,7 +105,7 @@ public class BlueCloseAlliance extends NextFTCOpMode {
 
     }
 
-
+Angle endTurn = Angle.fromDeg(-45);
     @Override
     public void onUpdate() {
 
@@ -172,36 +174,40 @@ public class BlueCloseAlliance extends NextFTCOpMode {
                         followCancelable(paths.secondIntake, 4000)
                 ),
                 new Delay(GATE_TIMES[0]),
+                FlywheelNF.INSTANCE.setVel(FLYWHEEL_VELOCITIES[2]),
 
 
                 //SECOND RETURN
                 driveShootPara(paths.secondReturn),
                 TurretNF.INSTANCE.setPosition(TURRET_POSITIONS[2]),
-                FlywheelNF.INSTANCE.setVel(FLYWHEEL_VELOCITIES[2]),
 
 
                 //FIRST INTAKE
                 new FollowPath(paths.firstIntake),
                 new Delay(GATE_TIMES[1]),
+                FlywheelNF.INSTANCE.setVel(FLYWHEEL_VELOCITIES[3]),
+
 
                 IntakeNF.INSTANCE.intake(),
 
                 //FIRST RETURN
                 driveShootPara(paths.firstReturn),
                 TurretNF.INSTANCE.setPosition(TURRET_POSITIONS[3]),
-                FlywheelNF.INSTANCE.setVel(FLYWHEEL_VELOCITIES[3]),
 
 
                 //THIRD INTAKE
 
                 new FollowPath(paths.thirdIntake),
+                FlywheelNF.INSTANCE.setVel(FLYWHEEL_VELOCITIES[4]),
+
                 new Delay(0.5),
                 new FollowPath(paths.thirdIntakeGate),
                 new Delay(GATE_TIMES[2]),
                 driveShootPara(paths.thirdReturn),
-                FlywheelNF.INSTANCE.setVel(FLYWHEEL_VELOCITIES[4]),
 
                 new Delay(0.3),
+
+                new TurnTo(endTurn),
 
                 //RESET
                 TurretNF.INSTANCE.setPosition(TurretNF.INSTANCE.turret.startPosition),

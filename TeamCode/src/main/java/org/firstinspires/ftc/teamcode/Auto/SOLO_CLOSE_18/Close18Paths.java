@@ -109,7 +109,7 @@ public class Close18Paths {
                         new BezierLine(
                                 new Pose(30.720, 61.890),
                                 new Pose(18.5, 57.707)
-                        )).setConstantHeadingInterpolation(0)
+                        )).setConstantHeadingInterpolation(Math.PI)
 
                 /*.addPath(
                         new BezierCurve(
@@ -194,7 +194,7 @@ public class Close18Paths {
                                 new HeadingInterpolator.PiecewiseNode(
                                         0.6,
                                         1,
-                                        HeadingInterpolator.constant(Math.toRadians(162))
+                                        HeadingInterpolator.constant(Math.toRadians(166))
                                 )
                         )
                 )
@@ -267,7 +267,7 @@ public class Close18Paths {
                         new BezierLine(
                                 new Pose(28.829, 35.951),
 
-                                new Pose(53.146, 81.683)
+                                new Pose(53.146, 86.683)
                         )
                 ).setHeadingInterpolation(
                         HeadingInterpolator.piecewise(
